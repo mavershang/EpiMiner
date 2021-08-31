@@ -1,0 +1,14 @@
+<p>snp-query works!</p>
+<div class="card">
+    <h4 class="card-header">Query a SNP</h4>
+    <!-- <div class="card-body"> -->
+    <div class="container"> 
+        <a>* Required Column</a>
+        <form #form="ngForm" autocomplete="off" (ngSubmit)="onSubmit(form)">
+            <div class="form-group">
+                <input type="text" placeholder="Search with a SNP" name="snp"  class="form-control" [(ngModel)]="snpInput" required maxlength="100"/>
+            </div>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div> 
+</div>
