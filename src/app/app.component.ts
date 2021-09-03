@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-declare var showViewer: boolean;
+// declare var showViewer: boolean;
 
 @Component({
   selector: 'app-root',
@@ -10,5 +10,5 @@ declare var showViewer: boolean;
 export class AppComponent {
   title = 'EpiMiner';
 
-  showViewer: boolean = showViewer;
+  // showViewer: boolean = showViewer
 }

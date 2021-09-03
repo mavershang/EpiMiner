@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataSharingService } from 'src/app/services/data-sharing.service';
 
 @Component({
   selector: 'app-viewer',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./viewer.component.css']
 })
 export class ViewerComponent implements OnInit {
+  showViewer:boolean=false;
 
-  constructor() { }
+  constructor(public dataSharingService: DataSharingService) { }
 
   ngOnInit(): void {
+    this.dataSharingService.showViewerChange.subscribe((value) => {
+      this.showViewer = true;
+    });
   }
-
 }

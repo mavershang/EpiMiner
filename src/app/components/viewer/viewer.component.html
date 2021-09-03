@@ -1,13 +1,23 @@
-<!-- <script src="https://www.givengine.org/bower_components/webcomponentsjs/webcomponents-loader.js"></script> 
-<link rel="import" href="https://www.givengine.org/components/chart-controller/chart-controller.html">
-<p>viewer works!</p>
-
 <div>
-    <chart-controller 
+    <!-- <chart-controller *ngIf=showViewer
     title-text="A 2-minute starter of building a genome browser with GIVE" 
     ref="hg19" 
     num-of-subs="2" 
-    coordinate='["chr18:19140000-19450000", "chr18:19140000-19450000"]'
-    group-id-list='["genes", "CHi-C_promoter"]'
-    ></chart-controller>
-</div> -->
+    coordinate='["chr18:19140000-19450000"]'
+    group-id-list='["genes", "singleCell", "customTracks","CHi-C_promoter"]'
+    ></chart-controller> -->
+
+    <chart-controller ref="hg19" coordinate='["chr17:35504032-35512777"]'
+    group-id-list='["genes", "singleCell", "customTracks"]'>
+    </chart-controller>
+
+    <!-- <chart-controller *ngIf=showViewer
+        title-text="Genome browser with GIVE" 
+        ref='["hg19"]' 
+        num-of-subs="1"
+        coordinate='["chr18:19140000-19450000"]'
+        group-id-list='["genes", "singleCell", "customTracks","CHi-C_promoter","ENCODE2_ChIA-PET"]'
+    ></chart-controller> -->
+
+    
+</div> 
