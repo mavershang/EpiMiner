@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { DataSharingService } from 'src/app/services/data-sharing.service';
 
 @Component({
   selector: 'app-snp-query',
@@ -9,7 +10,8 @@ import { NgForm } from '@angular/forms';
 export class SnpQueryComponent implements OnInit {
   snpInput: string = "";
 
-  constructor() { }
+  showViewer: boolean = false;
+  constructor(public dataSharingService: DataSharingService) { }
 
   ngOnInit(): void {
 
@@ -29,6 +31,9 @@ export class SnpQueryComponent implements OnInit {
     //       this.openDialog(this.errorMsg);
     //     }
     // );
+
+    this.dataSharingService.inputSnpArr = this.snpInput.split(",");
+    this.dataSharingService.toggleShowViewerChanged();
   }
 }
 
