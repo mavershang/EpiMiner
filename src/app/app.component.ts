@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+declare var showViewer: boolean;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +9,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'EpiMiner';
+
+  showViewer: boolean = showViewer;
 }
