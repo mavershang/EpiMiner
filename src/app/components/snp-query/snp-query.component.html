@@ -1,19 +1,87 @@
-<p>snp-query works!</p>
-<div class="card">
-    <h4 class="card-header">Query a SNP</h4>
-    <!-- <div class="card-body"> -->
-    <div class="container"> 
-        <a>* Required Column</a>
-        <form #form="ngForm" autocomplete="off" (ngSubmit)="onSubmit(form)">
-            <div class="form-group">
-                <input type="text" placeholder="Search with a SNP" name="snp"  class="form-control" [(ngModel)]="snpInput" required maxlength="100"/>
+<div span="header">Query a SNP</div>
+<div class="grid-container">
+    <div class="input">
+        <div class="input-container"> 
+            <div class="snpInput">
+                <input type="text" placeholder="Search with SNPs (seperated with ," name="snp"  class="form-control" [(ngModel)]="snpInput" required maxlength="100"/>
             </div>
-            <button class="btn btn-primary" type="submit">Search</button>
-        </form>
-    </div> 
-</div>
+            <div class="fileInput">
+                <a>or </a>
+                <input type="file" class="file-input"
+                    (change)="onFileSelected($event)" #fileUpload>
+            </div>
+            <button class="buttonInput" (change)="onSubmit">Search</button>
+        </div> 
+    </div>
 
-<div class="viewContainer">
-    <app-viewer></app-viewer>
+    <div class="table-container" mat-elevation-z8>
+        <h2 style="text-align: center; color:darkblue">Table Result</h2>
+        <table mat-table matTableFilter [dataSource]="tableDataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="chr">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Chromosome" [(ngModel)]="filterEntity.chr">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.chr}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="startPos">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Start Position" [(ngModel)]="filterEntity.startPos">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.startPos}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="endPos">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="End Position" [(ngModel)]="filterEntity.endPos">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.endPos}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="linkedGene">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Linked Gene" [(ngModel)]="filterEntity.linkedGene">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.linkedGene}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="score">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Score" [(ngModel)]="filterEntity.score">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.score}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="pvalue">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="P-Value" [(ngModel)]="filterEntity.pvalue">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.pvalue}} </mat-cell>
+            </ng-container>
+    
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"></mat-row>
+        </table>
+    
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div> 
+
+    <!-- <div class="viewContainer">
+        <app-viewer></app-viewer>
+    </div> -->
+
+    <div class="footer">Footer</div>`
 </div>
 

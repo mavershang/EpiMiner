@@ -1,0 +1,15 @@
+<p>finemapping works!</p>
+
+
+<div class="form-group col-md-12">
+    <input type="file" class="file-input"
+        (change)="onFileSelected($event)" #fileUpload>
+    <!-- <div class="file-upload">
+    {{fileName || "No file uploaded yet."}}
+        <button color="primary" class="upload-btn" (click)="fileUpload.click()">
+            Browse File
+        </button>
+    </div> -->
+</div>
+
+<button mat-raised-button color="primary" class="submit-sample-btn" (click)="onSubmit()">Submit</button>

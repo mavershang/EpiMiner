@@ -1,3 +1,68 @@
-.viewContainer{
-    width: 50%;
+.grid-container {
+    display: grid;
+    grid-template-areas:
+      'header header header header header header'
+      'main main main main main main'
+      'footer footer footer footer footer footer';
+    grid-gap: 10px;
+    background-color: #eaebec;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+  }
+
+  .grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+  }
+
+/* .header { grid-area: header;} */
+.input { 
+    grid-area: header ;
+    height: 80px;    
+}
+
+.table-container {
+    grid-area: main;
+    max-height: 600px;
+}
+
+/* .viewContainer {
+    grid-area: main;
+    max-height: 600px;
+} */
+
+.footer {
+    grid-area: footer;
+    max-height: 30px;
+}
+
+.input-container {
+    display: grid;
+    grid-template-areas:
+      'snp snp file file blank1 blank1'
+      'button blank2 blank2 blank2 blank2 blank2';
+    grid-gap: 10px;
+    background-color: #d8d9da;
+    padding: 10px;
+    position: relative;
+    /* width: 100%; */
+  }
+
+.snpInput {
+      grid-area: snp;
+      align-items:flex-start;
+      /* width:200px; */
+  }
+
+.fileInput {
+    grid-area: file;
+    align-items:flex-start;
+}
+
+.buttonInput {
+    grid-area: button;
+    align-items:flex-start;
 }
