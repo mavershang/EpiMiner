@@ -19,6 +19,8 @@ import { ViewerComponent } from './components/viewer/viewer.component';
 import { FinemappingComponent } from './components/finemapping/finemapping.component';
 import { AboutComponent } from './components/about/about.component';
 import { ResultTableComponent } from './components/result-table/result-table.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { ResultTableComponent } from './components/result-table/result-table.com
     ViewerComponent,
     FinemappingComponent,
     AboutComponent,
-    ResultTableComponent
+    ResultTableComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,8 @@ import { ResultTableComponent } from './components/result-table/result-table.com
     MatSelectModule,
     MatSortModule,
     MatPaginatorModule,
-    MatTableFilterModule, 
+    MatTableFilterModule,
+    BrowserAnimationsModule, 
   ],
   providers: [],
   //add the schemas property and pass the CUSTOM_ELEMENTS_SCHEMA constant
