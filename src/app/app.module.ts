@@ -21,6 +21,8 @@ import { AboutComponent } from './components/about/about.component';
 import { ResultTableComponent } from './components/result-table/result-table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -36,11 +38,13 @@ import { DialogComponent } from './components/dialog/dialog.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    HttpClientModule,
     MatTableModule,
     MatSelectModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableFilterModule,
+    MatDialogModule,
     BrowserAnimationsModule, 
   ],
   providers: [],

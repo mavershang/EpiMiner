@@ -34,7 +34,7 @@ export class SnpQueryComponent implements OnInit {
     private getDataService: GetDataService,
     public dataSharingService: DataSharingService,
     private changeDetectorRefs: ChangeDetectorRef,
-    private dialog: MatDialog
+    // private dialog: MatDialog
     ) {
       console.log("");
   }
@@ -61,7 +61,7 @@ export class SnpQueryComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = description;
-    this.dialog.open(DialogComponent, dialogConfig);
+    // this.dialog.open(DialogComponent, dialogConfig);
   }
   
   onSubmit(form: NgForm) {
