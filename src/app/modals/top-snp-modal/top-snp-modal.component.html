@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Top SNPs from COLOC analysis</h2>
+<h4>Index SNP {{this.indexSnp}}</h4>
+
+<div mat-dialog-content>
+    <div class="table-container-coloc" mat-elevation-z8>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <!-- Position Column -->
+            <ng-container matColumnDef="SNP">
+              <th mat-header-cell *matHeaderCellDef> SNP </th>
+              <td mat-cell *matCellDef="let element"> {{element.Position}} </td>
+            </ng-container>
+          
+            <!-- Score Column -->
+            <ng-container matColumnDef="SNP.PP.H4">
+              <th mat-header-cell *matHeaderCellDef> SNP.PP.H4 </th>
+              <td mat-cell *matCellDef="let element"> {{element.PP_H4 | number:'1.1-5'}} </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+    </div> 
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Close</button>
+</div>

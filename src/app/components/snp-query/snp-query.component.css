@@ -2,8 +2,8 @@
     display: grid;
     grid-template-areas:
       'header header header header header header'
-      'main main main main main main'
-      'footer footer footer footer footer footer';
+      'main main main main2 main2 main2'
+      'viewer footer footer footer footer footer';
     grid-gap: 10px;
     background-color: #eaebec;
     padding: 10px;
@@ -27,8 +27,18 @@
 .table-container {
     grid-area: main;
     max-height: 600px;
+    max-width: 1000px;
 }
 
+.table-container-coloc {
+  grid-area: main2;
+  max-height: 600px;
+  max-width: 1000px;
+}
+
+.buttonViewer {
+  grid-area: viewer;
+}
 /* .viewContainer {
     grid-area: main;
     max-height: 600px;
@@ -42,19 +52,19 @@
 .input-container {
     display: grid;
     grid-template-areas:
-      'snp snp file file blank1 blank1'
-      'button blank2 blank2 blank2 blank2 blank2';
+      'snp file select pval'
+      'button1 button1 button2 button2';
     grid-gap: 10px;
     background-color: #d8d9da;
     padding: 10px;
     position: relative;
-    /* width: 100%; */
-  }
+    width: 100%;
+}
 
 .snpInput {
       grid-area: snp;
       align-items:flex-start;
-      /* width:200px; */
+      width:200px
   }
 
 .fileInput {
@@ -62,7 +72,75 @@
     align-items:flex-start;
 }
 
-.buttonInput {
-    grid-area: button;
+
+.select-data {
+  grid-area: select;
+  align-items:flex-start;
+}
+.select-container {
+  display: grid;
+    grid-template-areas:
+      'select1'
+      'select2';
+    grid-gap: 10px;
+    background-color: #d8d9da;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+}
+.selectGWAS{
+  grid-area: select1;
+  align-items:flex-start;
+}
+.selectQTL{
+  grid-area: select2;
+  align-items:flex-start;
+}
+
+
+.pval-cutoff {
+  grid-area: pval;
+  align-items:flex-start;
+}
+.pval-container {
+  display: grid;
+    grid-template-areas:
+      'p1'
+      'p2'
+      'p3';
+    grid-gap: 5px;
+    background-color: #d8d9da;
+    padding: 10px;
+    position: relative;
+    width: 50%;
+}
+.p1val {
+  grid-area: p1;
+  align-items:flex-start;
+}
+.p2val {
+  grid-area: p2;
+  align-items:flex-start;
+}
+.p3val {
+  grid-area: p3;
+  align-items:flex-start;
+}
+
+.buttonSearchDB {
+    grid-area: button1;
     align-items:flex-start;
+}
+
+.buttonRunQTL {
+  grid-area: button2;
+  align-items:flex-start;
+}
+
+.mat-row.hovered {
+  background: #eee;
+}
+
+.mat-row.highlighted {
+  background: #999;
 }

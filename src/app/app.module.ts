@@ -21,8 +21,10 @@ import { AboutComponent } from './components/about/about.component';
 import { ResultTableComponent } from './components/result-table/result-table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogComponent } from './components/dialog/dialog.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
+import { NetworkInterceptor } from './network.interceptor';
+import { TopSnpModalComponent } from './modals/top-snp-modal/top-snp-modal.component';
 
 @NgModule({
   declarations: [
@@ -32,22 +34,32 @@ import { MatDialogModule } from '@angular/material/dialog';
     FinemappingComponent,
     AboutComponent,
     ResultTableComponent,
-    DialogComponent
+    DialogComponent,
+    TopSnpModalComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    MatInputModule,
+    MatCheckboxModule,
     MatTableModule,
     MatSelectModule,
     MatSortModule,
     MatPaginatorModule,
     MatTableFilterModule,
     MatDialogModule,
-    BrowserAnimationsModule, 
+    MatProgressSpinnerModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: NetworkInterceptor,
+      multi: true,
+    },
+  ],
   //add the schemas property and pass the CUSTOM_ELEMENTS_SCHEMA constant
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]

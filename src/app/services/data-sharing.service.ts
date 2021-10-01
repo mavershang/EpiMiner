@@ -6,14 +6,14 @@ import { Subject } from 'rxjs';
 })
 export class DataSharingService {
 
-  inputSnpArr: string[] = [];
+  coordinates: string[] = [];
 
-  isShowViewerChanged:boolean=false;
-  showViewerChange: Subject<boolean> = new Subject<boolean>();
+  // isShowViewerChanged:boolean=false;
+  // showViewerChange: Subject<boolean> = new Subject<boolean>();
 
-  constructor() { }
+  // constructor() { }
 
-  toggleShowViewerChanged() {
-    this.showViewerChange.next(!this.isShowViewerChanged);
-  }
+  // toggleShowViewerChanged() {
+  //   this.showViewerChange.next(!this.isShowViewerChanged);
+  // }
 }

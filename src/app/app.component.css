@@ -63,8 +63,8 @@ p {
 
 /* Sets background color, height and padding*/
 .navbar {
-  background-color: purple;
-  height: 90px;
+  background-color: rgb(59, 104, 172);
+  height: 75px;
   padding: 0 30px;
 }
 

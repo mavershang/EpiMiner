@@ -1,8 +1,12 @@
 export class EpiData {
-    chr: string;
-    startPos: number;
-    endPos: number;
-    linkedGene: string;
-    score: number;
-    pvalue: number;
+    Chr: string;
+    SnpPosition: number;
+    ChunkStartPos: number;
+    ChunkEndPos: number;
+    Gene: string;
+    Score: number;
+    //pvalue: number;
+
+    highlighted?:boolean;
+    hovered?:boolean;
 }

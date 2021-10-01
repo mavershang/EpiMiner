@@ -7,16 +7,14 @@ import { DataSharingService } from 'src/app/services/data-sharing.service';
   styleUrls: ['./viewer.component.css']
 })
 export class ViewerComponent implements OnInit {
-  coordinates:string[]=[]
+  coordinates:string[]=[];
   showViewer:boolean=false;
 
   constructor(public dataSharingService: DataSharingService) {
-      this.coordinates=this.dataSharingService.inputSnpArr
+      let c = localStorage.getItem("coordinate");
+      this.coordinates = c.split(",");
    }
 
   ngOnInit(): void {
-    this.dataSharingService.showViewerChange.subscribe((value) => {
-      this.showViewer = true;
-    });
   }
 }
