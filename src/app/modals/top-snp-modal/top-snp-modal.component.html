@@ -1,8 +1,8 @@
-<h2 mat-dialog-title>Top SNPs from COLOC analysis</h2>
-<h4>Index SNP {{this.indexSnp}}</h4>
+<h1 mat-dialog-title style="color: rgb(1, 0, 75);">Top SNPs from COLOC analysis</h1>
 
 <div mat-dialog-content>
     <div class="table-container-coloc" mat-elevation-z8>
+      <h4 style="color: rgb(92, 119, 243);text-align: center;">Index SNP {{this.indexSnp}}</h4>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <!-- Position Column -->
             <ng-container matColumnDef="SNP">
@@ -20,6 +20,20 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
     </div> 
+
+    <mat-progress-spinner style="margin:0 auto;"  
+        [mode]="'indeterminate'" 
+        *ngIf="loading$ | async"></mat-progress-spinner>
+
+    <div class="img-container1">
+      <h4 style="color: rgb(0, 47, 255);text-align: center;"> Locuszoom from {{qtlDataset1}}</h4>
+      <img id="img-lpz1" [src]='lzpImg1' style="width:800px;height:400px;" alt="LocusZoom Plot 1"/>
+    </div>
+    
+    <div class="img-container2">
+      <h4 style="color: rgb(0, 47, 255);text-align: center;"> Locuszoom from {{qtlDataset2}}</h4>
+      <img id="img-lpz2" [src]='lzpImg2' style="width:800px;height:400px;" alt="LocusZoom Plot 2"/>
+    </div>
 </div>
 
 <div mat-dialog-actions>

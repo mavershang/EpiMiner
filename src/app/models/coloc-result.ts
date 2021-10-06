@@ -1,4 +1,5 @@
 export class ColocResult {
+    WorkDir: string;
     IndexSnp: string;
     NumOfSnp: number;
     H0_abf: number;

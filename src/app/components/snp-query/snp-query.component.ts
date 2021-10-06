@@ -35,15 +35,6 @@ export class SnpQueryComponent implements OnInit {
   qtlDataList: string[] = [];
   qtlParam: QtlParam;
 
-  // // selected GWAS and QTL data
-  // selectedGwasData: string;
-  // selectedQtlData: string;
-
-  // // pval cutoff
-  // p1:number;
-  // p2:number;
-  // p12:number;
-
   // epi data table
   displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'Score'];
   epiResultData: EpiData[];
@@ -76,6 +67,8 @@ export class SnpQueryComponent implements OnInit {
     private router: Router,
     public loader: LoadingService
     ) {
+      // this.openTopSnpDialogTest();
+
       console.log("");
       this.epiResultData=[];
 
@@ -246,8 +239,14 @@ export class SnpQueryComponent implements OnInit {
 
   openTopSnpDialog(row:ColocResult){
     const dialogRef = this.dialog.open(TopSnpModalComponent, {
-    width: '400px',
-    data:{indexSnp: row.IndexSnp, topSnps:row.TopSnps}
+      width: '1400px',
+      data:{
+        indexSnp: row.IndexSnp,
+        topSnps:row.TopSnps,
+        workDir:row.WorkDir,
+        dataset1: this.qtlParam.dataset1,
+        dataset2: this.qtlParam.dataset2
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -257,19 +256,22 @@ export class SnpQueryComponent implements OnInit {
     });
   }
 
-  // openTopSnpDialog(indexSnp:string, topSnpStr:string): void {
-  //   const dialogRef = this.dialog.open(TopSnpModalComponent, {
-  //     width: '400px',
-  //     // data: "A:0.01;B:0;C:1"
-  //     data:{indexSnp: indexSnp, topSnps:topSnpStr}
-  //   });
+  openTopSnpDialogTest(): void {
+    const dialogRef = this.dialog.open(TopSnpModalComponent, {
+      width: '1400px',
+      data:{
+        indexSnp: "testSNP",
+        topSnps: "A:0.01;B:0;C:1",
+        workDir:"test",
+        dataset1: "data1",
+        dataset2: "data2"
+      }
+    });
 
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log('The dialog was closed', result);
-  //     // this.city = result;
-  //     // this.food_from_modal = result.food;
-  //   });
-  // }
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+  }
 
   getCoordinate(idx:number) {
     if (idx<0 || idx >= this.epiResultData.length) {

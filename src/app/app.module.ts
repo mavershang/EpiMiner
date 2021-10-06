@@ -25,6 +25,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NetworkInterceptor } from './network.interceptor';
 import { TopSnpModalComponent } from './modals/top-snp-modal/top-snp-modal.component';
+import { EpiBrowserComponent } from './components/epi-browser/epi-browser.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { TopSnpModalComponent } from './modals/top-snp-modal/top-snp-modal.compo
     ResultTableComponent,
     DialogComponent,
     TopSnpModalComponent,
+    EpiBrowserComponent,
   ],
   imports: [
     BrowserModule,

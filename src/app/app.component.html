@@ -1,61 +1,29 @@
 <html lang="en">
-<head>
-  <!-- <meta charset="UTF-8"> -->
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-  <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
-  <title>EpiMiner</title>
-  <!-- <link rel="stylesheet" href="app.component.css"> -->
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-</head>  
+  <head>
+    <!-- <meta charset="UTF-8"> -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <title>EpiMiner</title>
+    <!-- <link rel="stylesheet" href="app.component.css"> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+  </head>  
 
-<body>
-  <div class="navbar">
-    <div class="container flex">
-      <h1 class="logo" style="color:rgb(245, 246, 247);">EpiMiner</h1>
-        <nav>
-          <ul>
-            <li class="nav"><a class="outline" href="/search">Search</a></li>
-            <li class="nav"><a class="outline" href="/finemapping">Fine-Mapping</a></li>
-            <li class="nav"><a class="outline" href="/about">About</a></li>
-          </ul>
-        </nav>
+  <body>
+    <div class="navbar">
+      <div class="container flex">
+        <h1 class="logo" style="color:rgb(245, 246, 247);">EpiMiner</h1>
+          <nav>
+            <ul>
+              <li class="nav"><a class="outline" href="/search">Search</a></li>
+              <li class="nav"><a class="outline" href="/finemapping">Fine-Mapping</a></li>
+              <li class="nav"><a class="outline" href="/about">About</a></li>
+            </ul>
+          </nav>
+      </div>
     </div>
-  </div>
 
-
-<!-- 
-
-		<div id="header">Header</div>
-    <div class="wrapper d-flex align-items-stretch">
-			<nav id="sidebar" class="active">
-         <h1><a href="index.html" class="logo">M.</a></h1>
-        <ul class="list-unstyled components mb-5"> 
-          <li>
-            <a href="/finemapping "><span class="fa fa-sticky-note"></span>Fine-mapping</a>
-          </li>
-          <li>
-            <a href="/search"><span class="fa fa-home"></span>Search</a>
-          </li>
-          <li>
-            <a href="/about"><span class="fa fa-cogs"></span>About</a>
-          </li>
-        </ul>
-
-        <div class="footer">
-        	<p>
-					  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib.com</a>
-					</p>
-        </div>
-    	</nav> -->
-
-<!-- header source -->
-
-        <!-- Page Content  -->
-		<!-- </div> -->
-   
     <div class="p-4 p-md-5">
       <router-outlet></router-outlet>
     </div>   
-
-</body>
+  </body>
 </html>

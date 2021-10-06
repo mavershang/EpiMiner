@@ -1,3 +1,42 @@
 table{
     width: 100%;
 }
+
+.mat-dialog-content {
+    display: grid;
+    grid-template-areas:
+      'table image1 image1'
+      'table image2 image2';
+    grid-gap: 10px;
+    background-color: #eaebec;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+  }
+
+  .grid-container > div {
+    background-color: rgba(255, 255, 255, 0.925);
+    text-align: center;
+    padding: 2px 0;
+    font-size: 20px;
+  }
+
+/* .header { grid-area: header;} */
+.table-container-coloc { 
+    grid-area: table ;
+    width: 400px;
+    height: 800px;
+    /* height: 80px;     */
+}
+
+.img-container1 {
+    grid-area: image1;
+    /* width:50px;
+    height:30px; */
+}
+
+.img-container2 {
+    grid-area: image2;
+    /* width:50px;
+    height:30px; */
+}

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
+import { EpiBrowserComponent } from './components/epi-browser/epi-browser.component';
 import { FinemappingComponent } from './components/finemapping/finemapping.component';
 import { SnpQueryComponent } from './components/snp-query/snp-query.component';
 import { ViewerComponent } from './components/viewer/viewer.component';
@@ -9,6 +10,7 @@ const routes: Routes = [
   { path: 'search', component: SnpQueryComponent },
   { path: 'finemapping', component: FinemappingComponent },
   { path: 'viewer', component: ViewerComponent},
+  { path: 'epiBrowser', component: EpiBrowserComponent},
   { path: 'about', component: AboutComponent},
 ]
 
