@@ -27,16 +27,84 @@
 
 
 <div class="grid-container">
+    <div class="sidebar">
+        <!-- <div *ngFor='let tt of trackTypes'>
+            <input type="checkbox" style="color:black">{{tt}}
+        </div> -->
+        <div class="sidebar-container">
+        <h4>Genome Browser Params</h4>    
+        <div class="egTrackTypeSelector">
+            <ng-multiselect-dropdown
+                [placeholder]="'Select Track Type(s)'"
+                [data]="trackTypeOptions"
+                [(ngModel)]="selectedTrackTypes"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                (click)="updateTrackTypeDropDownClick()"
+                (onDropDownClose)="updateTrackDataSource($event)">
+            ></ng-multiselect-dropdown>
+        </div>
+
+        <div class="egDataSourceSelector">
+            <ng-multiselect-dropdown
+                [placeholder]="'Select Data Sources(s)'"
+                [data]="trackDataSourceOptions"
+                [(ngModel)]="selectedTrackDataSources"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                (click)="updateTrackDataSourceDropDownClick()"
+                (onDropDownClose)="updateTrackTissue($event)">
+            ></ng-multiselect-dropdown>
+        </div>
+
+        <div class="egTissueSelector">
+            <ng-multiselect-dropdown
+                [placeholder]="'Select Tissue(s)'"
+                [data]="trackTissueOptions"
+                [(ngModel)]="selectedTrackTissues"
+                [settings]="dropdownSettings"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+            ></ng-multiselect-dropdown>
+        </div>
+        </div>
+    </div>
+
+
     <div class="input">
         <div class="input-container"> 
+
             <div class="snpInput">
-                <input type="text" placeholder="Search with SNPs (seperated with ," name="snp"  class="form-control" [(ngModel)]="snpInput" required maxlength="100"/>
+                <div class=snpInput-container>
+                    <div class="snpStrInput">
+                        <input type="text" placeholder="Search with SNPs (seperated with ," name="snp"  class="form-control" [(ngModel)]="snpInput" required maxlength="100"/>
+                    </div>
+                    
+                    <div class="snpFileInput">
+                        <input type="file" class="file-input"
+                            (change)="onFileSelected($event)" #fileUpload>
+                    </div>
+                </div>
             </div>
-            
-            <div class="fileInput">
-                <a>or </a>
-                <input type="file" class="file-input"
-                    (change)="onFileSelected($event)" #fileUpload>
+
+            <div class = "searchParam">
+                <div class="searchParam-container">
+                    <div class="tissueSelector">
+                        <ng-multiselect-dropdown
+                            [placeholder]="'Select Tissue(s)'"
+                            [data]="tissueOptions"
+                            [(ngModel)]="searchParam.tissues"
+                            [settings]="dropdownSettings"
+                            (onSelect)="onItemSelect($event)"
+                            (onSelectAll)="onSelectAll($event)"
+                        ></ng-multiselect-dropdown>
+                    </div>
+                    <div class="dist">
+                        <input type="text" placeholder="maximal distance (default +/-500k nt)" name="maxDist"  class="form-control" [(ngModel)]="searchParam.maxDist" required maxlength="20"/>
+                    </div>
+                </div>
             </div>
 
             <div class="select-data">
@@ -59,9 +127,9 @@
             </select> -->
             <div class="pval-cutoff">
                 <div class="pval-container">
-                    <input class="p1val" type="text" placeholder="p1 cutoff (default 1e-4)" name="snp" [(ngModel)]="qtlParam.p1" required maxlength="10"/>
-                    <input class="p2val" type="text" placeholder="p2 cutoff (default 1e-4)" name="snp" [(ngModel)]="qtlParam.p2" required maxlength="10"/>
-                    <input class="p12val" type="text" placeholder="p12 cutoff (default 1e-6)" name="snp" [(ngModel)]="qtlParam.p12" required maxlength="10"/>
+                    <input class="p1val" type="text" placeholder="p1 cutoff (default 1e-4)" name="p1" [(ngModel)]="qtlParam.p1" required maxlength="10"/>
+                    <input class="p2val" type="text" placeholder="p2 cutoff (default 1e-4)" name="p2" [(ngModel)]="qtlParam.p2" required maxlength="10"/>
+                    <input class="p12val" type="text" placeholder="p12 cutoff (default 1e-6)" name="p12" [(ngModel)]="qtlParam.p12" required maxlength="10"/>
                 </div>
             </div>
 
@@ -80,6 +148,34 @@
     <div class="table-container" mat-elevation-z8>
         <h2 style="text-align: center; color:darkblue">Epi Result Table</h2>
         <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType" [dataSource]="tableDataSource" matSort>
+                        
+            <ng-container matColumnDef="DataSource">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="DataSource" [(ngModel)]="filterEntity.DataSource">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.DataSource}} </mat-cell>
+            </ng-container>
+                        
+            <ng-container matColumnDef="DataType">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="DataType" [(ngModel)]="filterEntity.DataType">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.DataType}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Tissue">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Tissue" [(ngModel)]="filterEntity.Tissue">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Tissue}} </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="Chr">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>
                     <mat-form-field appearance="legacy">
@@ -125,23 +221,23 @@
                 <mat-cell *matCellDef="let row"> {{row.Gene}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="Score">
+            <ng-container matColumnDef="EpiLinkScore">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>
                     <mat-form-field appearance="legacy">
-                        <input matInput placeholder="Score" [(ngModel)]="filterEntity.Score">
+                        <input matInput placeholder="EpiLinkScore" [(ngModel)]="filterEntity.EpiLinkScore">
                     </mat-form-field>
                 </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.Score}} </mat-cell>
+                <mat-cell *matCellDef="let row"> {{row.EpiLinkScore}} </mat-cell>
             </ng-container>
 
-            <!-- <ng-container matColumnDef="pvalue">
+            <ng-container matColumnDef="QTLPValue">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>
                     <mat-form-field appearance="legacy">
-                        <input matInput placeholder="P-Value" [(ngModel)]="filterEntity.pvalue">
+                        <input matInput placeholder="P-Value" [(ngModel)]="filterEntity.QTLPValue">
                     </mat-form-field>
                 </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.pvalue}} </mat-cell>
-            </ng-container> -->
+                <mat-cell *matCellDef="let row"> {{row.QTLPValue}} </mat-cell>
+            </ng-container>
     
             <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;" 
