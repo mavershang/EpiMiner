@@ -4,9 +4,11 @@ export class EpiData {
     ChunkStartPos: number;
     ChunkEndPos: number;
     Gene: string;
-    Score: number;
-    //pvalue: number;
-
+    DataSource: string;
+    DataType: string;
+    Tissue: string;
+    EpiLinkScore: number;
+    QTLPValue: number;
     highlighted?:boolean;
     hovered?:boolean;
 }

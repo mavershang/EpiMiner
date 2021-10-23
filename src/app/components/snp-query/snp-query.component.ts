@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 import { ColocResult } from 'src/app/models/coloc-result';
 import { LoadingService } from 'src/app/services/loading.service';
 import { TopSnpModalComponent } from 'src/app/modals/top-snp-modal/top-snp-modal.component';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+
 
 @Component({
   selector: 'app-snp-query',
@@ -30,13 +32,19 @@ export class SnpQueryComponent implements OnInit {
   // loading spiner
   loading$ = this.loader.loading$;
 
+  // List of tissues in EPi data
+  tissueOptions: string[] = [];
+  // selectedTissues: string[] = [];
+  dropdownSettings: IDropdownSettings;
+
+
   // List of available GWAS and QTL data 
   gwasDataList: string[] = [];
   qtlDataList: string[] = [];
   qtlParam: QtlParam;
 
   // epi data table
-  displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'Score'];
+  displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'DataSource', 'DataType', 'Tissue'];
   epiResultData: EpiData[];
   hasData:boolean=false;
   tableDataSource = new MatTableDataSource<EpiData>(); 
@@ -59,6 +67,23 @@ export class SnpQueryComponent implements OnInit {
   // last highlighted row index
   flankingNt: number = 500000;  // flanking area of the SNP 
 
+  // test CORS
+  corsData:any;
+
+  // genome browser parameters
+  dropdownSettings2: IDropdownSettings;
+  dropdownSettings3: IDropdownSettings;
+  dropdownSettings4: IDropdownSettings;
+  trackTypeDropDownClick = false;
+  trackDataSourceDropDownClick = false;
+
+  trackTypeOptions:string[]; // ["interaction", "bigwig", "bed"];
+  trackDataSourceOptions: string[] = []; // ["EpiMap"];
+  trackTissueOptions:string[] = [];
+  selectedTrackTypes: string[] = [];
+  selectedTrackDataSources: string[] = [];
+  selectedTrackTissues: string[] = [];
+
   constructor(
     private getDataService: GetDataService,
     public dataSharingService: DataSharingService,
@@ -72,14 +97,37 @@ export class SnpQueryComponent implements OnInit {
       console.log("");
       this.epiResultData=[];
 
-      this.getDataService.getDataList().subscribe(
+      // this.getDataService.testCORS().subscribe(
+      //   data=>{
+      //     this.corsData=data;
+      //   }, error =>{
+      //     console.log(error); 
+      //   }
+      // )
+
+      this.getDataService.getExistingTrackType().subscribe(
+        data => {
+          this.trackTypeOptions = data;
+        }, error => {
+          this.openDialog("Failed to retrieve existing track types");
+        }
+      )
+
+      this.getDataService.getColocDataList().subscribe(
         data => {
           console.log(data);
           this.gwasDataList = data.GWAS;
           this.qtlDataList = data.QTL;
           // this.changeDetectorRefs.detectChanges();
         },error => {
-          this.openDialog("Failed to : " + error.message);
+          this.openDialog("Failed to get QTL data list: " + error.message);
+        });
+
+      this.getDataService.getTissueList().subscribe(
+        data => {
+          this.tissueOptions = data;
+        }, error => {
+          this.openDialog("Failed to fetch all tissues: " + error.message);
         });
   }
 
@@ -102,6 +150,17 @@ export class SnpQueryComponent implements OnInit {
       p2: '',
       p12: ''
     }
+
+    // tissue dropdown box
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'ID',
+      textField: 'Name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 10,
+      allowSearchFilter: true
+    };
   }
 
   ngAfterViewInit() {
@@ -111,6 +170,14 @@ export class SnpQueryComponent implements OnInit {
     this.tableDataSource2.sort = this.sort2;
   }
 
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+  
   onFileSelected(event:any) {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload) {
@@ -132,6 +199,12 @@ export class SnpQueryComponent implements OnInit {
     if (verifyError.length > 0){
       this.openDialog(verifyError);
       return;
+    }
+
+    // verify max distance
+    if (this.searchParam.maxDist == undefined ||  this.searchParam.maxDist.length == 0)
+    {
+      this.searchParam.maxDist = '500000';
     }
 
     // this.dataSharingService.inputSnpArr = this.snpInput.split(",");
@@ -162,6 +235,7 @@ export class SnpQueryComponent implements OnInit {
           // this.changeDetectorRefs.detectChanges();
         },error => {
           this.openDialog("Failed to : " + error.message);
+          this.epiResultData = [];
         });
     }
   }
@@ -283,18 +357,68 @@ export class SnpQueryComponent implements OnInit {
     return this.epiResultData[idx].Chr + ":" + (startPos > 0? startPos: 0) + "-" + endPos;
   }
 
-  openViewer() {
-    let coordinate = this.getCoordinate(this.lastIdx);
-    // let coordinate = "chr18:19140000-19450000";
-    if (coordinate == null)
-    {
-      this.openDialog("Please select a SNP from the table");
-      return;
-    }
-
-    localStorage.setItem("coordinate",  coordinate);
-    window.open('/viewer', '_blank'); 
+  updateTrackTypeDropDownClick(){
+    this.trackTypeDropDownClick=true;
   }
+
+  updateTrackDataSourceDropDownClick(){
+    this.trackDataSourceDropDownClick=true;
+  }
+
+  updateTrackDataSource(event:any) {
+    if (this.trackTypeDropDownClick) {
+      this.trackTypeDropDownClick = false;
+      this.getDataService.getExistingDataSource(this.selectedTrackTypes).subscribe(
+        data => {
+          this.trackDataSourceOptions = data;
+        }, error => {
+          this.openDialog("Failed to retrieve existing dataSource given track type " + this.selectedTrackTypes.join(","));
+        }
+      )
+    }
+  }
+
+  updateTrackTissue(event: any){
+    if (this.trackDataSourceDropDownClick) {
+      this.trackDataSourceDropDownClick = false;
+    
+      this.getDataService.getExistingTissue(this.selectedTrackTypes, this.selectedTrackDataSources).subscribe(
+        data => {
+          this.trackTissueOptions = data;
+        }, error => {
+          this.openDialog("Failed to retrieve existing tissues given track type " + this.selectedTrackTypes.join(",") + " and data source " + this.selectedTrackDataSources.join(","));
+        }
+      )
+    }
+  }
+
+
+  openViewer() {
+    this.getDataService.getEGHubFile(this.selectedTrackTypes, this.selectedTrackDataSources, this.selectedTrackTissues).subscribe(
+      data =>{
+      }, error => {
+        this.openDialog("Failed to generate data hub for epigenome browser: " + error.message);
+      }
+    )
+    //let coordinate = this.getCoordinate(this.lastIdx);
+    // let coordinate = "chr18:19140000-19450000";
+    // if (coordinate == null)
+    // {
+    //   this.openDialog("Please select a SNP from the table");
+    //   return;
+    // }
+
+    // localStorage.setItem("coordinate",  coordinate);
+
+    // opne GIVE
+    //window.open('/viewer', '_blank'); 
+
+    // open Washington Epigenome Browser
+    // window.open("http://localhost:3000/?genome=hg19&hub=http://10.132.10.11:81/testHub/test.json")
+    window.open("http://epigenomegateway.wustl.edu/legacy?genome=hg19&?hub=https://vizhub.wustl.edu/public/tmp/a.json")
+
+  }
+
 }
 
 export interface QtlParam {

@@ -1,8 +1,10 @@
 export class SearchParam {
-    maxDist: number;
+    maxDist: string;
+    tissues: string[];
 
     SearchParam() {
-        this.maxDist = 100000
+        this.maxDist='';
+        this.tissues = [];
     }
 }
 

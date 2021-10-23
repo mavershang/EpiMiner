@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -26,6 +27,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { NetworkInterceptor } from './network.interceptor';
 import { TopSnpModalComponent } from './modals/top-snp-modal/top-snp-modal.component';
 import { EpiBrowserComponent } from './components/epi-browser/epi-browser.component';
+import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { EpiBrowserComponent } from './components/epi-browser/epi-browser.compon
     DialogComponent,
     TopSnpModalComponent,
     EpiBrowserComponent,
+    EgSidebarComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ import { EpiBrowserComponent } from './components/epi-browser/epi-browser.compon
     MatTableFilterModule,
     MatDialogModule,
     MatProgressSpinnerModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
     {

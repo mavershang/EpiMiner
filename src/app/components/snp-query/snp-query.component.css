@@ -1,9 +1,9 @@
 .grid-container {
     display: grid;
     grid-template-areas:
-      'header header header header header header'
-      'main main main main2 main2 main2'
-      'viewer footer footer footer footer footer';
+      'sidebar header header header header header header'
+      'sidebar main main main main2 main2 main2'
+      'sidebar viewer footer footer footer footer footer';
     grid-gap: 10px;
     background-color: #eaebec;
     padding: 10px;
@@ -15,8 +15,16 @@
     background-color: rgba(255, 255, 255, 0.8);
     text-align: center;
     padding: 20px 0;
-    font-size: 30px;
+    font-size: 50px;
   }
+
+.sidebar-container {
+  grid-area: sidebar;
+  color: black;
+  align-items:flex-start;
+  font-size: 10px;
+  width:250px;
+}
 
 /* .header { grid-area: header;} */
 .input { 
@@ -52,7 +60,7 @@
 .input-container {
     display: grid;
     grid-template-areas:
-      'snp file select pval'
+      'snp param select pval'
       'button1 button1 button2 button2';
     grid-gap: 10px;
     background-color: #d8d9da;
@@ -64,12 +72,56 @@
 .snpInput {
       grid-area: snp;
       align-items:flex-start;
-      width:200px
-  }
+      width:50%
+}
 
-.fileInput {
-    grid-area: file;
-    align-items:flex-start;
+.snpInput-contain {
+  display: grid;
+  grid-template-areas:
+    'snpStr'
+    'snpFile';
+  grid-gap: 10px;
+  background-color: #d8d9da;
+  padding: 10px;
+  position: relative;
+  width: 100%;
+}
+
+.snpStrInput {
+  grid-area: snpStr;
+  align-items:flex-start;
+}
+
+.snpFileInput {
+  grid-area: snpFile;
+  align-items:flex-start;
+}
+
+.searchParam {
+  grid-area: param;
+  align-items:flex-start;
+}
+
+.searchParam-container {
+  display: grid;
+  grid-template-areas:
+    'tissue'
+    'dist';
+  grid-gap: 10px;
+  background-color: #d8d9da;
+  padding: 10px;
+  position: relative;
+  width: 100%;
+}
+
+.tissueSelector {
+  grid-area: tissue;
+  align-items:flex-start;
+  font-size: 12px;
+}
+.dist {
+  grid-area: dist;
+  align-items:flex-start;
 }
 
 
@@ -144,3 +196,4 @@
 .mat-row.highlighted {
   background: #999;
 }
+ 
