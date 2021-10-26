@@ -46,6 +46,8 @@ export class GetDataService extends BaseService{
     formData.append('file', fileToUpload, fileToUpload.name);
     formData.append("dataset1", param.dataset1);
     formData.append("dataset2", param.dataset2);
+    formData.append("datatype1", param.dataType1);
+    formData.append("datatype2", param.dataType2);
     formData.append("p1", param.p1);
     formData.append("p2", param.p2);
     formData.append("p12", param.p12);
@@ -70,12 +72,12 @@ export class GetDataService extends BaseService{
   }
 
   // Get the path of the dynamically generated datahub file for epigenome browser
-  getEGHubFile(trackTypes:string[], dataSources:string[], tissues:string[]):Observable<string> {
+  getEGHubFile(trackTypes:string[], dataSources:string[], tissues:string[]):Observable<any> {
     let params = new HttpParams();
     params = params.append('trackTypes', trackTypes.join(","));
     params = params.append('dataSources', dataSources.join(","));
     params = params.append('tissues', tissues.join(","));
-    return this.http.get<string>(this.rootURL + "/egHelper", {params});
+    return this.http.get<any>(this.rootURL + "/egHelper/getHub", {params});
   }
 
   testCORS() {

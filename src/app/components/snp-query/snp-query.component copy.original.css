@@ -1,0 +1,199 @@
+.grid-container {
+    display: grid;
+    grid-template-areas:
+      'sidebar header header header header header header'
+      'sidebar main main main main2 main2 main2'
+      'sidebar viewer footer footer footer footer footer';
+    grid-gap: 10px;
+    background-color: #eaebec;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+  }
+
+  .grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 50px;
+  }
+
+.sidebar-container {
+  grid-area: sidebar;
+  color: black;
+  align-items:flex-start;
+  font-size: 10px;
+  width:250px;
+}
+
+/* .header { grid-area: header;} */
+.input { 
+    grid-area: header ;
+    height: 80px;    
+}
+
+.table-container {
+    grid-area: main;
+    max-height: 600px;
+    max-width: 1000px;
+}
+
+.table-container-coloc {
+  grid-area: main2;
+  max-height: 600px;
+  max-width: 1000px;
+}
+
+.buttonViewer {
+  grid-area: viewer;
+}
+/* .viewContainer {
+    grid-area: main;
+    max-height: 600px;
+} */
+
+.footer {
+    grid-area: footer;
+    max-height: 30px;
+}
+
+.input-container {
+    display: grid;
+    grid-template-areas:
+      'snp param select pval'
+      'button1 button1 button2 button2';
+    grid-gap: 10px;
+    background-color: #d8d9da;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+}
+
+.snpInput {
+      grid-area: snp;
+      align-items:flex-start;
+      width:50%
+}
+
+.snpInput-contain {
+  display: grid;
+  grid-template-areas:
+    'snpStr'
+    'snpFile';
+  grid-gap: 10px;
+  background-color: #d8d9da;
+  padding: 10px;
+  position: relative;
+  width: 100%;
+}
+
+.snpStrInput {
+  grid-area: snpStr;
+  align-items:flex-start;
+}
+
+.snpFileInput {
+  grid-area: snpFile;
+  align-items:flex-start;
+}
+
+.searchParam {
+  grid-area: param;
+  align-items:flex-start;
+}
+
+.searchParam-container {
+  display: grid;
+  grid-template-areas:
+    'tissue'
+    'dist';
+  grid-gap: 10px;
+  background-color: #d8d9da;
+  padding: 10px;
+  position: relative;
+  width: 100%;
+}
+
+.tissueSelector {
+  grid-area: tissue;
+  align-items:flex-start;
+  font-size: 12px;
+}
+.dist {
+  grid-area: dist;
+  align-items:flex-start;
+}
+
+
+.select-data {
+  grid-area: select;
+  align-items:flex-start;
+}
+.select-container {
+  display: grid;
+    grid-template-areas:
+      'select1'
+      'select2';
+    grid-gap: 10px;
+    background-color: #d8d9da;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+}
+.selectGWAS{
+  grid-area: select1;
+  align-items:flex-start;
+}
+.selectQTL{
+  grid-area: select2;
+  align-items:flex-start;
+}
+
+
+.pval-cutoff {
+  grid-area: pval;
+  align-items:flex-start;
+}
+.pval-container {
+  display: grid;
+    grid-template-areas:
+      'p1'
+      'p2'
+      'p3';
+    grid-gap: 5px;
+    background-color: #d8d9da;
+    padding: 10px;
+    position: relative;
+    width: 50%;
+}
+.p1val {
+  grid-area: p1;
+  align-items:flex-start;
+}
+.p2val {
+  grid-area: p2;
+  align-items:flex-start;
+}
+.p3val {
+  grid-area: p3;
+  align-items:flex-start;
+}
+
+.buttonSearchDB {
+    grid-area: button1;
+    align-items:flex-start;
+}
+
+.buttonRunQTL {
+  grid-area: button2;
+  align-items:flex-start;
+}
+
+.mat-row.hovered {
+  background: #eee;
+}
+
+.mat-row.highlighted {
+  background: #999;
+}
+ 

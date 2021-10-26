@@ -7,6 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule} from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule }  from '@angular/material/sort';
@@ -54,6 +55,7 @@ import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component
     MatSelectModule,
     MatSortModule,
     MatPaginatorModule,
+    MatTabsModule,
     MatTableFilterModule,
     MatDialogModule,
     MatProgressSpinnerModule,

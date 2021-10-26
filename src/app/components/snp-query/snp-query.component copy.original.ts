@@ -15,7 +15,6 @@ import { ColocResult } from 'src/app/models/coloc-result';
 import { LoadingService } from 'src/app/services/loading.service';
 import { TopSnpModalComponent } from 'src/app/modals/top-snp-modal/top-snp-modal.component';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
-import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
 
 @Component({
   selector: 'app-snp-query',
@@ -32,9 +31,6 @@ export class SnpQueryComponent implements OnInit {
   // loading spiner
   loading$ = this.loader.loading$;
 
-  // 
-  activeTab:string='';
-
   // List of tissues in EPi data
   tissueOptions: string[] = [];
   // selectedTissues: string[] = [];
@@ -43,7 +39,6 @@ export class SnpQueryComponent implements OnInit {
   // List of available GWAS and QTL data 
   gwasDataList: string[] = [];
   qtlDataList: string[] = [];
-  allColocDataList: string[] = [];
   qtlParam: QtlParam;
 
   // epi data table
@@ -95,18 +90,17 @@ export class SnpQueryComponent implements OnInit {
     public loader: LoadingService
     ) {
       // this.openTopSnpDialogTest();
-            // this.getDataService.testCORS().subscribe(
+
+      console.log("");
+      this.epiResultData=[];
+
+      // this.getDataService.testCORS().subscribe(
       //   data=>{
       //     this.corsData=data;
       //   }, error =>{
       //     console.log(error); 
       //   }
       // )
-
-      console.log("");
-      this.epiResultData=[];
-
-
 
       this.getDataService.getExistingTrackType().subscribe(
         data => {
@@ -121,7 +115,6 @@ export class SnpQueryComponent implements OnInit {
           console.log(data);
           this.gwasDataList = data.GWAS;
           this.qtlDataList = data.QTL;
-          this.allColocDataList = this.gwasDataList.concat(this.qtlDataList);
           // this.changeDetectorRefs.detectChanges();
         },error => {
           this.openDialog("Failed to get QTL data list: " + error.message);
@@ -148,8 +141,12 @@ export class SnpQueryComponent implements OnInit {
 
     // qtl param
     this.qtlParam= {
-      dataset1: '', dataset2: '', dataType1:'', dataType2:'', p1: '', p2: '', p12: ''
-    };
+      dataset1: '',
+      dataset2: '',
+      p1: '',
+      p2: '',
+      p12: ''
+    }
 
     // tissue dropdown box
     this.dropdownSettings = {
@@ -241,10 +238,6 @@ export class SnpQueryComponent implements OnInit {
   }
 
   runQTL() {
-    // get datatypes of COLOC datasets 
-    this.getColocDatTypes(this.qtlParam);
-
-    // verify niput
     let verifyError = this.verifyInput("qtl");
     if (verifyError.length > 0){
       this.openDialog(verifyError);
@@ -263,19 +256,6 @@ export class SnpQueryComponent implements OnInit {
       },error => {
         this.openDialog("Failed to : " + error.message);
       });
-  }
-
-  getColocDatTypes(param: QtlParam) {
-    param.dataType1 = this.getColocDataType(param.dataset1);
-    param.dataType2 = this.getColocDataType(param.dataset2);
-  }
-
-  getColocDataType(dataset:string) {
-    if (this.gwasDataList.indexOf(dataset) >= 0)
-      return 'GWAS';
-    else if (this.qtlDataList.indexOf(dataset) >= 0)
-      return 'QTL';
-    return 'undefined';
   }
 
   //#region Input validation
@@ -365,17 +345,6 @@ export class SnpQueryComponent implements OnInit {
   //   });
   // }
 
-  tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-    if (tabChangeEvent.index==0)
-    {
-      this.activeTab="epi";
-    } 
-    else if (tabChangeEvent.index ==1)
-    {
-      this.activeTab="coloc";
-    }
-  }
-
   getCoordinate(idx:number) {
     if (idx < 0 || idx >= this.epiResultData.length) {
       return null;
@@ -384,13 +353,6 @@ export class SnpQueryComponent implements OnInit {
     let startPos = this.epiResultData[idx].SnpPosition - this.flankingNt;
     let endPos = this.epiResultData[idx].SnpPosition + this.flankingNt;
     return this.epiResultData[idx].Chr + ":" + (startPos > 0? startPos: 0) + "-" + endPos;
-  }
-
-  getCoordinate2(idx:number) {
-    if (idx < 0 || idx >= this.colocResultData.length) {
-      return null;
-    }
-    return this.colocResultData[idx].IndexSnp; 
   }
 
   //#region Genome Browser parameter multi-select data retrieving
@@ -403,7 +365,7 @@ export class SnpQueryComponent implements OnInit {
   }
 
   updateTrackDataSource(event:any) {
-    if (this.trackTypeDropDownClick && this.selectedTrackTypes.length > 0) {
+    if (this.trackTypeDropDownClick) {
       this.trackTypeDropDownClick = false;
       this.getDataService.getExistingDataSource(this.selectedTrackTypes).subscribe(
         data => {
@@ -416,7 +378,7 @@ export class SnpQueryComponent implements OnInit {
   }
 
   updateTrackTissue(event: any){
-    if (this.trackDataSourceDropDownClick && this.selectedTrackDataSources.length > 0) {
+    if (this.trackDataSourceDropDownClick) {
       this.trackDataSourceDropDownClick = false;
     
       this.getDataService.getExistingTissue(this.selectedTrackTypes, this.selectedTrackDataSources).subscribe(
@@ -455,15 +417,7 @@ export class SnpQueryComponent implements OnInit {
         let hubJsonUrl = data.Value;
 
         // get coordinate
-        let coordinate = '';
-
-        if (this.activeTab == "epi"){
-          coordinate = this.getCoordinate(this.lastIdx);
-        }
-        else if (this.activeTab = "coloc") {
-          coordinate = this.getCoordinate2(this.lastIdx2);
-        }
-
+        let coordinate = this.getCoordinate(this.lastIdx);
         if (coordinate == null)
         {
           this.openDialog("Please select a SNP from the table");
@@ -489,14 +443,6 @@ export class SnpQueryComponent implements OnInit {
   }
 
   buildEGUrl(position:string, hubUrl:string) {
-    let arr = position.split("-");
-    if (arr.length == 1)
-    {
-      arr = position.split(":");
-      let pos = parseInt(arr[1]);
-      position = arr[0] + ":" + (pos - 100000) + "-" + (pos + 100000);
-    }
-
     return "http://localhost:3000/browser?genome=hg19&position=" + position + "&hub=" + hubUrl;
   }
   //#endregion
@@ -505,8 +451,6 @@ export class SnpQueryComponent implements OnInit {
 export interface QtlParam {
   dataset1: string;
   dataset2: string;
-  dataType1: string;
-  dataType2: string;
   p1: string;
   p2: string;
   p12: string;
