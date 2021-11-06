@@ -12,6 +12,7 @@ table{
     padding: 10px;
     position: relative;
     width: 100%;
+    height: 1200px;
   }
 
   .grid-container > div {
@@ -25,7 +26,7 @@ table{
 .table-container-coloc { 
     grid-area: table ;
     width: 400px;
-    height: 800px;
+    height: 1200px;
     /* height: 80px;     */
 }
 

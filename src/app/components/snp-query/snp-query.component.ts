@@ -36,18 +36,18 @@ export class SnpQueryComponent implements OnInit {
   activeTab:string='';
 
   // List of tissues in EPi data
-  tissueOptions: string[] = [];
+  tissueOptions: string[]=[];
   // selectedTissues: string[] = [];
   dropdownSettings: IDropdownSettings;
 
   // List of available GWAS and QTL data 
-  gwasDataList: string[] = [];
-  qtlDataList: string[] = [];
+  gwasDataList: string[];
+  qtlDataList: string[];
   allColocDataList: string[] = [];
   qtlParam: QtlParam;
 
   // epi data table
-  displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'DataSource', 'DataType', 'Tissue'];
+  displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'Tissue', 'DataSource', 'Description', 'DataType'];
   epiResultData: EpiData[];
   hasData:boolean=false;
   tableDataSource = new MatTableDataSource<EpiData>(); 
@@ -58,7 +58,7 @@ export class SnpQueryComponent implements OnInit {
   lastIdx: number;
 
   // coloc data table
-  displayedColumns2: string[] = ['IndexSnp', 'NumOfSnp', 'H0_abf', 'H1_abf', 'H2_abf', 'H3_abf', 'H4_abf'];
+  displayedColumns2: string[] = ['IndexSnp', "Gene", 'NumOfSnp', 'H0_abf', 'H1_abf', 'H2_abf', 'H3_abf', 'H4_abf'];
   colocResultData: ColocResult[];
   tableDataSource2 = new MatTableDataSource<ColocResult>(); 
   @ViewChild(MatPaginator, {static: false} ) paginator2: MatPaginator;
@@ -68,7 +68,7 @@ export class SnpQueryComponent implements OnInit {
   lastIdx2:number;
 
   // last highlighted row index
-  flankingNt: number = 500000;  // flanking area of the SNP 
+  flankingNt: number = 100000;  // flanking area of the SNP 
 
   // test CORS
   corsData:any;
@@ -91,11 +91,10 @@ export class SnpQueryComponent implements OnInit {
     public dataSharingService: DataSharingService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
-    private router: Router,
     public loader: LoadingService
     ) {
-      // this.openTopSnpDialogTest();
-            // this.getDataService.testCORS().subscribe(
+      //this.openTopSnpDialogTest();
+      //       this.getDataService.testCORS().subscribe(
       //   data=>{
       //     this.corsData=data;
       //   }, error =>{
@@ -106,11 +105,17 @@ export class SnpQueryComponent implements OnInit {
       console.log("");
       this.epiResultData=[];
 
-
+      this.getDataService.getTissueList().subscribe(
+        data => {
+          this.tissueOptions = data;
+        }, error => {
+          this.openDialog("Failed to fetch all tissues: " + error.message);
+        });
 
       this.getDataService.getExistingTrackType().subscribe(
         data => {
           this.trackTypeOptions = data;
+          this.changeDetectorRefs.detectChanges();
         }, error => {
           this.openDialog("Failed to retrieve existing track types");
         }
@@ -125,13 +130,6 @@ export class SnpQueryComponent implements OnInit {
           // this.changeDetectorRefs.detectChanges();
         },error => {
           this.openDialog("Failed to get QTL data list: " + error.message);
-        });
-
-      this.getDataService.getTissueList().subscribe(
-        data => {
-          this.tissueOptions = data;
-        }, error => {
-          this.openDialog("Failed to fetch all tissues: " + error.message);
         });
   }
 
@@ -148,7 +146,7 @@ export class SnpQueryComponent implements OnInit {
 
     // qtl param
     this.qtlParam= {
-      dataset1: '', dataset2: '', dataType1:'', dataType2:'', p1: '', p2: '', p12: ''
+      dataset1: '', dataset2: '', dataType1:'', dataType2:'', p1: '', p2: '', p12: '', maxDist: ''
     };
 
     // tissue dropdown box
@@ -182,6 +180,8 @@ export class SnpQueryComponent implements OnInit {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload) {
       this.fileName = this.fileToUpload.name;
+    } else {
+      this.fileName = "";
     }
   }
 
@@ -213,7 +213,7 @@ export class SnpQueryComponent implements OnInit {
     {
       this.getDataService.getBySnpInput(this.snpInput, this.searchParam).subscribe(
         data => {
-          console.log(data);
+          //console.log(data);
           this.epiResultData = data;
           this.tableDataSource.data = this.epiResultData;
           this.hasData = this.epiResultData.length > 0;
@@ -226,7 +226,7 @@ export class SnpQueryComponent implements OnInit {
     } else if (this.fileName.length > 0) {
       this.getDataService.getByFileInput(this.fileToUpload, this.searchParam).subscribe(
         data => {
-          console.log(data);
+          //console.log(data);
           this.epiResultData = data;
           this.hasData = this.epiResultData.length > 0;
           this.tableDataSource.data = this.epiResultData;
@@ -251,18 +251,29 @@ export class SnpQueryComponent implements OnInit {
       return;
     }
 
-    this.getDataService.runQTLByFileInput(this.fileToUpload, this.qtlParam).subscribe(
-      data => {
-         console.log(data);
-        this.colocResultData = data;
-        // this.hasData = this.resultData.length > 0;
-        this.tableDataSource2.data = this.colocResultData;
-        this.tableDataSource2.paginator = this.paginator2;
-        this.tableDataSource2.sort = this.sort2;
-        this.changeDetectorRefs.detectChanges();
-      },error => {
-        this.openDialog("Failed to : " + error.message);
-      });
+    if (this.snpInput.length > 0)
+    {
+      this.getDataService.colocBySnpInput(this.snpInput, this.qtlParam).subscribe(
+        data =>{
+          this.colocResultData = data;
+          this.tableDataSource2.data = this.colocResultData;
+          this.tableDataSource2.paginator = this.paginator2;
+          this.tableDataSource2.sort = this.sort2;
+        }, error => {
+          this.openDialog("Failed to run colocolization. " + error.message + ". " + error.error);
+        });
+    }
+    else if (this.fileName.length > 0) {
+        this.getDataService.colocByFileInput(this.fileToUpload, this.qtlParam).subscribe(
+        data => {
+          this.colocResultData = data;
+          this.tableDataSource2.data = this.colocResultData;
+          this.tableDataSource2.paginator = this.paginator2;
+          this.tableDataSource2.sort = this.sort2;
+        },error => {
+          this.openDialog("Failed to run colocolization. " + error.message + ". " + error.error);
+        });
+    }
   }
 
   getColocDatTypes(param: QtlParam) {
@@ -291,10 +302,14 @@ export class SnpQueryComponent implements OnInit {
         return "";
 
       case "qtl":
-        if (this.fileName == "")
-          return "Please select the GWAS SNP file to be uploaded";
-        else if (this.snpInput != "")
-          return "QTL can only be ran by uploading a GWAS file";
+        if (this.snpInput == "" && this.fileName == "") {
+          return "Please fill SNP search textbox or upload a file.";
+        } else if (this.snpInput.length > 0 && this.fileName.length >0 ){
+          return "Please search with EITHER SNP textbox or upload a file.";
+        } else if (this.qtlParam.dataset1 == "" || this.qtlParam.dataset2 == "")
+        {
+          return "Please select dataset 1 and dataset 2 for coloc analysis.";
+        }
         return "";
 
       default:
@@ -510,4 +525,5 @@ export interface QtlParam {
   p1: string;
   p2: string;
   p12: string;
+  maxDist: string;
 }

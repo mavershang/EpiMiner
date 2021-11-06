@@ -17,11 +17,11 @@ export class GetDataService extends BaseService{
     super();
    }
 
-  getBySnpInput(snpStr: string, param:SearchParam): Observable<EpiData[]> {
+  getBySnpInput(snpStr: string, sp:SearchParam): Observable<EpiData[]> {
     let params = new HttpParams();
     params = params.append('snpStr', snpStr);
-    params = params.append("maxDist", param.maxDist);
-    params = params.append("tissues", param.tissues.join(","));
+    params = params.append("maxDist", sp.maxDist);
+    params = params.append("tissues", sp.tissues.join(","));
     return this.http.get<EpiData[]>(this.rootURL+'/GetEpiData/id', {params});
   }
 
@@ -41,16 +41,31 @@ export class GetDataService extends BaseService{
     return this.http.get<any[]>(this.rootURL + "/GetEpiData");
   }
 
-  runQTLByFileInput(fileToUpload: File, param: QtlParam): Observable<ColocResult[]> {
+  colocBySnpInput(snpStr: string, qp:QtlParam) {
+    let params = new HttpParams();
+    params=params.append('snpStr', snpStr);
+    params=params.append("dataset1", qp.dataset1);
+    params=params.append("dataset2", qp.dataset2);
+    params=params.append("datatype1", qp.dataType1);
+    params=params.append("datatype2", qp.dataType2);
+    params=params.append("p1Str", qp.p1);
+    params=params.append("p2Str", qp.p2);
+    params=params.append("p12Str", qp.p12);
+    params=params.append("maxDistStr", qp.maxDist);
+    return this.http.get<any[]>(this.rootURL + "/GetQTLColoc/id", {params});
+  }
+  
+  colocByFileInput(fileToUpload: File, qp: QtlParam): Observable<ColocResult[]> {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
-    formData.append("dataset1", param.dataset1);
-    formData.append("dataset2", param.dataset2);
-    formData.append("datatype1", param.dataType1);
-    formData.append("datatype2", param.dataType2);
-    formData.append("p1", param.p1);
-    formData.append("p2", param.p2);
-    formData.append("p12", param.p12);
+    formData.append("dataset1", qp.dataset1);
+    formData.append("dataset2", qp.dataset2);
+    formData.append("datatype1", qp.dataType1);
+    formData.append("datatype2", qp.dataType2);
+    formData.append("p1Str", qp.p1);
+    formData.append("p2Str", qp.p2);
+    formData.append("p12Str", qp.p12);
+    formData.append("maxDistStr", qp.maxDist);
     return this.http.post<ColocResult[]>(this.rootURL + "/GetQTLColoc", formData);
   }
 

@@ -9,6 +9,7 @@ export class EpiData {
     Tissue: string;
     EpiLinkScore: number;
     QTLPValue: number;
+    Description: string;
     highlighted?:boolean;
     hovered?:boolean;
 }

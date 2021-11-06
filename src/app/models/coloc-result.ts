@@ -8,6 +8,7 @@ export class ColocResult {
     H3_abf: number;
     H4_abf: number;
     TopSnps: string;
+    Gene: string;
     highlighted?:boolean;
     hovered?:boolean;
 }

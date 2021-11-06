@@ -16,6 +16,6 @@ export class ImgService  extends BaseService{
     let params = new HttpParams();
     params = params.append('wd', dir);
     params = params.append('tag', tag);
-    return this.http.get(this.rootURL+'/GetQTLColoc/lzp/',  { params: params, responseType: 'blob' });
+    return this.http.get(this.rootURL+'/lzp',  { params: params, responseType: 'blob' });
   }
 }
