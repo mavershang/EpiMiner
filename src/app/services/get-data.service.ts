@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { QtlParam } from '../components/snp-query/snp-query.component';
 import { ColocResult } from '../models/coloc-result';
+import { DataSummary } from '../models/data-summary';
 import { EpiData } from '../models/epi-data';
 import { SearchParam } from '../models/search-param';
 import { BaseService } from './base.service';
@@ -16,6 +17,10 @@ export class GetDataService extends BaseService{
   constructor(private http: HttpClient) {
     super();
    }
+
+  getDataSummary() {
+    return this.http.get<DataSummary[]>(this.rootURL+'/DataSummary')
+  }
 
   getBySnpInput(snpStr: string, sp:SearchParam): Observable<EpiData[]> {
     let params = new HttpParams();

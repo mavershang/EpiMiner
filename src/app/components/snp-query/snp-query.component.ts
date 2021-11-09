@@ -16,6 +16,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { TopSnpModalComponent } from 'src/app/modals/top-snp-modal/top-snp-modal.component';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
+import { ExcelService } from 'src/app/services/excel.service';
 
 @Component({
   selector: 'app-snp-query',
@@ -33,7 +34,8 @@ export class SnpQueryComponent implements OnInit {
   loading$ = this.loader.loading$;
 
   // 
-  activeTab:string='';
+  tabOptions:string[] = ['epi', 'coloc']
+  activeTab:string=this.tabOptions[0];
 
   // List of tissues in EPi data
   tissueOptions: string[]=[];
@@ -48,7 +50,7 @@ export class SnpQueryComponent implements OnInit {
 
   // epi data table
   displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'Tissue', 'DataSource', 'Description', 'DataType'];
-  epiResultData: EpiData[];
+  epiResultData: EpiData[] = [];
   hasData:boolean=false;
   tableDataSource = new MatTableDataSource<EpiData>(); 
   @ViewChild(MatPaginator, {static: false} ) paginator: MatPaginator;
@@ -59,7 +61,7 @@ export class SnpQueryComponent implements OnInit {
 
   // coloc data table
   displayedColumns2: string[] = ['IndexSnp', "Gene", 'NumOfSnp', 'H0_abf', 'H1_abf', 'H2_abf', 'H3_abf', 'H4_abf'];
-  colocResultData: ColocResult[];
+  colocResultData: ColocResult[] = [];
   tableDataSource2 = new MatTableDataSource<ColocResult>(); 
   @ViewChild(MatPaginator, {static: false} ) paginator2: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort2: MatSort;
@@ -91,7 +93,8 @@ export class SnpQueryComponent implements OnInit {
     public dataSharingService: DataSharingService,
     private changeDetectorRefs: ChangeDetectorRef,
     private dialog: MatDialog,
-    public loader: LoadingService
+    public loader: LoadingService,
+    private excelService: ExcelService
     ) {
       //this.openTopSnpDialogTest();
       //       this.getDataService.testCORS().subscribe(
@@ -381,14 +384,15 @@ export class SnpQueryComponent implements OnInit {
   // }
 
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-    if (tabChangeEvent.index==0)
-    {
-      this.activeTab="epi";
-    } 
-    else if (tabChangeEvent.index ==1)
-    {
-      this.activeTab="coloc";
-    }
+    this.activeTab = this.tabOptions[tabChangeEvent.index];
+    // if (tabChangeEvent.index==0)
+    // {
+    //   this.activeTab=this.tabOptions[0];
+    // } 
+    // else if (tabChangeEvent.index ==1)
+    // {
+    //   this.activeTab=this.tabOptions[1];
+    // }
   }
 
   getCoordinate(idx:number) {
@@ -472,10 +476,10 @@ export class SnpQueryComponent implements OnInit {
         // get coordinate
         let coordinate = '';
 
-        if (this.activeTab == "epi"){
+        if (this.activeTab == this.tabOptions[0]){
           coordinate = this.getCoordinate(this.lastIdx);
         }
-        else if (this.activeTab = "coloc") {
+        else if (this.activeTab = this.tabOptions[1]) {
           coordinate = this.getCoordinate2(this.lastIdx2);
         }
 
@@ -492,8 +496,6 @@ export class SnpQueryComponent implements OnInit {
         this.openDialog("Failed to generate data hub for epigenome browser: " + error.message);
       }
     )
-
-    
 
     // localStorage.setItem("coordinate",  coordinate);
     // opne GIVE
@@ -512,9 +514,15 @@ export class SnpQueryComponent implements OnInit {
       position = arr[0] + ":" + (pos - 100000) + "-" + (pos + 100000);
     }
 
-    return "http://localhost:3000/browser?genome=hg19&position=" + position + "&hub=" + hubUrl;
+    return "http://10.132.10.11:3000/browser?genome=hg19&position=" + position + "&hub=" + hubUrl;
   }
   //#endregion
+
+
+  exportAsXLSX(): void {
+    this.excelService.exportAsExcelFile(this.epiResultData, "QueryResult");
+  }
+  
 }
 
 export interface QtlParam {

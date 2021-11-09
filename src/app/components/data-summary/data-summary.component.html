@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="table-container" mat-elevation-z8>
+        <h2 style="text-align: center; color:darkblue">Existing Datasets</h2>
+        <table mat-table matTableFilter [dataSource]="tableDataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="Category">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Category" [(ngModel)]="filterEntity.Category">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Category}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="DataSource">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="DataSource" [(ngModel)]="filterEntity.DataSource">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.DataSource}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="DataType">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="DataType" [(ngModel)]="filterEntity.DataType">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.DataType}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="Tissue">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Tissue" [(ngModel)]="filterEntity.Tissue">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Tissue}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="Description">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Description" [(ngModel)]="filterEntity.Description">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Description}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="RefAssembly">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="RefAssembly" [(ngModel)]="filterEntity.RefAssembly">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.RefAssembly}} </mat-cell>
+            </ng-container>
+    
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"></mat-row>
+        </table>
+    
+        <mat-paginator [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div> 
+    </div>

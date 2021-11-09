@@ -116,6 +116,8 @@
                         <!-- </div> -->
                 <button class="buttonSearchDB" (click)="searchDB()">Search EpiDB</button>
 
+                <button class="button-export" mat-raised-button color="primary" (click)="exportAsXLSX()">Export to Excel</button>
+
                 <div class="epiTable-container" mat-elevation-z8>
                     <h3 style="text-align: center; color:darkblue">Epi Result Table</h3>
                     <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType" [dataSource]="tableDataSource" matSort>

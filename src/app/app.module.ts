@@ -29,6 +29,8 @@ import { NetworkInterceptor } from './network.interceptor';
 import { TopSnpModalComponent } from './modals/top-snp-modal/top-snp-modal.component';
 import { EpiBrowserComponent } from './components/epi-browser/epi-browser.component';
 import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component';
+import { ExcelService } from './services/excel.service';
+import { DataSummaryComponent } from './components/data-summary/data-summary.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,7 @@ import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component
     TopSnpModalComponent,
     EpiBrowserComponent,
     EgSidebarComponent,
+    DataSummaryComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,7 +69,10 @@ import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component
       provide: HTTP_INTERCEPTORS,
       useClass: NetworkInterceptor,
       multi: true,
+
     },
+    ExcelService,
+
   ],
   //add the schemas property and pass the CUSTOM_ELEMENTS_SCHEMA constant
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

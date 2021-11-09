@@ -1,0 +1,19 @@
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .table-container {
+    display: flex;
+    flex-direction: column;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
+  }
+  
+.mat-table {
+    max-height: 600px;
+    min-width: 800px;
+    overflow: auto;
+  }
