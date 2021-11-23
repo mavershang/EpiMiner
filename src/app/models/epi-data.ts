@@ -7,6 +7,8 @@ export class EpiData {
     DataSource: string;
     DataType: string;
     Tissue: string;
+    CellType: string;
+    CellLine: string;
     EpiLinkScore: number;
     QTLPValue: number;
     Description: string;

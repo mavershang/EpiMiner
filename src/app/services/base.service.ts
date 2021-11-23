@@ -6,7 +6,7 @@ import { throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class BaseService {
-  readonly rootURL = 'http://10.132.10.11:5055/api'; //   'https://localhost:44373/api' // 
+  readonly rootURL = 'http://10.132.10.11:5055/api'; //  'https://localhost:44373/api' // 'http://10.132.10.11:5055/api'; //  
   constructor() { }
 
   concatList2Str(list:any) {

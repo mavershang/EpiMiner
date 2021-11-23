@@ -42,7 +42,7 @@ export class GetDataService extends BaseService{
     return this.http.get<any>(this.rootURL+'/GetQTLColoc');
   }
 
-  getTissueList() {
+  getTissueCellList() {
     return this.http.get<any[]>(this.rootURL + "/GetEpiData");
   }
 

@@ -55,6 +55,7 @@
   padding: 10px;
   position: relative;
   width: auto;
+  min-height: 500px;
 }
 
 .coloc-container{
@@ -67,6 +68,7 @@
   padding: 10px;
   position: relative;
   width: auto;
+  min-height: 500px;
 }
 
 .input { 

@@ -148,6 +148,24 @@
                             </mat-header-cell>
                             <mat-cell *matCellDef="let row"> {{row.Tissue}} </mat-cell>
                         </ng-container>
+
+                        <ng-container matColumnDef="CellType">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <mat-form-field appearance="legacy">
+                                    <input matInput placeholder="CellType" [(ngModel)]="filterEntity.CellType">
+                                </mat-form-field>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.CellType}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="CellLine">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <mat-form-field appearance="legacy">
+                                    <input matInput placeholder="CellLine" [(ngModel)]="filterEntity.CellLine">
+                                </mat-form-field>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.CellLine}} </mat-cell>
+                        </ng-container>
             
                         <ng-container matColumnDef="Description">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>

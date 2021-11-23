@@ -17,6 +17,7 @@ import { TopSnpModalComponent } from 'src/app/modals/top-snp-modal/top-snp-modal
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
 import { ExcelService } from 'src/app/services/excel.service';
+import { DataTissueCell } from 'src/app/models/data-tissue-cell';
 
 @Component({
   selector: 'app-snp-query',
@@ -39,6 +40,7 @@ export class SnpQueryComponent implements OnInit {
 
   // List of tissues in EPi data
   tissueOptions: string[]=[];
+  tissueCellOptions: DataTissueCell[] = [];
   // selectedTissues: string[] = [];
   dropdownSettings: IDropdownSettings;
 
@@ -49,7 +51,7 @@ export class SnpQueryComponent implements OnInit {
   qtlParam: QtlParam;
 
   // epi data table
-  displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'Tissue', 'DataSource', 'Description', 'DataType'];
+  displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'Tissue', 'CellType', 'CellLine', 'DataSource', 'Description', 'DataType'];
   epiResultData: EpiData[] = [];
   hasData:boolean=false;
   tableDataSource = new MatTableDataSource<EpiData>(); 
@@ -108,9 +110,15 @@ export class SnpQueryComponent implements OnInit {
       console.log("");
       this.epiResultData=[];
 
-      this.getDataService.getTissueList().subscribe(
+      this.getDataService.getTissueCellList().subscribe(
         data => {
-          this.tissueOptions = data;
+          //this.tissueOptions = data;
+          this.tissueCellOptions = data;
+          this.tissueOptions = this.tissueCellOptions.map(x=>x.InfoType+":"+x.InfoValue);
+          this.tissueOptions = this.tissueOptions.filter(function(ele, index, self){
+            return index == self.indexOf(ele);
+          })
+          this.tissueOptions = this.tissueOptions.sort();
         }, error => {
           this.openDialog("Failed to fetch all tissues: " + error.message);
         });
