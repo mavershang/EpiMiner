@@ -55,7 +55,7 @@ export class SnpQueryComponent implements OnInit {
   epiResultData: EpiData[] = [];
   hasData:boolean=false;
   tableDataSource = new MatTableDataSource<EpiData>(); 
-  @ViewChild(MatPaginator, {static: false} ) paginator: MatPaginator;
+  @ViewChild('paginatorQuery') paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   filterEntity: EpiData;
   filterType: MatTableFilter;
@@ -65,7 +65,7 @@ export class SnpQueryComponent implements OnInit {
   displayedColumns2: string[] = ['IndexSnp', "Gene", 'NumOfSnp', 'H0_abf', 'H1_abf', 'H2_abf', 'H3_abf', 'H4_abf'];
   colocResultData: ColocResult[] = [];
   tableDataSource2 = new MatTableDataSource<ColocResult>(); 
-  @ViewChild(MatPaginator, {static: false} ) paginator2: MatPaginator;
+  @ViewChild('paginatorColoc') paginator2: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort2: MatSort;
   filterEntity2: ColocResult;
   filterType2: MatTableFilter;

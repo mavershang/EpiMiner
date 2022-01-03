@@ -245,7 +245,7 @@
                             (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
                         </mat-row>
                     </mat-table>
-                    <mat-paginator [pageSizeOptions]="[100]" showFirstLastButtons></mat-paginator>
+                    <mat-paginator #paginatorQuery [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
                 </div> 
             </div>
         </mat-tab>
@@ -364,7 +364,7 @@
                             (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
                         </mat-row>
                     </mat-table>
-                    <mat-paginator [pageSizeOptions]="[100]" showFirstLastButtons></mat-paginator>
+                    <mat-paginator #paginatorColoc [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
                 </div> 
             </div>
         </mat-tab>
