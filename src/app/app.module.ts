@@ -31,6 +31,8 @@ import { EpiBrowserComponent } from './components/epi-browser/epi-browser.compon
 import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component';
 import { ExcelService } from './services/excel.service';
 import { DataSummaryComponent } from './components/data-summary/data-summary.component';
+import { TrackTreeComponent } from './components/track-tree/track-tree.component';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import { DataSummaryComponent } from './components/data-summary/data-summary.com
     EpiBrowserComponent,
     EgSidebarComponent,
     DataSummaryComponent,
+    TrackTreeComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +65,8 @@ import { DataSummaryComponent } from './components/data-summary/data-summary.com
     MatTableFilterModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    MatTreeModule,
   ],
   providers: [
     {

@@ -6,6 +6,7 @@ import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component
 import { EpiBrowserComponent } from './components/epi-browser/epi-browser.component';
 import { FinemappingComponent } from './components/finemapping/finemapping.component';
 import { SnpQueryComponent } from './components/snp-query/snp-query.component';
+import { TrackTreeComponent } from './components/track-tree/track-tree.component';
 import { ViewerComponent } from './components/viewer/viewer.component';
 
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: 'viewer', component: ViewerComponent},
   { path: 'epiBrowser', component: EpiBrowserComponent},
   { path: 'about', component: AboutComponent},
-  { path:'sidebar', component: EgSidebarComponent}
+  { path: 'sidebar', component: EgSidebarComponent},
+  { path: 'trackTree', component:TrackTreeComponent}
 ]
 
 @NgModule({

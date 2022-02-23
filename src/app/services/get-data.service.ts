@@ -100,6 +100,17 @@ export class GetDataService extends BaseService{
     return this.http.get<any>(this.rootURL + "/egHelper/getHub", {params});
   }
 
+  // Version 2
+  getEGHubFileV2(trackPaths:string[]):Observable<any> {
+    let params = new HttpParams();
+    params = params.append('trackPaths', trackPaths.join(","));
+    return this.http.get<any>(this.rootURL + "/egHelper/getHubV2", {params});
+  }
+
+  getTrackTree():Observable<string> {
+    return this.http.get<any>(this.rootURL + "/egHelper/getTrackStructure");
+  }
+
   testCORS() {
     return this.http.get('http://10.132.10.11:81/testTrack/FINAL_ATAC-seq_BSS00007.sub_VS_Uniform_BKG_CONTROL_36_50000000.pval.signal.bedgraph.gz.bigWig');
   }
