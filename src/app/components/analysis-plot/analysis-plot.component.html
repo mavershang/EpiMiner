@@ -1,0 +1,19 @@
+<h1 mat-dialog-title style="color: rgb(1, 0, 75);">Analysis Summary</h1>
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+    <mat-icon class="close-icon" color="warn">X</mat-icon>
+</button>
+
+<div mat-dialog-content>
+    <div class="img-container">
+      <!-- <h4 style="color: rgb(0, 47, 255);text-align: center;"> EpiDB search heatmap</h4> -->
+      <img id="img-heatmap" [src]='heatmapImg1' alt="loading"/>
+    </div>
+</div>
+
+<!-- <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Close</button>
+</div> -->
+
+<mat-progress-spinner style="margin:0 auto;"  
+[mode]="'indeterminate'" 
+*ngIf="loading$ | async"></mat-progress-spinner>

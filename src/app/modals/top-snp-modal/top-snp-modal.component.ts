@@ -45,7 +45,7 @@ export class TopSnpModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.imgService.getImage(this.workDir, this.lzpTag1).subscribe(
+    this.imgService.getLzpImage(this.workDir, this.lzpTag1).subscribe(
       response => {
       //alert(JSON.stringify(data.image));
       this.createImageFromBlob(response,this.lzpTag1);
@@ -53,7 +53,7 @@ export class TopSnpModalComponent implements OnInit {
       console.log(error);
     });
 
-    this.imgService.getImage(this.workDir, this.lzpTag2).subscribe(
+    this.imgService.getLzpImage(this.workDir, this.lzpTag2).subscribe(
       response => {
       //alert(JSON.stringify(data.image));
       this.createImageFromBlob(response,this.lzpTag2);

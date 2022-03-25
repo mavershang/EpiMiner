@@ -27,11 +27,20 @@
 
 
 <div class="grid-container">
-    <div class="sidebar">
+        <div class="refGenome-select-container">
+            <a style="text-align: center; color:navy">Genome Build  </a>    
+            <select  class="selectGenome" [(ngModel)] = "refGenome" name="gwasDataList" placeholder="Select Reference Genome">
+                <!-- <option [ngValue]="undefined" hidden>Select GWAS Dataset</option> -->
+                <option value="" disabled selected>Select Reference</option>
+                <option *ngFor = "let g of refGenomeArr" [value]="g">{{g}}</option>
+            </select>
+        </div>
+
+    <div class="track-select-container">
         <!-- <div *ngFor='let tt of trackTypes'>
             <input type="checkbox" style="color:black">{{tt}}
         </div> -->
-        <div class="sidebar-container">
+        <!-- <div class="sidebar-container">
         <h3 style="text-align: center;">Genome Browser Parameters</h3>    
         <div class="egTrackTypeSelector">
             <ng-multiselect-dropdown
@@ -70,27 +79,37 @@
             ></ng-multiselect-dropdown>
         </div>
 
-        <button class="buttonViewer" (click)="openEpiBrowser()">Launch Epigenome Browser</button>
+        <button class="buttonViewer" (click)="openEpiBrowser()">Launch Epigenome Browser</button> -->
 
-        </div>
+        <h4 style="text-align: left; color:navy">Epigenome Browser</h4>    
+        <button class="buttonTrackSelection" (click)="openTrackTreeDialog()">Launch Track Selector</button>
     </div>
 
     <div class="Input">
         <div class="snpInput-container"> 
+            <!-- <div class="snpInputTitle"> -->
+                <h4 style="text-align:left; color: navy;">SNP Input</h4>    
+            <!-- </div> -->
 
             <!-- <div class="snpInput"> -->
                     <div class="snpStrInput">
-                        <a style="color: black;align-content: left;">Option #1</a>
+                        <label style="color: black;align-content: left;">Option #1  </label>>
                         <input type="text" placeholder="Search with SNPs (snp1;snp...)" name="snp"  class="form-control" [(ngModel)]="snpInput" required maxlength="100"/>
                     </div>
-                    
                     <div class="snpFileInput">
-                        <a style="text-align: left;color: black;">Option #2</a>
+                        <label style="text-align: left;color: black;">Option #2  </label>>
                         <input type="file" class="file-input" style="color:black"
                             (change)="onFileSelected($event)" #fileUpload>
                     </div>
             <!-- </div> -->
         </div> 
+    </div>
+
+    <div class="placeholder">
+        <h4 style="text-align:left; color:navy">News</h4>
+        <a style="color:black;">[3/24/2022] Announcement:</a>
+        <br>
+        <a style="color:black;">hg38 data is under preparation.</a>
     </div>
 
     <mat-tab-group (selectedTabChange)="tabChanged($event)">
@@ -114,9 +133,11 @@
                 </div>
                         
                         <!-- </div> -->
-                <button class="buttonSearchDB" (click)="searchDB()">Search EpiDB</button>
+                <button class="buttonSearchDB" mat-raised-button color="primary" style="color:blue" (click)="searchDB()">Search EpiDB</button>
 
-                <button class="button-export" mat-raised-button color="primary" (click)="exportAsXLSX()">Export to Excel</button>
+                <button class="button-export" mat-raised-button color="primary" style="color:black" (click)="exportAsXLSX()">Export to Excel</button>
+
+                <button class="button-heatmap" mat-raised-button color="primary" style="color:rgb(255, 0, 0)" (click)="analsisHeatmap()">Analysis Summary Plot</button>
 
                 <div class="epiTable-container" mat-elevation-z8>
                     <h3 style="text-align: center; color:darkblue">Epi Result Table</h3>

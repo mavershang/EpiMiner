@@ -5,7 +5,9 @@ import {MatTreeFlattener, MatTreeFlatDataSource} from '@angular/material/tree';
 import {of as ofObservable, Observable, BehaviorSubject} from 'rxjs';
 import { GetDataService } from 'src/app/services/get-data.service';
 import { DataSharingService } from 'src/app/services/data-sharing.service';
-
+import { MatDialogRef } from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import { LoadingService } from 'src/app/services/loading.service';
 
 /**
  * Node for to-do item
@@ -23,27 +25,27 @@ export class TodoItemFlatNode {
   expandable: boolean;
 }
 
-/**
- * The Json object for to-do list data.
- */
-const TREE_DATA = {
-  'Reminders': [
-    'Cook dinner',
-    'Read the Material Design spec',
-    'Upgrade Application to Angular'
-  ],
-  // 'Groceries': {
-  //   'Organic eggs': null,
-  //   'Protein Powder': null,
-  //   'Almond Meal flour': null,
-  //   'Fruits': {
-  //     'Apple': null,
-  //     'Orange': null,
-  //     'Berries': ['Blueberry', 'Raspberry']
-  //   }
-  // }
+// /**
+//  * The Json object for to-do list data.
+//  */
+// const TREE_DATA = {
+//   'Reminders': [
+//     'Cook dinner',
+//     'Read the Material Design spec',
+//     'Upgrade Application to Angular'
+//   ],
+//   // 'Groceries': {
+//   //   'Organic eggs': null,
+//   //   'Protein Powder': null,
+//   //   'Almond Meal flour': null,
+//   //   'Fruits': {
+//   //     'Apple': null,
+//   //     'Orange': null,
+//   //     'Berries': ['Blueberry', 'Raspberry']
+//   //   }
+//   // }
   
-};
+// };
 
 /**
  * Checklist database, it can build a tree structured Json object.
@@ -57,8 +59,6 @@ export class ChecklistDatabase {
   get data(): TodoItemNode[] { return this.dataChange.value; }
 
   constructor(private dataService: GetDataService) {
-
-
     this.initialize();
   }
 
@@ -154,10 +154,18 @@ export class TrackTreeComponent {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  constructor(private database: ChecklistDatabase,
-              private dataService: GetDataService) {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
-      this.isExpandable, this.getChildren);
+    // loading spiner
+  loading$ = this.loader.loading$;
+
+  constructor(
+    public dialogRef: MatDialogRef<TrackTreeComponent>,
+    private database: ChecklistDatabase,
+    private dataService: GetDataService,
+    public dataSharingService: DataSharingService,    
+    public loader: LoadingService,
+    ) 
+  {
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -240,71 +248,36 @@ export class TrackTreeComponent {
 
     this.dataService.getEGHubFileV2(trackPaths).subscribe(
       data => { 
-        let hubJsonUrl = data.Value;
-        let coordinate = "";
-        
-        // build URL
-        let eg_url = this.buildEGUrl(coordinate, hubJsonUrl);
-        window.open(eg_url, '_blank');  
-
+        data.forEach(p=> {
+          let eg_url = this.buildEGUrl(this.dataSharingService.coordinate, p.Key, p.Value);
+          window.open(eg_url, '_blank');        
+        });
+        this.onNoClick();
       }, error =>{
         console.log(error);
       }
-    )
-
-    // // generate data hub file
-    // this.getDataService.getEGHubFile(this.selectedTrackTypes, this.selectedTrackDataSources, this.selectedTrackTissues).subscribe(
-    //   data =>{
-    //     let hubJsonUrl = data.Value;
-
-    //     // get coordinate
-    //     let coordinate = '';
-
-    //     if (this.activeTab == this.tabOptions[0]){
-    //       coordinate = this.getCoordinate(this.lastIdx);
-    //     }
-    //     else if (this.activeTab = this.tabOptions[1]) {
-    //       coordinate = this.getCoordinate2(this.lastIdx2);
-    //     }
-
-    //     if (coordinate == null)
-    //     {
-    //       this.openDialog("Please select a SNP from the table");
-    //       return;
-    //     }
-
-    //     // build URL
-    //     let eg_url = this.buildEGUrl(coordinate, hubJsonUrl);
-    //     window.open(eg_url, '_blank');                          
-    //   }, error => {
-    //     this.openDialog("Failed to generate data hub for epigenome browser: " + error.message);
-    //   }
-    // )
-
-    
+    )    
   }
 
-  buildEGUrl(position:string, hubUrl:string) {
+  buildEGUrl(position:string, genome:string, hubUrl:string) {
     if (position === "") {
-      return "http://10.132.10.11:3000/browser?genome=hg19"  + "&hub=" + hubUrl;
+      return "http://10.132.10.11:3000/browser?genome=" + genome  + "&hub=" + hubUrl;
     } 
     else {
       let arr = position.split("-");
       if (arr.length == 1)
       {
         arr = position.split(":");
+        let chr = arr[0];
         let pos = parseInt(arr[1]);
-        position = arr[0] + ":" + (pos - 100000) + "-" + (pos + 100000);
+        position = chr + ":" + (pos - 100000) + "-" + (pos + 100000);
       }
-      return "http://10.132.10.11:3000/browser?genome=hg19" + "&position=" + position + "&hub=" + hubUrl;
+      return "http://10.132.10.11:3000/browser?genome=" + genome + "&position=" + position + "&hub=" + hubUrl;
     }
   }
 
-  //#endregion
-
+  onNoClick()
+  {
+    this.dialogRef.close();
+  }
 }
-
-
-/**  Copyright 2018 Google Inc. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license */

@@ -18,6 +18,8 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
 import { ExcelService } from 'src/app/services/excel.service';
 import { DataTissueCell } from 'src/app/models/data-tissue-cell';
+import { TrackTreeComponent } from '../track-tree/track-tree.component';
+import { AnalysisPlotComponent } from '../analysis-plot/analysis-plot.component';
 
 @Component({
   selector: 'app-snp-query',
@@ -25,6 +27,10 @@ import { DataTissueCell } from 'src/app/models/data-tissue-cell';
   styleUrls: ['./snp-query.component.css']
 })
 export class SnpQueryComponent implements OnInit {
+  // Ref Genome
+  refGenomeArr = ["hg19", "hg38"];
+  refGenome = this.refGenomeArr[2];
+
   // Input
   snpInput: string = "";
   fileToUpload: File = null;
@@ -59,7 +65,6 @@ export class SnpQueryComponent implements OnInit {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   filterEntity: EpiData;
   filterType: MatTableFilter;
-  lastIdx: number;
 
   // coloc data table
   displayedColumns2: string[] = ['IndexSnp', "Gene", 'NumOfSnp', 'H0_abf', 'H1_abf', 'H2_abf', 'H3_abf', 'H4_abf'];
@@ -72,7 +77,13 @@ export class SnpQueryComponent implements OnInit {
   lastIdx2:number;
 
   // last highlighted row index
+  lastIdx: number;
+
+  // size of the flanking region
   flankingNt: number = 100000;  // flanking area of the SNP 
+
+  // the backend workingDir (for analysis plot)
+  workDir: string= "";
 
   // test CORS
   corsData:any;
@@ -139,7 +150,7 @@ export class SnpQueryComponent implements OnInit {
           this.qtlDataList = data.QTL;
           this.allColocDataList = this.gwasDataList.concat(this.qtlDataList);
           // this.changeDetectorRefs.detectChanges();
-        },error => {
+        }, error => {
           this.openDialog("Failed to get QTL data list: " + error.message);
         });
   }
@@ -225,7 +236,8 @@ export class SnpQueryComponent implements OnInit {
       this.getDataService.getBySnpInput(this.snpInput, this.searchParam).subscribe(
         data => {
           //console.log(data);
-          this.epiResultData = data;
+          this.epiResultData = data.epiDataList;
+          this.workDir = data.workDir;
           this.tableDataSource.data = this.epiResultData;
           this.hasData = this.epiResultData.length > 0;
           this.tableDataSource.paginator = this.paginator;
@@ -238,7 +250,8 @@ export class SnpQueryComponent implements OnInit {
       this.getDataService.getByFileInput(this.fileToUpload, this.searchParam).subscribe(
         data => {
           //console.log(data);
-          this.epiResultData = data;
+          this.epiResultData = data.epiDataList;
+          this.workDir = data.workDir;
           this.hasData = this.epiResultData.length > 0;
           this.tableDataSource.data = this.epiResultData;
           this.tableDataSource.paginator = this.paginator;
@@ -309,7 +322,10 @@ export class SnpQueryComponent implements OnInit {
           return "Please fill SNP search textbox or upload a file.";
         } else if (this.snpInput.length > 0 && this.fileName.length >0 ){
           return "Please search with EITHER SNP textbox or upload a file.";
+        } else if (this.searchParam.tissues == undefined || this.searchParam.tissues.length==0) {
+          return "Please select Tissue and Celltype before search";
         }
+
         return "";
 
       case "qtl":
@@ -330,6 +346,10 @@ export class SnpQueryComponent implements OnInit {
 
   //#endregion
 
+  getSnpPos(row:any) {
+    return row.Chr+":"+row.SnpPosition;
+  }
+
   onRowClicked(row: any, i: number) {
     console.log('Row clicked: ', row);
     if (this.lastIdx > -1) {
@@ -338,23 +358,20 @@ export class SnpQueryComponent implements OnInit {
     row.highlighted = !row.highlighted;
     this.lastIdx = i;
 
-    // this.dataSharingService.coordinates.push(coordinate);
+    // set current coordinate in data-sharing service
+    this.dataSharingService.coordinate = this.getSnpPos(row);
   }
 
   onRowClicked2(row: any, i: number) {
-    console.log('Row clicked: ', row);
+    // console.log('Row clicked: ', row);
     if (this.lastIdx2 > -1) {
       this.tableDataSource2.data[this.lastIdx2].highlighted = false;
     }
     row.highlighted = !row.highlighted;
     this.lastIdx2 = i;
 
-    // // open topSNP modal
-    // this.openTopSnpDialog(
-    //   this.tableDataSource2.data[i].IndexSnp,
-    //   this.tableDataSource2.data[i].TopSnps);
-
-    // this.dataSharingService.coordinates.push(coordinate);
+    // set current coordinate in data-sharing service
+    this.dataSharingService.coordinate = this.getSnpPos(row);
   }
 
   openTopSnpDialog(row:ColocResult){
@@ -504,13 +521,6 @@ export class SnpQueryComponent implements OnInit {
         this.openDialog("Failed to generate data hub for epigenome browser: " + error.message);
       }
     )
-
-    // localStorage.setItem("coordinate",  coordinate);
-    // opne GIVE
-    //window.open('/viewer', '_blank'); 
-    // open Washington Epigenome Browser
-    // window.open("http://localhost:3000/?genome=hg19&hub=http://10.132.10.11:81/testHub/test.json")
-    // window.open("http://epigenomegateway.wustl.edu/legacy?genome=hg19&?hub=https://vizhub.wustl.edu/public/tmp/a.json")
   }
 
   buildEGUrl(position:string, hubUrl:string) {
@@ -531,6 +541,38 @@ export class SnpQueryComponent implements OnInit {
     this.excelService.exportAsExcelFile(this.epiResultData, "QueryResult");
   }
   
+
+  openTrackTreeDialog(){
+    const dialogRef = this.dialog.open(TrackTreeComponent, {
+      width: '1400px',
+      // data:{
+      //   indexSnp: row.IndexSnp,
+      //   topSnps:row.TopSnps,
+      //   workDir:row.WorkDir,
+      //   dataset1: this.qtlParam.dataset1,
+      //   dataset2: this.qtlParam.dataset2
+      // }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+  }
+
+  analsisHeatmap() {
+    const dialogRef = this.dialog.open(AnalysisPlotComponent, {
+      width: '1800px',
+      height: '1500px',
+      data:{
+        workDir: this.workDir,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
+  }
+
 }
 
 export interface QtlParam {

@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class DataSharingService {
 
-  coordinates: string[] = [];
+  coordinate: string = '';
 
   // isShowViewerChanged:boolean=false;
   // showViewerChange: Subject<boolean> = new Subject<boolean>();

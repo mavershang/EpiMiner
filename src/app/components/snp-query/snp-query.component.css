@@ -1,31 +1,32 @@
 .grid-container {
     display: grid;
     grid-template-areas:
-      'sidebar snpInput'
-      'sidebar main'
-      'sidebar main';
-    grid-gap: 10px;
+      'genome main'
+      'snpInput main'
+      'track main'
+      'news main';
+    grid-gap: 5px;
     background-color: #eaebec;
-    padding: 10px;
+    padding: 2px;
     position: relative;
     width: 100%;
   }
 
   .grid-container > div {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color:eaebec;
     /* text-align: left; */
     padding: 10px 0;
     font-size: 16px;
   }
 
-.sidebar-container {
+/* .sidebar-container {
   grid-area: sidebar;
   color: black;
   align-items:flex-start;
   font-size: 12px;
   width: 250px;
   max-width: 250px;
-}
+} */
 
 .mat-tab-group {
   grid-area: main;
@@ -37,25 +38,29 @@
 .snpInput-container{
   display: grid;
   grid-template-areas:
-    'textbox file';
+    'title'
+    'textbox'
+    'file';
   grid-gap: 10px;
   background-color: #ffffff;
-  padding: 10px;
+  padding: 5px;
   position: relative;
-  width: 30%;
+  width: auto;
+  max-height:170px;
 }
 
 .epiTab-grid-container{
   display: 'grid';
   grid-template-areas:
-    'tissue dist button'
-    'table table table';
-  grid-gap: 10px;
+    'tissue dist'
+    'button button'
+    'table table';
+  grid-gap: 5px;
   background-color: #ffffff;
-  padding: 10px;
+  padding: 5px;
   position: relative;
   width: auto;
-  min-height: 500px;
+  min-height: 600px;
 }
 
 .coloc-container{
@@ -68,7 +73,20 @@
   padding: 10px;
   position: relative;
   width: auto;
-  min-height: 500px;
+  min-height: 600px;
+}
+
+.refGenome-select-container {
+  grid-area: genome;
+  height: 30px;
+  background-color:#ffffff;
+}
+
+.track-select-container {
+  grid-area: track;
+  height: 80px;
+  padding: 10px;
+  background-color:#ffffff ;
 }
 
 .input { 
@@ -76,28 +94,49 @@
   height: 20px;    
 }
 
+.snpInputTitle {
+  grid-area: title;
+  align-items:flex-start
+}
 .snpStrInput {
   grid-area: textbox;
-  align-items:flex-start;
+  align-items:flex-start
 }
 
 .snpFileInput {
   grid-area: file;
-  align-items:flex-start;
+  align-items: flex-start;
+}
+
+.placeholder {
+  grid-area:news;
+  background-color:#ffffff;
+  min-height: 300px;
 }
 
 .tissueSelector {
   grid-area: tissue;
   align-items:flex-start;
+  max-width: 98%;
 }
 .dist {
   grid-area: dist;
-  align-items:flex-start;
+  align-items:flex-end;
+  width:20%
 }
 .buttonSearchDB {
   grid-area: button;
   align-items:flex-start;
+  width:10%
 }
+
+
+.button-export{
+  float: right;
+  right:-24px;
+}
+
+
 .epiTable-container{
   grid-area: table;
   align-items:flex-start;

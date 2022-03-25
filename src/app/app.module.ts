@@ -20,7 +20,6 @@ import { SnpQueryComponent } from './components/snp-query/snp-query.component';
 import { ViewerComponent } from './components/viewer/viewer.component';
 import { FinemappingComponent } from './components/finemapping/finemapping.component';
 import { AboutComponent } from './components/about/about.component';
-import { ResultTableComponent } from './components/result-table/result-table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -33,6 +32,7 @@ import { ExcelService } from './services/excel.service';
 import { DataSummaryComponent } from './components/data-summary/data-summary.component';
 import { TrackTreeComponent } from './components/track-tree/track-tree.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { AnalysisPlotComponent } from './components/analysis-plot/analysis-plot.component';
 
 @NgModule({
   declarations: [
@@ -41,13 +41,13 @@ import { MatTreeModule } from '@angular/material/tree';
     ViewerComponent,
     FinemappingComponent,
     AboutComponent,
-    ResultTableComponent,
     DialogComponent,
     TopSnpModalComponent,
     EpiBrowserComponent,
     EgSidebarComponent,
     DataSummaryComponent,
     TrackTreeComponent,
+    AnalysisPlotComponent,
   ],
   imports: [
     BrowserModule,

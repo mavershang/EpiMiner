@@ -22,20 +22,20 @@ export class GetDataService extends BaseService{
     return this.http.get<DataSummary[]>(this.rootURL+'/DataSummary')
   }
 
-  getBySnpInput(snpStr: string, sp:SearchParam): Observable<EpiData[]> {
+  getBySnpInput(snpStr: string, sp:SearchParam): Observable<any> {
     let params = new HttpParams();
     params = params.append('snpStr', snpStr);
     params = params.append("maxDist", sp.maxDist);
     params = params.append("tissues", sp.tissues.join(","));
-    return this.http.get<EpiData[]>(this.rootURL+'/GetEpiData/id', {params});
+    return this.http.get<any>(this.rootURL+'/GetEpiData/id', {params});
   }
 
-  getByFileInput(fileToUpload: File, param: SearchParam): Observable<EpiData[]> {
+  getByFileInput(fileToUpload: File, param: SearchParam): Observable<any> {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     formData.append('maxDist', param.maxDist);
     formData.append('tissues', param.tissues.join(","));
-    return this.http.post<EpiData[]>(this.rootURL + "/GetEpiData", formData);
+    return this.http.post<any>(this.rootURL + "/GetEpiData", formData);
   }
 
   getColocDataList() {
@@ -101,10 +101,10 @@ export class GetDataService extends BaseService{
   }
 
   // Version 2
-  getEGHubFileV2(trackPaths:string[]):Observable<any> {
+  getEGHubFileV2(trackPaths:string[]):Observable<any[]> {
     let params = new HttpParams();
     params = params.append('trackPaths', trackPaths.join(","));
-    return this.http.get<any>(this.rootURL + "/egHelper/getHubV2", {params});
+    return this.http.get<any[]>(this.rootURL + "/egHelper/getHubV2", {params});
   }
 
   getTrackTree():Observable<string> {

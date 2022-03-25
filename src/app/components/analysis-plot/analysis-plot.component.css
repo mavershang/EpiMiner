@@ -1,0 +1,40 @@
+.mat-dialog-content {
+    display: grid;
+    grid-template-areas:
+      'image';
+    grid-gap: 10px;
+    background-color: #eaebec;
+    padding: 10px;
+    position: relative;
+    width: 100%;
+    height: 1200px;
+  }
+
+  .grid-container > div {
+    background-color: rgba(255, 255, 255, 0.925);
+    text-align: center;
+    padding: 2px 0;
+    font-size: 20px;
+  }
+
+  .img-container{
+    grid-area: image;
+    width: 1500px;
+    height: 800px;
+  }
+
+
+  .close-button{
+    float: right;
+    top:-24px;
+    right:-24px;
+  }
+  
+  .close-icon {
+    transition: 1s ease-in-out;
+  }
+  
+  .close-icon:hover {
+    transform: rotate(180deg);
+  }
+  

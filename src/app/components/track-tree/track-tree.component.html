@@ -1,32 +1,44 @@
-<button class="buttonViewer" (click)="openEpiBrowser()">Launch Epigenome Browser</button>
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="warn">X</mat-icon>
+</button>
 
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+<h1 mat-dialog-title style="color: rgb(1, 0, 75);">Track Selector</h1>
+
+<div mat-dialog-content>
+  <button mat-raised-button color="primary" (click)="openEpiBrowser()">Launch Epigenome Browser</button>
+
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
       <button mat-icon-button disabled></button>
       <mat-checkbox class="checklist-leaf-node"
                     [checked]="checklistSelection.isSelected(node)"
                     (change)="checklistSelection.toggle(node);">{{node.item}}</mat-checkbox>
-    </mat-tree-node>
-  
-    <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
-      <button mat-icon-button disabled></button>
-      <mat-form-field>
-        <input matInput #itemValue placeholder="New item...">
-      </mat-form-field>
-      <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
-    </mat-tree-node>
-  
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-      <button mat-icon-button matTreeNodeToggle
-              [attr.aria-label]="'toggle ' + node.filename">
-        <mat-icon class="mat-icon-rtl-mirror">
-          {{treeControl.isExpanded(node) ? 'Retract' : 'Expand'}}
-        </mat-icon>
-      </button>
-      <mat-checkbox [checked]="descendantsAllSelected(node)"
-                    [indeterminate]="descendantsPartiallySelected(node)"
-                    (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-      <!-- <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button> -->
-    </mat-tree-node>
+      </mat-tree-node>
+    
+      <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+        <button mat-icon-button disabled></button>
+        <mat-form-field>
+          <input matInput #itemValue placeholder="New item...">
+        </mat-form-field>
+        <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+      </mat-tree-node>
+    
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle
+                [attr.aria-label]="'toggle ' + node.filename">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'Retract' : 'Expand'}}
+          </mat-icon>
+        </button>
+        <mat-checkbox [checked]="descendantsAllSelected(node)"
+                      [indeterminate]="descendantsPartiallySelected(node)"
+                      (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+        <!-- <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button> -->
+      </mat-tree-node>
   </mat-tree>
-  
+
+  <mat-progress-spinner style="margin:0 auto;"  
+    [mode]="'indeterminate'" 
+    *ngIf="loading$ | async"></mat-progress-spinner>
+
+</div>

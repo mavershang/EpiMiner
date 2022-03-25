@@ -1,5 +1,9 @@
 <h1 mat-dialog-title style="color: rgb(1, 0, 75);">Top SNPs from COLOC analysis</h1>
 
+<mat-progress-spinner style="margin:0 auto;"  
+[mode]="'indeterminate'" 
+*ngIf="loading$ | async"></mat-progress-spinner>
+
 <div mat-dialog-content>
     <div class="table-container-coloc" mat-elevation-z8>
       <h4 style="color: rgb(92, 119, 243);text-align: center;">Index SNP {{this.indexSnp}}</h4>
@@ -20,10 +24,6 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
     </div> 
-
-    <mat-progress-spinner style="margin:0 auto;"  
-        [mode]="'indeterminate'" 
-        *ngIf="loading$ | async"></mat-progress-spinner>
 
     <div class="img-container1">
       <h4 style="color: rgb(0, 47, 255);text-align: center;"> Locuszoom from {{qtlDataset1}}</h4>
