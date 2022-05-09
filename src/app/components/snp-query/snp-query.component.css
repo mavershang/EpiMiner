@@ -66,8 +66,9 @@
 .coloc-container{
   display: 'grid';
   grid-template-areas:
-    'tissue dist button'
-    'table table table';
+    'data1 data1 data2 data2'
+    'p1 p2 p12 dist'
+    'table table table table';
   grid-gap: 10px;
   background-color: #ffffff;
   padding: 10px;
@@ -76,10 +77,22 @@
   min-height: 600px;
 }
 
+.select1-container{
+  grid-area: data1;
+  width:500px;
+  align-items:flex-start;
+}
+.select2-container{
+  grid-area: data2;
+  width:500px;
+}
+
+
 .refGenome-select-container {
   grid-area: genome;
   height: 30px;
   background-color:#ffffff;
+  padding: 10px;
 }
 
 .track-select-container {
@@ -92,6 +105,7 @@
 .input { 
   grid-area: snpInput ;
   height: 20px;    
+  padding:10px;
 }
 
 .snpInputTitle {
