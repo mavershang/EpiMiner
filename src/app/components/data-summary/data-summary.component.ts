@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTableFilter } from 'mat-table-filter';
 import { DataSummary } from 'src/app/models/data-summary';
 import { GetDataService } from 'src/app/services/get-data.service';
+import { LoadingService } from 'src/app/services/loading.service';
 import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
@@ -24,9 +25,12 @@ export class DataSummaryComponent implements OnInit {
   filterEntity: DataSummary;
   filterType: MatTableFilter;
 
+  loading$ = this.loader.loading$;
+
   constructor(
     private dataService: GetDataService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public loader: LoadingService,
     // private dialogService: DialogService,
   ) { }
 

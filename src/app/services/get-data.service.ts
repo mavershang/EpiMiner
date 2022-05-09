@@ -22,32 +22,39 @@ export class GetDataService extends BaseService{
     return this.http.get<DataSummary[]>(this.rootURL+'/DataSummary')
   }
 
-  getBySnpInput(snpStr: string, sp:SearchParam): Observable<any> {
+  getBySnpInput(snpStr:string, refGenome:string, sp:SearchParam): Observable<any> {
     let params = new HttpParams();
+    params = params.append('refGenome', refGenome);
     params = params.append('snpStr', snpStr);
     params = params.append("maxDist", sp.maxDist);
     params = params.append("tissues", sp.tissues.join(","));
     return this.http.get<any>(this.rootURL+'/GetEpiData/id', {params});
   }
 
-  getByFileInput(fileToUpload: File, param: SearchParam): Observable<any> {
+  getByFileInput(fileToUpload:File, refGenome:string, param:SearchParam): Observable<any> {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
+    formData.append('refGenome', refGenome);
     formData.append('maxDist', param.maxDist);
     formData.append('tissues', param.tissues.join(","));
     return this.http.post<any>(this.rootURL + "/GetEpiData", formData);
   }
 
-  getColocDataList() {
-    return this.http.get<any>(this.rootURL+'/GetQTLColoc');
-  }
-
-  getTissueCellList() {
-    return this.http.get<any[]>(this.rootURL + "/GetEpiData");
-  }
-
-  colocBySnpInput(snpStr: string, qp:QtlParam) {
+  getColocDataList(refGenome:string) {
     let params = new HttpParams();
+    params=params.append('refGenome', refGenome);
+    return this.http.get<any>(this.rootURL+'/GetQTLColoc', {params});
+  }
+
+  getTissueCellList(refGenome:string) {
+    let params = new HttpParams();
+    params=params.append('refGenome', refGenome);
+    return this.http.get<any[]>(this.rootURL + "/GetEpiData", {params});
+  }
+
+  colocBySnpInput(snpStr: string, refGenome:string, qp:QtlParam) {
+    let params = new HttpParams();
+    params=params.append('refGenome', refGenome);
     params=params.append('snpStr', snpStr);
     params=params.append("dataset1", qp.dataset1);
     params=params.append("dataset2", qp.dataset2);
@@ -60,9 +67,10 @@ export class GetDataService extends BaseService{
     return this.http.get<any[]>(this.rootURL + "/GetQTLColoc/id", {params});
   }
   
-  colocByFileInput(fileToUpload: File, qp: QtlParam): Observable<ColocResult[]> {
+  colocByFileInput(fileToUpload: File, refGenome: string, qp: QtlParam): Observable<ColocResult[]> {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
+    formData.append("refGenome", refGenome);
     formData.append("dataset1", qp.dataset1);
     formData.append("dataset2", qp.dataset2);
     formData.append("datatype1", qp.dataType1);
@@ -74,7 +82,9 @@ export class GetDataService extends BaseService{
     return this.http.post<ColocResult[]>(this.rootURL + "/GetQTLColoc", formData);
   }
 
-  getExistingTrackType():Observable<string[]> {
+  getExistingTrackType(refGenome:string):Observable<string[]> {
+    let params = new HttpParams();
+    params = params.append('refGenome', refGenome);
     return this.http.get<string[]>(this.rootURL + "/egHelper/getTrackTypes");
   }
 
@@ -92,13 +102,13 @@ export class GetDataService extends BaseService{
   }
 
   // Get the path of the dynamically generated datahub file for epigenome browser
-  getEGHubFile(trackTypes:string[], dataSources:string[], tissues:string[]):Observable<any> {
-    let params = new HttpParams();
-    params = params.append('trackTypes', trackTypes.join(","));
-    params = params.append('dataSources', dataSources.join(","));
-    params = params.append('tissues', tissues.join(","));
-    return this.http.get<any>(this.rootURL + "/egHelper/getHub", {params});
-  }
+  // getEGHubFile(trackTypes:string[], dataSources:string[], tissues:string[]):Observable<any> {
+  //   let params = new HttpParams();
+  //   params = params.append('trackTypes', trackTypes.join(","));
+  //   params = params.append('dataSources', dataSources.join(","));
+  //   params = params.append('tissues', tissues.join(","));
+  //   return this.http.get<any>(this.rootURL + "/egHelper/getHub", {params});
+  // }
 
   // Version 2
   getEGHubFileV2(trackPaths:string[]):Observable<any[]> {
@@ -111,7 +121,7 @@ export class GetDataService extends BaseService{
     return this.http.get<any>(this.rootURL + "/egHelper/getTrackStructure");
   }
 
-  testCORS() {
-    return this.http.get('http://10.132.10.11:81/testTrack/FINAL_ATAC-seq_BSS00007.sub_VS_Uniform_BKG_CONTROL_36_50000000.pval.signal.bedgraph.gz.bigWig');
-  }
+  // testCORS() {
+  //   return this.http.get('http://10.132.10.11:81/testTrack/FINAL_ATAC-seq_BSS00007.sub_VS_Uniform_BKG_CONTROL_36_50000000.pval.signal.bedgraph.gz.bigWig');
+  // }
 }

@@ -62,4 +62,8 @@
     
         <mat-paginator [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
     </div> 
-    </div>
+
+    <mat-progress-spinner style="margin:0 auto;"  
+    [mode]="'indeterminate'" 
+    *ngIf="loading$ | async"></mat-progress-spinner>
+</div>

@@ -29,7 +29,8 @@ import { AnalysisPlotComponent } from '../analysis-plot/analysis-plot.component'
 export class SnpQueryComponent implements OnInit {
   // Ref Genome
   refGenomeArr = ["hg19", "hg38"];
-  refGenome = this.refGenomeArr[2];
+  selectedRefGenome:string;
+  currentRefGenome:string;
 
   // Input
   snpInput: string = "";
@@ -93,12 +94,12 @@ export class SnpQueryComponent implements OnInit {
   trackTypeDropDownClick = false;
   trackDataSourceDropDownClick = false;
 
-  trackTypeOptions:string[]; // ["interaction", "bigwig", "bed"];
-  trackDataSourceOptions: string[] = []; // ["EpiMap"];
-  trackTissueOptions:string[] = [];
-  selectedTrackTypes: string[] = [];
-  selectedTrackDataSources: string[] = [];
-  selectedTrackTissues: string[] = [];
+  // trackTypeOptions:string[]; // ["interaction", "bigwig", "bed"];
+  // trackDataSourceOptions: string[] = []; // ["EpiMap"];
+  // trackTissueOptions:string[] = [];
+  // selectedTrackTypes: string[] = [];
+  // selectedTrackDataSources: string[] = [];
+  // selectedTrackTissues: string[] = [];
   //#endregion
 
   constructor(
@@ -109,50 +110,19 @@ export class SnpQueryComponent implements OnInit {
     public loader: LoadingService,
     private excelService: ExcelService
     ) {
-      //this.openTopSnpDialogTest();
-      //       this.getDataService.testCORS().subscribe(
-      //   data=>{
-      //     this.corsData=data;
-      //   }, error =>{
-      //     console.log(error); 
-      //   }
-      // )
+      // default genome build
+      this.selectedRefGenome = this.refGenomeArr[0];
+      this.currentRefGenome = this.selectedRefGenome;
 
-      console.log("");
+      // initiate epiSearch result array
       this.epiResultData=[];
-
-      this.getDataService.getTissueCellList().subscribe(
-        data => {
-          //this.tissueOptions = data;
-          this.tissueCellOptions = data;
-          this.tissueOptions = this.tissueCellOptions.map(x=>x.InfoType+":"+x.InfoValue);
-          this.tissueOptions = this.tissueOptions.filter(function(ele, index, self){
-            return index == self.indexOf(ele);
-          })
-          this.tissueOptions = this.tissueOptions.sort();
-        }, error => {
-          this.openDialog("Failed to fetch all tissues: " + error.message);
-        });
-
-      this.getDataService.getExistingTrackType().subscribe(
-        data => {
-          this.trackTypeOptions = data;
-          this.changeDetectorRefs.detectChanges();
-        }, error => {
-          this.openDialog("Failed to retrieve existing track types");
-        }
-      )
-
-      this.getDataService.getColocDataList().subscribe(
-        data => {
-          console.log(data);
-          this.gwasDataList = data.GWAS;
-          this.qtlDataList = data.QTL;
-          this.allColocDataList = this.gwasDataList.concat(this.qtlDataList);
-          // this.changeDetectorRefs.detectChanges();
-        }, error => {
-          this.openDialog("Failed to get QTL data list: " + error.message);
-        });
+      
+      // initiate tissue/cell type options
+      this.getTissueCellList(this.currentRefGenome);
+      // initiate existing track types
+      // this.getTrackType(this.currentRefGenome);
+      // initiate coloc data list
+      this.getColocDataList(this.currentRefGenome);
   }
 
   ngOnInit(): void {
@@ -167,9 +137,7 @@ export class SnpQueryComponent implements OnInit {
     this.lastIdx2 = -1;
 
     // qtl param
-    this.qtlParam= {
-      dataset1: '', dataset2: '', dataType1:'', dataType2:'', p1: '', p2: '', p12: '', maxDist: ''
-    };
+    this.resetQtlParam();
 
     // tissue dropdown box
     this.dropdownSettings = {
@@ -215,6 +183,67 @@ export class SnpQueryComponent implements OnInit {
     this.dialog.open(DialogComponent, dialogConfig);
   }
 
+  resetQtlParam() {
+    this.qtlParam= {
+      dataset1: '', dataset2: '', dataType1:'', dataType2:'', p1: '', p2: '', p12: '', maxDist: ''
+    };
+
+    this.searchParam.tissues=[]
+  }
+
+  genomeOnChange(){
+    if (this.selectedRefGenome == this.currentRefGenome) {
+      // do nothing
+      return;
+    }
+
+    // reset reference genome and fetch dataset
+    this.currentRefGenome = this.selectedRefGenome;
+    this.getTissueCellList(this.currentRefGenome);
+    this.getColocDataList(this.currentRefGenome);
+
+    this.resetQtlParam();
+  }
+
+  getTissueCellList(refGenome:string) {
+    this.getDataService.getTissueCellList(refGenome).subscribe(
+      data => {
+        //this.tissueOptions = data;
+        this.tissueCellOptions = data;
+        this.tissueOptions = this.tissueCellOptions.map(x=>x.InfoType+":"+x.InfoValue);
+        this.tissueOptions = this.tissueOptions.filter(function(ele, index, self){
+          return index == self.indexOf(ele);
+        })
+        this.tissueOptions = this.tissueOptions.sort();
+      }, error => {
+        this.openDialog("Failed to fetch all tissues: " + error.message);
+      });
+  }
+
+  // getTrackType(refGenome:string){
+  //   this.getDataService.getExistingTrackType(refGenome).subscribe(
+  //     data => {
+  //       this.trackTypeOptions = data;
+  //       this.changeDetectorRefs.detectChanges();
+  //     }, error => {
+  //       this.openDialog("Failed to retrieve existing track types");
+  //     }
+  //   )
+  // }
+
+  getColocDataList(refGenome:string) {
+    this.getDataService.getColocDataList(refGenome).subscribe(
+      data => {
+        console.log(data);
+        this.gwasDataList = data.GWAS;
+        this.qtlDataList = data.QTL;
+        this.allColocDataList = this.gwasDataList.concat(this.qtlDataList);
+        // this.changeDetectorRefs.detectChanges();
+      }, error => {
+        this.openDialog("Failed to get QTL data list: " + error.message);
+      });
+  }
+
   searchDB() {
     // verify SNP input
     let verifyError = this.verifyInput("searchDB");
@@ -233,7 +262,7 @@ export class SnpQueryComponent implements OnInit {
     // this.dataSharingService.toggleShowViewerChanged();
     if (this.snpInput.length > 0)
     {
-      this.getDataService.getBySnpInput(this.snpInput, this.searchParam).subscribe(
+      this.getDataService.getBySnpInput(this.snpInput, this.currentRefGenome, this.searchParam).subscribe(
         data => {
           //console.log(data);
           this.epiResultData = data.epiDataList;
@@ -247,7 +276,7 @@ export class SnpQueryComponent implements OnInit {
           this.openDialog("Failed to : " + error.message);
         });
     } else if (this.fileName.length > 0) {
-      this.getDataService.getByFileInput(this.fileToUpload, this.searchParam).subscribe(
+      this.getDataService.getByFileInput(this.fileToUpload, this.currentRefGenome, this.searchParam).subscribe(
         data => {
           //console.log(data);
           this.epiResultData = data.epiDataList;
@@ -277,7 +306,7 @@ export class SnpQueryComponent implements OnInit {
 
     if (this.snpInput.length > 0)
     {
-      this.getDataService.colocBySnpInput(this.snpInput, this.qtlParam).subscribe(
+      this.getDataService.colocBySnpInput(this.snpInput, this.currentRefGenome, this.qtlParam).subscribe(
         data =>{
           this.colocResultData = data;
           this.tableDataSource2.data = this.colocResultData;
@@ -288,7 +317,7 @@ export class SnpQueryComponent implements OnInit {
         });
     }
     else if (this.fileName.length > 0) {
-        this.getDataService.colocByFileInput(this.fileToUpload, this.qtlParam).subscribe(
+        this.getDataService.colocByFileInput(this.fileToUpload, this.currentRefGenome, this.qtlParam).subscribe(
         data => {
           this.colocResultData = data;
           this.tableDataSource2.data = this.colocResultData;
@@ -446,94 +475,94 @@ export class SnpQueryComponent implements OnInit {
     this.trackDataSourceDropDownClick=true;
   }
 
-  updateTrackDataSource(event:any) {
-    if (this.trackTypeDropDownClick && this.selectedTrackTypes.length > 0) {
-      this.trackTypeDropDownClick = false;
-      this.getDataService.getExistingDataSource(this.selectedTrackTypes).subscribe(
-        data => {
-          this.trackDataSourceOptions = data;
-        }, error => {
-          this.openDialog("Failed to retrieve existing dataSource given track type " + this.selectedTrackTypes.join(","));
-        }
-      )
-    }
-  }
+  // updateTrackDataSource(event:any) {
+  //   if (this.trackTypeDropDownClick && this.selectedTrackTypes.length > 0) {
+  //     this.trackTypeDropDownClick = false;
+  //     this.getDataService.getExistingDataSource(this.selectedTrackTypes).subscribe(
+  //       data => {
+  //         this.trackDataSourceOptions = data;
+  //       }, error => {
+  //         this.openDialog("Failed to retrieve existing dataSource given track type " + this.selectedTrackTypes.join(","));
+  //       }
+  //     )
+  //   }
+  // }
 
-  updateTrackTissue(event: any){
-    if (this.trackDataSourceDropDownClick && this.selectedTrackDataSources.length > 0) {
-      this.trackDataSourceDropDownClick = false;
+  // updateTrackTissue(event: any){
+  //   if (this.trackDataSourceDropDownClick && this.selectedTrackDataSources.length > 0) {
+  //     this.trackDataSourceDropDownClick = false;
     
-      this.getDataService.getExistingTissue(this.selectedTrackTypes, this.selectedTrackDataSources).subscribe(
-        data => {
-          this.trackTissueOptions = data;
-        }, error => {
-          this.openDialog("Failed to retrieve existing tissues given track type " + this.selectedTrackTypes.join(",") + " and data source " + this.selectedTrackDataSources.join(","));
-        }
-      )
-    }
-  }
+  //     this.getDataService.getExistingTissue(this.selectedTrackTypes, this.selectedTrackDataSources).subscribe(
+  //       data => {
+  //         this.trackTissueOptions = data;
+  //       }, error => {
+  //         this.openDialog("Failed to retrieve existing tissues given track type " + this.selectedTrackTypes.join(",") + " and data source " + this.selectedTrackDataSources.join(","));
+  //       }
+  //     )
+  //   }
+  // }
 
   // Verify track type, data source and tissue 
-  verifyTrackSelection() {
-    if (this.selectedTrackTypes == null || this.selectedTrackTypes.length == 0) {
-      return "To view genome tracks, please select at least one track type on the left side bar";
-    } else if (this.selectedTrackDataSources == null || this.selectedTrackDataSources.length == 0) {
-      return "There are " + this.selectedTrackDataSources.length + " data sources under track type " + this.selectedTrackTypes.join(",") +". To avoid long loading time, please select at least one data source on the left side bar";
-    }
-    return "";
-  }
+  // verifyTrackSelection() {
+  //   if (this.selectedTrackTypes == null || this.selectedTrackTypes.length == 0) {
+  //     return "To view genome tracks, please select at least one track type on the left side bar";
+  //   } else if (this.selectedTrackDataSources == null || this.selectedTrackDataSources.length == 0) {
+  //     return "There are " + this.selectedTrackDataSources.length + " data sources under track type " + this.selectedTrackTypes.join(",") +". To avoid long loading time, please select at least one data source on the left side bar";
+  //   }
+  //   return "";
+  // }
   //#endregion
 
   //#region Open EpiGenome Browser with url parameters
-  openEpiBrowser() {
-    // verify track selection 
-    let err = this.verifyTrackSelection();
-    if (err.length > 0){
-      this.openDialog(err);
-      return;
-    }
+  // openEpiBrowser() {
+  //   // verify track selection 
+  //   let err = this.verifyTrackSelection();
+  //   if (err.length > 0){
+  //     this.openDialog(err);
+  //     return;
+  //   }
 
-    // generate data hub file
-    this.getDataService.getEGHubFile(this.selectedTrackTypes, this.selectedTrackDataSources, this.selectedTrackTissues).subscribe(
-      data =>{
-        let hubJsonUrl = data.Value;
+  //   // generate data hub file
+  //   this.getDataService.getEGHubFile(this.selectedTrackTypes, this.selectedTrackDataSources, this.selectedTrackTissues).subscribe(
+  //     data =>{
+  //       let hubJsonUrl = data.Value;
 
-        // get coordinate
-        let coordinate = '';
+  //       // get coordinate
+  //       let coordinate = '';
 
-        if (this.activeTab == this.tabOptions[0]){
-          coordinate = this.getCoordinate(this.lastIdx);
-        }
-        else if (this.activeTab = this.tabOptions[1]) {
-          coordinate = this.getCoordinate2(this.lastIdx2);
-        }
+  //       if (this.activeTab == this.tabOptions[0]){
+  //         coordinate = this.getCoordinate(this.lastIdx);
+  //       }
+  //       else if (this.activeTab = this.tabOptions[1]) {
+  //         coordinate = this.getCoordinate2(this.lastIdx2);
+  //       }
 
-        if (coordinate == null)
-        {
-          this.openDialog("Please select a SNP from the table");
-          return;
-        }
+  //       if (coordinate == null)
+  //       {
+  //         this.openDialog("Please select a SNP from the table");
+  //         return;
+  //       }
 
-        // build URL
-        let eg_url = this.buildEGUrl(coordinate, hubJsonUrl);
-        window.open(eg_url, '_blank');                          
-      }, error => {
-        this.openDialog("Failed to generate data hub for epigenome browser: " + error.message);
-      }
-    )
-  }
+  //       // build URL
+  //       let eg_url = this.buildEGUrl(coordinate, hubJsonUrl);
+  //       window.open(eg_url, '_blank');                          
+  //     }, error => {
+  //       this.openDialog("Failed to generate data hub for epigenome browser: " + error.message);
+  //     }
+  //   )
+  // }
+  // 
+  // buildEGUrl(position:string, hubUrl:string) {
+  //   let arr = position.split("-");
+  //   if (arr.length == 1)
+  //   {
+  //     arr = position.split(":");
+  //     let pos = parseInt(arr[1]);
+  //     position = arr[0] + ":" + (pos - 100000) + "-" + (pos + 100000);
+  //   }
 
-  buildEGUrl(position:string, hubUrl:string) {
-    let arr = position.split("-");
-    if (arr.length == 1)
-    {
-      arr = position.split(":");
-      let pos = parseInt(arr[1]);
-      position = arr[0] + ":" + (pos - 100000) + "-" + (pos + 100000);
-    }
-
-    return "http://10.132.10.11:3000/browser?genome=hg19&position=" + position + "&hub=" + hubUrl;
-  }
+  //   return "http://10.132.10.11:3000/browser?genome=hg19&position=" + position + "&hub=" + hubUrl;
+  // }
   //#endregion
 
 

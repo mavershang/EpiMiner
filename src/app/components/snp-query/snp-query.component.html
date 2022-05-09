@@ -27,12 +27,11 @@
 
 
 <div class="grid-container">
-        <div class="refGenome-select-container">
-            <a style="text-align: center; color:navy">Genome Build  </a>    
-            <select  class="selectGenome" [(ngModel)] = "refGenome" name="gwasDataList" placeholder="Select Reference Genome">
-                <!-- <option [ngValue]="undefined" hidden>Select GWAS Dataset</option> -->
-                <option value="" disabled selected>Select Reference</option>
-                <option *ngFor = "let g of refGenomeArr" [value]="g">{{g}}</option>
+        <div class="refGenome-select-container" style="width:100%">
+            <label style="text-align: left; width:200px; padding-left:5px; padding-right: 10px; color:navy">Reference Genome</label>    
+            <select  class="selectGenome" style="width: 192px" [(ngModel)] = "selectedRefGenome" (change)="genomeOnChange()">
+                <!-- <option value="" disabled selected>Select Reference Genome</option> -->
+                <option *ngFor = "let g of refGenomeArr" [ngValue]="g">{{g}}</option>
             </select>
         </div>
 
@@ -81,24 +80,24 @@
 
         <button class="buttonViewer" (click)="openEpiBrowser()">Launch Epigenome Browser</button> -->
 
-        <h4 style="text-align: left; color:navy">Epigenome Browser</h4>    
-        <button class="buttonTrackSelection" (click)="openTrackTreeDialog()">Launch Track Selector</button>
+        <h4 style="text-align: left; padding-left: 5px; color:navy">Epigenome Browser</h4>    
+        <button mat-raised-button class="buttonTrackSelection" color="primary" style="align-items: center; color: black" (click)="openTrackTreeDialog()">Launch Track Selector</button>
     </div>
 
     <div class="Input">
         <div class="snpInput-container"> 
             <!-- <div class="snpInputTitle"> -->
-                <h4 style="text-align:left; color: navy;">SNP Input</h4>    
+                <h4 style="font-size:medium; text-align:left; color: navy;">SNP Input</h4>    
             <!-- </div> -->
 
             <!-- <div class="snpInput"> -->
                     <div class="snpStrInput">
-                        <label style="color: black;align-content: left;">Option #1  </label>>
-                        <input type="text" placeholder="Search with SNPs (snp1;snp...)" name="snp"  class="form-control" [(ngModel)]="snpInput" required maxlength="100"/>
+                        <label style="width:180px; padding-left: 5px; padding-right: 5px; color: black; text-align: left;">Option #1</label>>
+                        <input type="text" style="width:238px" placeholder="Search with SNPs (chr1:123;chr2:789...)" name="snp"  class="form-control" [(ngModel)]="snpInput" required maxlength="100"/>
                     </div>
                     <div class="snpFileInput">
-                        <label style="text-align: left;color: black;">Option #2  </label>>
-                        <input type="file" class="file-input" style="color:black"
+                        <label style="width:180px; padding-left: 5px; padding-right: 5px; color: black; text-align: left;">Option #2</label>>
+                        <input type="file" class="file-input" style="color:black;width:250px"
                             (change)="onFileSelected($event)" #fileUpload>
                     </div>
             <!-- </div> -->
@@ -273,20 +272,20 @@
 
         <mat-tab label="Colocalization"> 
             <div class="coloc-container">
-                <div class="select-data">
-                    <div class="select-container">
+                    <div class="select1-container">
                         <select  class="selectGWAS" [(ngModel)] = "qtlParam.dataset1" name="gwasDataList" placeholder="Select GWAS Data">
                             <!-- <option [ngValue]="undefined" hidden>Select GWAS Dataset</option> -->
                             <option value="" disabled selected>Select the 1st GWAS/QTL Dataset</option>
                             <option *ngFor = "let g of allColocDataList" [value]="g">{{g}}</option>
                         </select>
+                    </div>
+                    <div class="select2-container">
                         <select class="selectQTL" [(ngModel)] = "qtlParam.dataset2" name="qtlDataList" placeholder="Select QTL Data">
                             <!-- <option [ngValue]="undefined" hidden>Select QTL Dataset</option> -->
                             <option value="" disabled selected>Select the 2nd GWAS/QTL Dataset</option>
                             <option *ngFor = "let q of allColocDataList" [value]="q">{{q}}</option>
                         </select>
                     </div>
-                </div>
 
                 <div class="pval-cutoff">
                     <div class="pval-container">

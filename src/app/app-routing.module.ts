@@ -17,7 +17,8 @@ const routes: Routes = [
   { path: 'epiBrowser', component: EpiBrowserComponent},
   { path: 'about', component: AboutComponent},
   { path: 'sidebar', component: EgSidebarComponent},
-  { path: 'trackTree', component:TrackTreeComponent}
+  { path: 'trackTree', component:TrackTreeComponent},
+  { path: 'summary', component:DataSummaryComponent},
 ]
 
 @NgModule({
