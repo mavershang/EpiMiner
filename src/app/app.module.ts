@@ -33,6 +33,7 @@ import { DataSummaryComponent } from './components/data-summary/data-summary.com
 import { TrackTreeComponent } from './components/track-tree/track-tree.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { AnalysisPlotComponent } from './components/analysis-plot/analysis-plot.component';
+import { CreditReportComponent } from './components/credit-report/credit-report.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { AnalysisPlotComponent } from './components/analysis-plot/analysis-plot.
     DataSummaryComponent,
     TrackTreeComponent,
     AnalysisPlotComponent,
+    CreditReportComponent,
   ],
   imports: [
     BrowserModule,

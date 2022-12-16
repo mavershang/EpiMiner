@@ -22,22 +22,30 @@ export class GetDataService extends BaseService{
     return this.http.get<DataSummary[]>(this.rootURL+'/DataSummary')
   }
 
-  getBySnpInput(snpStr:string, refGenome:string, sp:SearchParam): Observable<any> {
+  queryByStr(inputStr:string, refGenome:string, sp:SearchParam): Observable<any> {
     let params = new HttpParams();
     params = params.append('refGenome', refGenome);
-    params = params.append('snpStr', snpStr);
+    params = params.append('inputStr', inputStr);
     params = params.append("maxDist", sp.maxDist);
-    params = params.append("tissues", sp.tissues.join(","));
+    params = params.append("tissueCelltypes", encodeURIComponent(sp.tissues.join(",")));
     return this.http.get<any>(this.rootURL+'/GetEpiData/id', {params});
   }
 
-  getByFileInput(fileToUpload:File, refGenome:string, param:SearchParam): Observable<any> {
+  queryByFile(fileToUpload:File, refGenome:string, param:SearchParam): Observable<any> {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     formData.append('refGenome', refGenome);
     formData.append('maxDist', param.maxDist);
-    formData.append('tissues', param.tissues.join(","));
-    return this.http.post<any>(this.rootURL + "/GetEpiData", formData);
+    formData.append('tissues', encodeURIComponent(param.tissues.join(",")));
+    return this.http.post<any>(this.rootURL + "/GetEpiData/id", formData);
+  }
+
+  RunScEpiLock(inputStr:string, refGenome: string, sp:SearchParam): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('refGenome', refGenome);
+    params = params.append('inputStr', inputStr);
+    params = params.append("tissueCelltypes", encodeURIComponent(sp.tissues.join(",")));
+    return this.http.get<any>(this.rootURL + '/runDLModel/id', {params});
   }
 
   getColocDataList(refGenome:string) {
@@ -119,6 +127,16 @@ export class GetDataService extends BaseService{
 
   getTrackTree():Observable<string> {
     return this.http.get<any>(this.rootURL + "/egHelper/getTrackStructure");
+  }
+
+  // credit report data services
+  getCRGeneticsByGene(gene: string, disease: string, refGenome: string, param: SearchParam): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('disease', disease);
+    params = params.append('geneStr', gene);
+    params = params.append('refgenome', refGenome);
+    params = params.append('maxDistStr', param.maxDist);
+    return this.http.get<any>(this.rootURL + "/CreditReport/id", {params});
   }
 
   // testCORS() {

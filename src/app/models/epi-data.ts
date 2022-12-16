@@ -12,6 +12,10 @@ export class EpiData {
     EpiLinkScore: number;
     QTLPValue: number;
     Description: string;
+    scEpiLockPred: string;
+    scEpiLockPeakOverlap: string;
     highlighted?:boolean;
-    hovered?:boolean;
+    hovered?:boolean;   
+
+
 }

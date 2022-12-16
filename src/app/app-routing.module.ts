@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
+import { CreditReportComponent } from './components/credit-report/credit-report.component';
 import { DataSummaryComponent } from './components/data-summary/data-summary.component';
 import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component';
 import { EpiBrowserComponent } from './components/epi-browser/epi-browser.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'sidebar', component: EgSidebarComponent},
   { path: 'trackTree', component:TrackTreeComponent},
   { path: 'summary', component:DataSummaryComponent},
+  { path: 'credit-report', component:CreditReportComponent},
 ]
 
 @NgModule({

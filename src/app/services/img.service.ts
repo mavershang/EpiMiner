@@ -19,6 +19,12 @@ export class ImgService  extends BaseService{
     return this.http.get(this.rootURL+'/lzp',  { params: params, responseType: 'blob' });
   }
 
+  getLzpImageByFname(file:string): Observable<Blob>{
+    let params = new HttpParams();
+    params = params.append('file', file);
+    return this.http.get(this.rootURL+'/lzp/id',  { params: params, responseType: 'blob' });
+  }
+
   getHeatmapImage(dir: string): Observable<Blob> {
     let params = new HttpParams();
     params = params.append('wd', dir);

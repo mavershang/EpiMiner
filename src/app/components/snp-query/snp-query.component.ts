@@ -20,6 +20,8 @@ import { ExcelService } from 'src/app/services/excel.service';
 import { DataTissueCell } from 'src/app/models/data-tissue-cell';
 import { TrackTreeComponent } from '../track-tree/track-tree.component';
 import { AnalysisPlotComponent } from '../analysis-plot/analysis-plot.component';
+import { scEpiLockResult } from 'src/app/models/scEpiLock-result';
+import { DataUtil } from 'src/app/util/util.data';
 
 @Component({
   selector: 'app-snp-query',
@@ -33,7 +35,7 @@ export class SnpQueryComponent implements OnInit {
   currentRefGenome:string;
 
   // Input
-  snpInput: string = "";
+  inputStr: string = "";
   fileToUpload: File = null;
   fileName: string = "";
   searchParam: SearchParam = new SearchParam();
@@ -41,7 +43,7 @@ export class SnpQueryComponent implements OnInit {
   // loading spiner
   loading$ = this.loader.loading$;
 
-  // 
+  // tab names
   tabOptions:string[] = ['epi', 'coloc']
   activeTab:string=this.tabOptions[0];
 
@@ -58,7 +60,7 @@ export class SnpQueryComponent implements OnInit {
   qtlParam: QtlParam;
 
   // epi data table
-  displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'Tissue', 'CellType', 'CellLine', 'DataSource', 'Description', 'DataType'];
+  displayedColumns: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'Tissue', 'CellType', 'CellLine', 'DataSource', 'Description', 'DataType', 'scEpiLockPeakOverlap', 'scEpiLockPred'];
   epiResultData: EpiData[] = [];
   hasData:boolean=false;
   tableDataSource = new MatTableDataSource<EpiData>(); 
@@ -66,6 +68,7 @@ export class SnpQueryComponent implements OnInit {
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   filterEntity: EpiData;
   filterType: MatTableFilter;
+  scEpiLockResultData: scEpiLockResult[] = [];
 
   // coloc data table
   displayedColumns2: string[] = ['IndexSnp', "Gene", 'NumOfSnp', 'H0_abf', 'H1_abf', 'H2_abf', 'H3_abf', 'H4_abf'];
@@ -111,7 +114,7 @@ export class SnpQueryComponent implements OnInit {
     private excelService: ExcelService
     ) {
       // default genome build
-      this.selectedRefGenome = this.refGenomeArr[0];
+      this.selectedRefGenome = this.refGenomeArr[1];
       this.currentRefGenome = this.selectedRefGenome;
 
       // initiate epiSearch result array
@@ -138,6 +141,9 @@ export class SnpQueryComponent implements OnInit {
 
     // qtl param
     this.resetQtlParam();
+
+    // reset result table
+    this.resetResultTable();
 
     // tissue dropdown box
     this.dropdownSettings = {
@@ -189,6 +195,11 @@ export class SnpQueryComponent implements OnInit {
     };
 
     this.searchParam.tissues=[]
+  }
+
+  resetResultTable() {
+    this.epiResultData = [];
+    this.scEpiLockResultData = [];
   }
 
   genomeOnChange(){
@@ -258,39 +269,63 @@ export class SnpQueryComponent implements OnInit {
       this.searchParam.maxDist = '500000';
     }
 
-    // this.dataSharingService.inputSnpArr = this.snpInput.split(",");
-    // this.dataSharingService.toggleShowViewerChanged();
-    if (this.snpInput.length > 0)
-    {
-      this.getDataService.getBySnpInput(this.snpInput, this.currentRefGenome, this.searchParam).subscribe(
-        data => {
-          //console.log(data);
-          this.epiResultData = data.epiDataList;
-          this.workDir = data.workDir;
-          this.tableDataSource.data = this.epiResultData;
-          this.hasData = this.epiResultData.length > 0;
-          this.tableDataSource.paginator = this.paginator;
-          this.tableDataSource.sort = this.sort;
-          // this.changeDetectorRefs.detectChanges();
-        },error => {
-          this.openDialog("Failed to : " + error.message);
-        });
+    // reset result data and table
+    this.resetResultTable();
+
+    // search
+    if (this.inputStr.length > 0) {
+      this.searchDbBySnpStr();
     } else if (this.fileName.length > 0) {
-      this.getDataService.getByFileInput(this.fileToUpload, this.currentRefGenome, this.searchParam).subscribe(
-        data => {
-          //console.log(data);
-          this.epiResultData = data.epiDataList;
-          this.workDir = data.workDir;
-          this.hasData = this.epiResultData.length > 0;
-          this.tableDataSource.data = this.epiResultData;
-          this.tableDataSource.paginator = this.paginator;
-          this.tableDataSource.sort = this.sort;
-          // this.changeDetectorRefs.detectChanges();
-        },error => {
-          this.openDialog("Failed to : " + error.message);
-          this.epiResultData = [];
-        });
+      this.searchDbBySnpFile();
     }
+  }
+
+  searchDbBySnpStr() {
+    // search EpiDB
+    this.getDataService.queryByStr(this.inputStr, this.currentRefGenome, this.searchParam).subscribe(
+      data => {
+        this.epiResultData = data.epiDataList;
+        this.epiResultData = DataUtil.merge(this.epiResultData, this.scEpiLockResultData);
+        this.workDir = data.workDir;
+        this.tableDataSource.data = this.epiResultData;
+        this.hasData = this.epiResultData.length > 0;
+        this.tableDataSource.paginator = this.paginator;
+        this.tableDataSource.sort = this.sort;
+        // this.changeDetectorRefs.detectChanges();
+      },error => {
+        this.openDialog("Failed to search EpiDB by SNP string: " + error.message);
+      });
+
+    // run scEpiLock
+    this.getDataService.RunScEpiLock(this.inputStr, this.selectedRefGenome, this.searchParam).subscribe(
+      data => {
+        this.scEpiLockResultData = data;
+        this.epiResultData = DataUtil.merge(this.epiResultData, this.scEpiLockResultData);
+        this.tableDataSource.data = this.epiResultData;
+
+        // match
+      }, error => {
+        this.openDialog("Failed to run DL model by SNP string: " + error.message);
+      }
+    )
+  }
+
+  searchDbBySnpFile() {
+    this.getDataService.queryByFile(this.fileToUpload, this.currentRefGenome, this.searchParam).subscribe(
+      data => {
+        //console.log(data);
+        this.epiResultData = DataUtil.merge(data.epiDataList, this.scEpiLockResultData);
+        this.workDir = data.workDir;
+        this.hasData = this.epiResultData.length > 0;
+        this.tableDataSource.data = this.epiResultData;
+        this.tableDataSource.paginator = this.paginator;
+        this.tableDataSource.sort = this.sort;
+        // this.changeDetectorRefs.detectChanges();
+      },error => {
+        this.openDialog("Failed to : " + error.message);
+        this.epiResultData = [];
+      });
+      
   }
 
   runQTL() {
@@ -304,9 +339,9 @@ export class SnpQueryComponent implements OnInit {
       return;
     }
 
-    if (this.snpInput.length > 0)
+    if (this.inputStr.length > 0)
     {
-      this.getDataService.colocBySnpInput(this.snpInput, this.currentRefGenome, this.qtlParam).subscribe(
+      this.getDataService.colocBySnpInput(this.inputStr, this.currentRefGenome, this.qtlParam).subscribe(
         data =>{
           this.colocResultData = data;
           this.tableDataSource2.data = this.colocResultData;
@@ -347,20 +382,19 @@ export class SnpQueryComponent implements OnInit {
   verifyInput(mode:string) {
     switch (mode.toLowerCase()) {
       case "searchdb":
-        if (this.snpInput == "" && this.fileName == "") {
+        if (this.inputStr == "" && this.fileName == "") {
           return "Please fill SNP search textbox or upload a file.";
-        } else if (this.snpInput.length > 0 && this.fileName.length >0 ){
+        } else if (this.inputStr.length > 0 && this.fileName.length >0 ){
           return "Please search with EITHER SNP textbox or upload a file.";
         } else if (this.searchParam.tissues == undefined || this.searchParam.tissues.length==0) {
           return "Please select Tissue and Celltype before search";
         }
-
         return "";
 
       case "qtl":
-        if (this.snpInput == "" && this.fileName == "") {
+        if (this.inputStr == "" && this.fileName == "") {
           return "Please fill SNP search textbox or upload a file.";
-        } else if (this.snpInput.length > 0 && this.fileName.length >0 ){
+        } else if (this.inputStr.length > 0 && this.fileName.length >0 ){
           return "Please search with EITHER SNP textbox or upload a file.";
         } else if (this.qtlParam.dataset1 == "" || this.qtlParam.dataset2 == "")
         {
@@ -419,23 +453,6 @@ export class SnpQueryComponent implements OnInit {
       console.log('The dialog was closed', result);
     });
   }
-
-  // openTopSnpDialogTest(): void {
-  //   const dialogRef = this.dialog.open(TopSnpModalComponent, {
-  //     width: '1400px',
-  //     data:{
-  //       indexSnp: "testSNP",
-  //       topSnps: "A:0.01;B:0;C:1",
-  //       workDir:"test",
-  //       dataset1: "data1",
-  //       dataset2: "data2"
-  //     }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     console.log('The dialog was closed', result);
-  //   });
-  // }
 
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {
     this.activeTab = this.tabOptions[tabChangeEvent.index];

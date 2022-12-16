@@ -1,0 +1,72 @@
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+      'input input'
+      'main main';
+    grid-gap: 5px;
+    background-color: #eaebec;
+    padding: 2px;
+    position: relative;
+    width: 100%;
+  }
+
+  .grid-container > div {
+    background-color:eaebec;
+    /* text-align: left; */
+    padding: 10px 0;
+    font-size: 16px;
+  }
+
+.Input {
+    grid-area:input;
+    align-items:flex-start;
+    width:100%;
+}
+
+.mat-tab-group {
+    grid-area: main;
+    color: black;
+    align-items:flex-start;
+    width: auto;
+ }
+
+.genetics-grid-container {
+    display: grid;
+    grid-template-areas:
+        'table table'
+        'lzp1 lzp2'
+        'lzp3 lzp4'
+        'lzp5 lzp6';
+    grid-gap: 5px;
+    background-color: rgb(227, 230, 233);
+    padding: 5px;
+    position: relative;
+    width: auto;
+}
+
+.table-container-hypercoloc {
+    grid-area:table; 
+    width:auto;
+}
+
+.img-container1 {
+    grid-area: lzp1;
+    align-items:flex-start;
+}
+.img-container2 {
+    grid-area: lzp2;
+    align-items:flex-start;
+}
+.img-container3 {
+    grid-area: lzp3;
+    align-items:flex-start;
+}
+.img-container4 {
+    grid-area: lzp4;
+    align-items:flex-start;
+}
+.img-container5 {
+    grid-area: lzp5;
+    align-items:flex-start;
+}
