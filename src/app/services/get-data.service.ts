@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+//import * as internal from 'stream';
 import { QtlParam } from '../components/snp-query/snp-query.component';
 import { ColocResult } from '../models/coloc-result';
 import { DataSummary } from '../models/data-summary';
@@ -137,6 +138,15 @@ export class GetDataService extends BaseService{
     params = params.append('refgenome', refGenome);
     params = params.append('maxDistStr', param.maxDist);
     return this.http.get<any>(this.rootURL + "/CreditReport/id", {params});
+  }
+
+  askChatGPT(question:string, maxToken:number, randomness:number, model:string): Observable<string> {
+    let params = new HttpParams();
+    params = params.append('question', question);
+    params = params.append('maxToken', maxToken);
+    params = params.append('temperature', randomness);
+    params = params.append('model', model);
+    return this.http.get<any>(this.rootURL+ "/ChatGPT/id", {params});
   }
 
   // testCORS() {

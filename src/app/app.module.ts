@@ -34,6 +34,7 @@ import { TrackTreeComponent } from './components/track-tree/track-tree.component
 import { MatTreeModule } from '@angular/material/tree';
 import { AnalysisPlotComponent } from './components/analysis-plot/analysis-plot.component';
 import { CreditReportComponent } from './components/credit-report/credit-report.component';
+import { FunStuffComponent } from './components/fun-stuff/fun-stuff.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { CreditReportComponent } from './components/credit-report/credit-report.
     TrackTreeComponent,
     AnalysisPlotComponent,
     CreditReportComponent,
+    FunStuffComponent,
   ],
   imports: [
     BrowserModule,

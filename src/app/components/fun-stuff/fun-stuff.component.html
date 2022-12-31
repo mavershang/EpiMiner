@@ -1,0 +1,14 @@
+<div class = "chatGPT_containter">
+    <h2 style="color:black">ChatGPT</h2>
+
+    <div class="chatGPT_input">
+        <input type="text" style="width:600px" placeholder="Ask ChatGPT any question" name="gptInput"  class="form-control" [(ngModel)]="inputStr" required/>
+        <button mat-raised-button class="buttonAsk" color="primary" style="align-items: center; color: black" (click)="askChatGPT()">submit</button>
+
+    </div>
+
+    <div class = "chatGPT_output">
+        <textarea [(ngModel)]="outStr" style="width:600px; height:300px;"></textarea>
+    </div>
+
+</div>

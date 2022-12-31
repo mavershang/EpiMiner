@@ -6,6 +6,7 @@ import { DataSummaryComponent } from './components/data-summary/data-summary.com
 import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component';
 import { EpiBrowserComponent } from './components/epi-browser/epi-browser.component';
 import { FinemappingComponent } from './components/finemapping/finemapping.component';
+import { FunStuffComponent } from './components/fun-stuff/fun-stuff.component';
 import { SnpQueryComponent } from './components/snp-query/snp-query.component';
 import { TrackTreeComponent } from './components/track-tree/track-tree.component';
 import { ViewerComponent } from './components/viewer/viewer.component';
@@ -21,6 +22,8 @@ const routes: Routes = [
   { path: 'trackTree', component:TrackTreeComponent},
   { path: 'summary', component:DataSummaryComponent},
   { path: 'credit-report', component:CreditReportComponent},
+  { path: 'fun-stuff', component:FunStuffComponent},
+
 ]
 
 @NgModule({
