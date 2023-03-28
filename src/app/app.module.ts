@@ -15,7 +15,7 @@ import { MatTableFilterModule } from 'mat-table-filter';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // import { NgxChartModule } from 'ngx-chart';
 import { NgxChartsModule }from '@swimlane/ngx-charts';
-import { NgChartsModule } from 'ng2-charts'
+// import { NgChartsModule } from 'ng2-charts'
 
 
 
@@ -88,7 +88,7 @@ import { TestNgxEchartComponent } from './components/plot/test-ngx-echart/test-n
     MatTreeModule,
     // NgxChartModule,
     NgxChartsModule,
-    NgChartsModule,  
+    //NgChartsModule,  
   ],
   providers: [
     {
