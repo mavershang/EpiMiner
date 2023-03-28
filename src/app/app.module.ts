@@ -44,7 +44,6 @@ import { BubblePlotBase } from './components/plot/bubble-plot-base/bubble-plot-b
 import { PlotBulkRNASeqExprComponent } from './components/plot/plot-bulk-rnaseq-expr/plot-bulk-rnaseq-expr.component';
 import { PlotHolderExprComponent } from './components/plot/plot-holder-expr/plot-holder-expr.component';
 import { TestComponent } from './components/plot/test/test.component';
-import { TestNgxEchartComponent } from './components/plot/test-ngx-echart/test-ngx-echart.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +65,6 @@ import { TestNgxEchartComponent } from './components/plot/test-ngx-echart/test-n
     PlotBulkRNASeqExprComponent,
     PlotHolderExprComponent,
     TestComponent,
-    TestNgxEchartComponent,
   ],
   imports: [
     BrowserModule,
