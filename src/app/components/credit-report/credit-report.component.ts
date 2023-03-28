@@ -14,6 +14,7 @@ import { MatTableFilter } from 'mat-table-filter';
 import { EpiData } from 'src/app/models/epi-data';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { DataTissueCell } from 'src/app/models/data-tissue-cell';
+import { DataSharingBulkRNASeqService } from 'src/app/services/data-sharing-bulk-rnaseq.service';
 
 
 @Component({
@@ -80,7 +81,8 @@ export class CreditReportComponent implements OnInit {
     private dialog: MatDialog,
     public loader: LoadingService,
     private getDataService: GetDataService,
-    private imgService: ImgService) {
+    private imgService: ImgService,
+    public dataShareBulkRnaSeqService: DataSharingBulkRNASeqService) {
       this.initRefGenome();
       this.getTissueCellList(this.currentRefGenome);
     }
@@ -172,7 +174,7 @@ export class CreditReportComponent implements OnInit {
     }
 
     // genetics: hypercoloc and locuszoom
-/*     this.getDataService.getCRGeneticsByGene(this.geneInput, this.selectedDisease, this.selectedRefGenome, this.searchParam).subscribe(
+    this.getDataService.getCRGeneticsByGene(this.geneInput, this.selectedDisease, this.selectedRefGenome, this.searchParam).subscribe(
       data => {
         console.log(data);
         this.hypercolocResults = data.HCRList;
@@ -183,7 +185,7 @@ export class CreditReportComponent implements OnInit {
         this.getImages(this.lzpFiles);
       },error => {
         this.openDialog("Failed to run Credit Report genetics: " + error.message);
-      }); */
+      }); 
     
     // epigenomics
     this.getDataService.queryByStr(this.geneInput, this.selectedRefGenome, this.searchParam).subscribe(
@@ -197,6 +199,17 @@ export class CreditReportComponent implements OnInit {
         this.openDialog("Failed to query gene for epigenomics: " + error.message);
       }
     );
+
+    // bulk RNASeq
+    this.getDataService.getCRBulkRNASeqByGene(this.geneInput, this.selectedDisease).subscribe(
+      data => {
+        console.log("test");
+        this.dataShareBulkRnaSeqService.import(data);
+      }, error => {
+        this.openDialog("Failed to get RNASeq result: " + error.message);
+      }
+    );
+
   }
 
   verifyInput() {

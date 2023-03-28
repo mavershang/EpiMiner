@@ -13,6 +13,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule }  from '@angular/material/sort';
 import { MatTableFilterModule } from 'mat-table-filter';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+// import { NgxChartModule } from 'ngx-chart';
+import { NgxChartsModule }from '@swimlane/ngx-charts';
+import { NgChartsModule } from 'ng2-charts'
+
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,6 +40,11 @@ import { MatTreeModule } from '@angular/material/tree';
 import { AnalysisPlotComponent } from './components/analysis-plot/analysis-plot.component';
 import { CreditReportComponent } from './components/credit-report/credit-report.component';
 import { FunStuffComponent } from './components/fun-stuff/fun-stuff.component';
+import { BubblePlotBase } from './components/plot/bubble-plot-base/bubble-plot-base.component';
+import { PlotBulkRNASeqExprComponent } from './components/plot/plot-bulk-rnaseq-expr/plot-bulk-rnaseq-expr.component';
+import { PlotHolderExprComponent } from './components/plot/plot-holder-expr/plot-holder-expr.component';
+import { TestComponent } from './components/plot/test/test.component';
+import { TestNgxEchartComponent } from './components/plot/test-ngx-echart/test-ngx-echart.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +62,11 @@ import { FunStuffComponent } from './components/fun-stuff/fun-stuff.component';
     AnalysisPlotComponent,
     CreditReportComponent,
     FunStuffComponent,
+    BubblePlotBase,
+    PlotBulkRNASeqExprComponent,
+    PlotHolderExprComponent,
+    TestComponent,
+    TestNgxEchartComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,6 +86,9 @@ import { FunStuffComponent } from './components/fun-stuff/fun-stuff.component';
     MatProgressSpinnerModule,
     NgMultiSelectDropDownModule.forRoot(),
     MatTreeModule,
+    // NgxChartModule,
+    NgxChartsModule,
+    NgChartsModule,  
   ],
   providers: [
     {

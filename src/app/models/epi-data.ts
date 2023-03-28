@@ -16,6 +16,4 @@ export class EpiData {
     scEpiLockPeakOverlap: string;
     highlighted?:boolean;
     hovered?:boolean;   
-
-
 }

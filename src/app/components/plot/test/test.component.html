@@ -1,0 +1,23 @@
+<h2>pre test</h2>   
+
+<ngx-charts-bubble-chart
+  [view]="[400,700]"
+  [results]="bubbleData"
+  [xAxis]="showXAxis"
+  [yAxis]="showYAxis"
+  [legend]="showLegend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [xScaleMin]="xScaleMin"
+  [xScaleMax]="xScaleMax"
+  [yScaleMin]="yScaleMin"
+  [yScaleMax]="yScaleMax"
+  [minRadius]="minRadius"
+  [maxRadius]="maxRadius"
+  (select)="onSelect($event)"
+  (activate)="onActivate($event)"
+  (deactivate)="onDeactivate($event)">
+</ngx-charts-bubble-chart>
+<h2>post test</h2>

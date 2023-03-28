@@ -1,0 +1,22 @@
+<p>plot-holder-expr works!</p>
+
+
+<!-- <div class="plot-area">
+    <ngx-charts-bubble-chart
+        [view]=[400,400]
+        [results]="this.testData2"
+        [xAxis]="true"
+        [yAxis]="true"
+        [legend]="true"
+    >
+    </ngx-charts-bubble-chart>
+</div> -->
+
+<!-- <app-plot-bulk-rnaseq-expr [data]=this.testData></app-plot-bulk-rnaseq-expr> -->
+
+<div class="container">
+    <div *ngFor="let item of this.dataService.exprData | keyvalue">
+        <app-plot-bulk-rnaseq-expr [data]=item.value></app-plot-bulk-rnaseq-expr>
+        <!-- <app-plot-bulk-rnaseq-expr>test app</app-plot-bulk-rnaseq-expr>  -->
+    </div>
+</div>

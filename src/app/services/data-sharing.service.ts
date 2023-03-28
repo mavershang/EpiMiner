@@ -5,9 +5,10 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class DataSharingService {
-  // 
-
   coordinate: string = '';
+
+  // bulk RNASeq data sharing 
+
 
   // isShowViewerChanged:boolean=false;
   // showViewerChange: Subject<boolean> = new Subject<boolean>();
