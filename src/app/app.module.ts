@@ -15,9 +15,7 @@ import { MatTableFilterModule } from 'mat-table-filter';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // import { NgxChartModule } from 'ngx-chart';
 import { NgxChartsModule }from '@swimlane/ngx-charts';
-// import { NgChartsModule } from 'ng2-charts'
-
-
+import { NgChartsModule } from 'ng2-charts'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,6 +42,8 @@ import { BubblePlotBase } from './components/plot/bubble-plot-base/bubble-plot-b
 import { PlotBulkRNASeqExprComponent } from './components/plot/plot-bulk-rnaseq-expr/plot-bulk-rnaseq-expr.component';
 import { PlotHolderExprComponent } from './components/plot/plot-holder-expr/plot-holder-expr.component';
 import { TestComponent } from './components/plot/test/test.component';
+import { TestNg2ChartsComponent } from './components/plot/test-ng2-charts/test-ng2-charts.component';
+import { PlotWgcnaComponent } from './components/plot-wgcna/plot-wgcna.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +65,8 @@ import { TestComponent } from './components/plot/test/test.component';
     PlotBulkRNASeqExprComponent,
     PlotHolderExprComponent,
     TestComponent,
+    TestNg2ChartsComponent,
+    PlotWgcnaComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,7 +88,7 @@ import { TestComponent } from './components/plot/test/test.component';
     MatTreeModule,
     // NgxChartModule,
     NgxChartsModule,
-    //NgChartsModule,  
+    NgChartsModule,
   ],
   providers: [
     {

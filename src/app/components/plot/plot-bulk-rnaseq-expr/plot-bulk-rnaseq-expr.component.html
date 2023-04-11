@@ -1,6 +1,4 @@
-<p>plot bulk rnaseq expr component </p>
-
-<div class="plot-area">
+<!-- <div class="plot-area">
     <ngx-charts-bubble-chart
         [view]=[400,400]
         [results]="bubbleData"
@@ -16,11 +14,12 @@
         (select)="onSelect($event)"
         (activate)="onActivate($event)"
         (deactivate)="onDeactivate($event)">
-    </ngx-charts-bubble-chart>
-</div>
-
-
-
-<div class="test">
-    <h2>this is a post chart test string</h2>
+    </ngx-charts-bubble-chart> 
+</div>-->
+<div style="display: block; width: 500px; height: 400px;">
+    <canvas baseChart
+        [datasets]="bubbleChartDatasets"
+        [options]="bubbleChartOptions"
+        [type]="'bubble'">
+    </canvas>
 </div>

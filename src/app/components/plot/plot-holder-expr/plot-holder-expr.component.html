@@ -1,5 +1,49 @@
-<p>plot-holder-expr works!</p>
+  <div class="container">
+    <div class="DE-plots"></div>
+        
+    <div class="DE-Table"> DE result table
 
+    </div>
+    <div class="Gene"></div>
+    <div class="DE-data">
+      <div class="Gene-expr-plot"> Single gene expr plot</div>
+    </div>
+    <div class="WGCNA-Plot">
+      <div class="WGCNA-module-plot"> WGCNA heatmap</div>
+      <div class="Target-Module-Pathway-enrichment"> Target Module Top 10 Pathway enrichment </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="DE-plots">
+        <div *ngFor="let item of this.dataService.exprDEData | keyvalue">
+            <app-plot-bulk-rnaseq-expr [data]=item.value ></app-plot-bulk-rnaseq-expr>
+        </div>
+    </div>
+    <div class="DE-data">
+      <div class="DE-table">
+        DE table
+      </div>
+      <div class="Gene-Expr-Plot">
+        Single gene Expr plot
+      </div>
+    </div>
+
+    <div class="WGCNA-Plot">
+      <div class="Target-Module-Pathway-enrichment">
+        Target module top 10 pathway enrichment
+      </div>
+      <div class="WGCNA-Module-Heatmap">
+        module heatmap
+      </div>
+      <div class="WGCNA-2nd-Plot">
+        soft power threshold pick
+      </div>
+      <div class="TBD">
+        TBD
+      </div>
+    </div>
+  </div>
 
 <!-- <div class="plot-area">
     <ngx-charts-bubble-chart
@@ -11,12 +55,3 @@
     >
     </ngx-charts-bubble-chart>
 </div> -->
-
-<!-- <app-plot-bulk-rnaseq-expr [data]=this.testData></app-plot-bulk-rnaseq-expr> -->
-
-<div class="container">
-    <div *ngFor="let item of this.dataService.exprData | keyvalue">
-        <app-plot-bulk-rnaseq-expr [data]=item.value></app-plot-bulk-rnaseq-expr>
-        <!-- <app-plot-bulk-rnaseq-expr>test app</app-plot-bulk-rnaseq-expr>  -->
-    </div>
-</div>

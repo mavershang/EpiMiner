@@ -7,6 +7,7 @@ import { EgSidebarComponent } from './components/eg-sidebar/eg-sidebar.component
 import { EpiBrowserComponent } from './components/epi-browser/epi-browser.component';
 import { FinemappingComponent } from './components/finemapping/finemapping.component';
 import { FunStuffComponent } from './components/fun-stuff/fun-stuff.component';
+import { TestNg2ChartsComponent } from './components/plot/test-ng2-charts/test-ng2-charts.component';
 import { TestComponent } from './components/plot/test/test.component';
 import { SnpQueryComponent } from './components/snp-query/snp-query.component';
 import { TrackTreeComponent } from './components/track-tree/track-tree.component';
@@ -25,7 +26,7 @@ const routes: Routes = [
   { path: 'credit-report', component:CreditReportComponent},
   { path: 'fun-stuff', component:FunStuffComponent},
   { path: 'test', component:TestComponent},
-
+  { path: 'test2', component:TestNg2ChartsComponent},
 
 ]
 

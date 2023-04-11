@@ -5,11 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "legacy-chrome",
+            "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            // "sourceMaps": true,
+            // "sourceMapPathOverrides": {
+            //     "webpack:///./*": "${workspaceRoot}/*"
+            // }
         }
     ]
 }

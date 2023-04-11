@@ -200,16 +200,26 @@ export class CreditReportComponent implements OnInit {
       }
     );
 
-    // bulk RNASeq
-    this.getDataService.getCRBulkRNASeqByGene(this.geneInput, this.selectedDisease).subscribe(
+    // bulk RNASeq DE
+    this.getDataService.getCRBulkRNASeqByGene(this.selectedDisease).subscribe(
       data => {
-        console.log("test");
-        this.dataShareBulkRnaSeqService.import(data);
+        this.dataShareBulkRnaSeqService.importDEResult(data);
       }, error => {
-        this.openDialog("Failed to get RNASeq result: " + error.message);
+        this.openDialog("Failed to get bulk RNASeq DE result: " + error.message);
       }
     );
 
+    // WGCNA
+    this.getDataService.getWGCNA(this.selectedDisease).subscribe(
+      data => {
+        this.dataShareBulkRnaSeqService.importWGCNAResult(data);
+      }, error => {
+        this.openDialog("Failed to get bulk RNASeq WGCNA result: "  + error.message);
+      }
+    )
+
+    // scRNASEq
+    
   }
 
   verifyInput() {

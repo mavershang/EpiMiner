@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BulkRNASeqData } from 'src/app/models/bulk-rnaseq-data';
+import { BulkRNASeqDEPerGene } from 'src/app/models/bulk-rnaseq-data';
 import { DataSharingBulkRNASeqService } from 'src/app/services/data-sharing-bulk-rnaseq.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { DataSharingBulkRNASeqService } from 'src/app/services/data-sharing-bulk
 })
 export class PlotHolderExprComponent implements OnInit {
 
-  testData: Map<string, BulkRNASeqData[]> = new Map<string, BulkRNASeqData[]>()
+  testData: Map<string, BulkRNASeqDEPerGene[]> = new Map<string, BulkRNASeqDEPerGene[]>()
   testData2: any[] = [
     {
       "name": "Example1",
@@ -51,14 +51,14 @@ export class PlotHolderExprComponent implements OnInit {
     public dataService: DataSharingBulkRNASeqService,
     ) {
       //debug 
-      let d: BulkRNASeqData[] = [];
-      d.push(new BulkRNASeqData("geneA", 1.2, 0.1));
-      d.push(new BulkRNASeqData("geneA", 1.5, 0.05));
+      let d: BulkRNASeqDEPerGene[] = [];
+      d.push(new BulkRNASeqDEPerGene("geneA", 1.2, 0.1));
+      d.push(new BulkRNASeqDEPerGene("geneA", 1.5, 0.05));
       this.testData.set("TestComparison_VS_TestCtrl", d);
     }
 
   ngOnInit(): void {
-    this.dataService.exprDataChange.subscribe((value) => {
+    this.dataService.exprDEDataChange.subscribe((value) => {
       this.refresh();
     });
   }

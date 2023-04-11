@@ -1,43 +1,50 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { BulkRNASeqData } from '../models/bulk-rnaseq-data';
+import { BulkRNASeqDEPerGene } from '../models/bulk-rnaseq-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataSharingBulkRNASeqService {
 
-  exprData: Map<string, Map<string, BulkRNASeqData[]>> = new Map<string, Map<string, BulkRNASeqData[]>>();
-  isExprDataChanged: boolean;
-  exprDataChange: Subject<boolean> = new Subject<boolean>();
+  exprDEData: Map<string, Map<string, BulkRNASeqDEPerGene[]>> = new Map<string, Map<string, BulkRNASeqDEPerGene[]>>();
+  isExprDEDataChanged: boolean;
+  exprDEDataChange: Subject<boolean> = new Subject<boolean>();
   studyChanged: string[];
+
+  //WGCNAData: Map<string,
+
+
 
   constructor() { 
   }
 
-  import(data: any[]) {
+  importDEResult(data: any[]) {
     for (let i=0; i<data.length; i++){
       let study = data[i].Study;
-      let cmprMap = new Map<string, BulkRNASeqData[]>();
+      let cmprMap = new Map<string, BulkRNASeqDEPerGene[]>();
 
       data[i].DEData.forEach(function(v) {
         let cmprStr = v.Case + "_VS_" + v.Ctrl;
-        let arr = new Array<BulkRNASeqData>();
+        let arr = new Array<BulkRNASeqDEPerGene>();
         v.Results.forEach(function(v2) {
-          arr.push(new BulkRNASeqData(v2.Gene, v2.LFC, v2.PVal));
+          arr.push(new BulkRNASeqDEPerGene(v2.Gene, v2.LFC, v2.PVal));
         })
         cmprMap.set(cmprStr, arr);
       });
 
-      this.exprData.set(study, cmprMap);
+      this.exprDEData.set(study, cmprMap);
     }
 
-    this.toggleExprDataChanged([...this.exprData.keys()]);
+    this.toggleExprDataChanged([...this.exprDEData.keys()]);
   }
 
+  importWGCNAResult(data: any[]) {
+    
+  }
 
   toggleExprDataChanged(studies:string[]) {
-    this.exprDataChange.next(!this.isExprDataChanged);
+    this.exprDEDataChange.next(!this.isExprDEDataChanged);
     this.studyChanged = studies;
   }
 }

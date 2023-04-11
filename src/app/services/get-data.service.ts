@@ -141,11 +141,16 @@ export class GetDataService extends BaseService{
   }
 
   // credit report bulk RNASeq data services
-  getCRBulkRNASeqByGene(gene: string, disease: string): Observable<any> {
+  getCRBulkRNASeqByGene(disease: string): Observable<any> {
     let params = new HttpParams();
     params = params.append('disease', disease);
-    params = params.append('geneStr', gene);
     return this.http.get<any>(this.rootURL + "/CRBulkRNASeq/id", {params});
+  }
+
+  getWGCNA(disease: string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('disease', disease);
+    return this.http.get<any>(this.rootURL + "/WGCNA/id", {params});
   }
 
   askChatGPT(question:string, maxToken:number, randomness:number, model:string): Observable<string> {
