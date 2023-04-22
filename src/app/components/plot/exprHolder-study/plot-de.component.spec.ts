@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlotWgcnaComponent } from './plot-wgcna.component';
+import { PlotDEComponent } from './plot-de.component';
 
-describe('PlotWgcnaComponent', () => {
-  let component: PlotWgcnaComponent;
-  let fixture: ComponentFixture<PlotWgcnaComponent>;
+describe('PlotDEComponent', () => {
+  let component: PlotDEComponent;
+  let fixture: ComponentFixture<PlotDEComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PlotWgcnaComponent ]
+      declarations: [ PlotDEComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PlotWgcnaComponent);
+    fixture = TestBed.createComponent(PlotDEComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

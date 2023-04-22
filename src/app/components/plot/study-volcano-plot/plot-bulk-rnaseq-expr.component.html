@@ -1,0 +1,13 @@
+<div class="select-comparison-container">
+    <select  class="selectComparison" [(ngModel)] = "selectedComparison" (ngModelChange)="refreshPlot(selectedComparison)" name="comparisonList" placeholder="Select Comparison">
+        <option *ngFor = "let g of comparisons" [value]="g">{{g}}</option>
+    </select>
+</div>
+
+<div style="display: block; width: 600px; height: 500px;">
+    <canvas baseChart
+        [datasets]="bubbleChartDatasets"
+        [options]="bubbleChartOptions"
+        [type]="'bubble'">
+    </canvas>
+</div>

@@ -6,6 +6,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { DialogComponent } from '../../dialog/dialog.component';
 import { BubblePlotBase } from '../bubble-plot-base/bubble-plot-base.component';
 import { ChartConfiguration, ChartDataset, ChartOptions } from 'chart.js'
+import { DataSharingBulkRNASeqService } from 'src/app/services/data-sharing-bulk-rnaseq.service';
 
 
 @Component({
@@ -15,7 +16,9 @@ import { ChartConfiguration, ChartDataset, ChartOptions } from 'chart.js'
 })
 export class PlotBulkRNASeqExprComponent extends BubblePlotBase {
   @Input() data: Map<string, BulkRNASeqDEPerGene[]>;
-  //view: any[] = [400, 400];
+  //@Input() study: string;
+
+  comparisons: string[];  
 
   lfcCutoff:number=1;
   pvalCutoff:number=0.05;
@@ -24,7 +27,6 @@ export class PlotBulkRNASeqExprComponent extends BubblePlotBase {
   DE_downData: Array<any> = []
 
   public bubbleChartDatasets: ChartConfiguration<'bubble'>['data']['datasets'];
-
 
   bubbleChartOptions: ChartConfiguration<'bubble'>['options'] = {
     responsive: true,
@@ -68,21 +70,27 @@ export class PlotBulkRNASeqExprComponent extends BubblePlotBase {
   constructor(
     private dialog: MatDialog,
     private loader: LoadingService,
-    //public dataShareService: DataSharingService,
+    public dataShareService: DataSharingBulkRNASeqService,
   ) { 
     super();
   }
 
   ngOnInit(): void {
+    this.populateComparisons();
+    this.pickDefaultComparison();
     this.refreshPlot('');
   }
 
-  PickDefaultComparison() {
-    let keys = Array.from(this.data.keys()).sort();
-    return keys[0];
-    // for (let key  of Array.from(this.data.keys())) {
+  populateComparisons() {
+    // this.comparisons = Array.from(this.dataShareService.DEData.get(this.study).keys()).sort();
+    this.comparisons = Array.from(this.data.keys()).sort();
 
-    // }
+  }
+
+  pickDefaultComparison() {
+    this.selectedComparison = this.comparisons[0];
+    // let keys = Array.from(this.data.keys()).sort();
+    // return keys[0];
   }
 
   resetData(){
@@ -115,24 +123,23 @@ export class PlotBulkRNASeqExprComponent extends BubblePlotBase {
     }
   }
 
-  convertToBubbleData_ngxCharts(DEData:BulkRNASeqDEPerGene[]) {
-    this.resetData();
-    for (let i = 0; i < DEData.length; i++) {
-      this.DE_otherData.push({
-        name: "Gene",
-        series: [
-          {
-            name: DEData[i].Gene,
-            x: DEData[i].LFC,
-            y: -1 * Math.log10(DEData[i].PValue),
-          }
-        ]
-      });
-    }
-  }
+  // convertToBubbleData_ngxCharts(DEData:BulkRNASeqDEPerGene[]) {
+  //   this.resetData();
+  //   for (let i = 0; i < DEData.length; i++) {
+  //     this.DE_otherData.push({
+  //       name: "Gene",
+  //       series: [
+  //         {
+  //           name: DEData[i].Gene,
+  //           x: DEData[i].LFC,
+  //           y: -1 * Math.log10(DEData[i].PValue),
+  //         }
+  //       ]
+  //     });
+  //   }
+  // }
 
   setChartData() {
-
      this.bubbleChartDatasets = [
       {
         data: this.DE_otherData,
@@ -162,12 +169,12 @@ export class PlotBulkRNASeqExprComponent extends BubblePlotBase {
 
   refreshPlot(comparison: string) {
     if (comparison == '') {
-      this.selectedComparison = this.PickDefaultComparison();
+      this.pickDefaultComparison();
     }
 
+    //this.convertToBubbleData_ng2Charts(this.dataShareService.DEData.get(this.study).get(this.selectedComparison));
     this.convertToBubbleData_ng2Charts(this.data.get(this.selectedComparison));
-    this.setChartData();
 
-    console.log(this.bubbleChartDatasets);
+    this.setChartData();
   }
 }

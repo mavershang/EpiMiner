@@ -1,0 +1,115 @@
+.container {  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.5fr 0.05fr 0.65fr 0.8fr 2fr;
+  grid-auto-columns: 1fr 1fr;
+  grid-auto-rows: 1fr;
+  gap: 5px 5px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "Volcano-plots"
+    "Study-Selector"
+    "Metadata"
+    "DE-result"
+    "WGCNA";
+}
+
+.Volcano-plots { 
+  grid-area: Volcano-plots; 
+  max-height: 500 px;
+}
+
+.select-study-container {
+  grid-area: Study-Selector;
+  max-height: 300px;
+  
+}
+
+.Metadata {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: Metadata; 
+  width: 100%; 
+  height: 100%; 
+}
+
+.DE-result  {
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  grid-template-rows: 1fr; 
+  gap: 0px 0px; 
+  grid-template-areas: 
+    "DE-table Single-Gene-Expr"; 
+  justify-content: stretch; 
+  align-content: stretch; 
+  justify-items: stretch; 
+  align-items: stretch; 
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: DE-result; 
+  /* width: 100%; 
+  height: 100%;  */
+  max-height: 400px;
+}
+.DE-table {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: DE-table; 
+  /* width: 100%; 
+  height: 100%;  */
+  max-height: 400px;
+}
+.Single-Gene-Expr {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: Single-Gene-Expr; 
+  /* width: 100%; 
+  height: 100%;  */
+  max-height: 400px;
+
+}
+
+.WGCNA {
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  grid-template-rows: 1fr 1fr; 
+  gap: 5px 5px; 
+  grid-template-areas: 
+    "WGCNA-Correlation WGCNA-PathwayEnrichment"
+    "WGCNA-Dendrogram TBD"; 
+  grid-area: WGCNA; 
+}
+.WGCNA-Correlation {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: WGCNA-Correlation; 
+  /* width: 100%; 
+  height: 100%;  */
+  max-height: 400px;
+}
+.WGCNA-Dendrogram {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: WGCNA-Dendrogram; 
+  /* width: 100%; 
+  height: 100%;  */
+  max-height: 400px;
+}
+.WGCNA-PathwayEnrichment {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: WGCNA-PathwayEnrichment; 
+  /* width: 100%; 
+  height: 100%;  */
+  max-height: 400px;
+}
+.TBD {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: TBD; 
+  /* width: 100%; 
+  height: 100%;  */
+  max-height: 400px;
+}
+
+
+

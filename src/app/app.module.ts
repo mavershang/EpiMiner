@@ -39,11 +39,17 @@ import { AnalysisPlotComponent } from './components/analysis-plot/analysis-plot.
 import { CreditReportComponent } from './components/credit-report/credit-report.component';
 import { FunStuffComponent } from './components/fun-stuff/fun-stuff.component';
 import { BubblePlotBase } from './components/plot/bubble-plot-base/bubble-plot-base.component';
-import { PlotBulkRNASeqExprComponent } from './components/plot/plot-bulk-rnaseq-expr/plot-bulk-rnaseq-expr.component';
-import { PlotHolderExprComponent } from './components/plot/plot-holder-expr/plot-holder-expr.component';
+import { PlotBulkRNASeqExprComponent } from './components/plot/study-volcano-plot/plot-bulk-rnaseq-expr.component';
+import { PlotHolderExprComponent } from './components/plot/plot-bulkRNASeq-holder/plot-holder-expr.component';
 import { TestComponent } from './components/plot/test/test.component';
 import { TestNg2ChartsComponent } from './components/plot/test-ng2-charts/test-ng2-charts.component';
-import { PlotWgcnaComponent } from './components/plot-wgcna/plot-wgcna.component';
+import { WGCNACorrelationComponent } from './components/plot/wgcna-correlation-plot/wgcna-correlation-plot.component';
+import { PlotDEComponent } from './components/plot/exprHolder-study/plot-de.component';
+import { StudyDETableComponent } from './components/plot/study-de-table/study-de-table.component';
+import { StudyGeneExprPlotComponent } from './components/plot/study-gene-expr-plot/study-gene-expr-plot.component';
+import { StudyMetadataTableComponent } from './components/plot/study-metadata-table/study-metadata-table.component';
+import { WgcnaDendrogramPlotComponent } from './components/plot/wgcna-dendrogram-plot/wgcna-dendrogram-plot.component';
+import { WgcnaPathwayTableComponent } from './components/plot/wgcna-pathway-table/wgcna-pathway-table.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +72,13 @@ import { PlotWgcnaComponent } from './components/plot-wgcna/plot-wgcna.component
     PlotHolderExprComponent,
     TestComponent,
     TestNg2ChartsComponent,
-    PlotWgcnaComponent,
+    PlotDEComponent,
+    StudyDETableComponent,
+    StudyGeneExprPlotComponent,
+    StudyMetadataTableComponent,
+    WGCNACorrelationComponent,
+    WgcnaDendrogramPlotComponent,
+    WgcnaPathwayTableComponent,
   ],
   imports: [
     BrowserModule,

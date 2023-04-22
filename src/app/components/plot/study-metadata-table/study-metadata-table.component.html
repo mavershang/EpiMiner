@@ -1,0 +1,90 @@
+
+<div class="metadata-table">
+    <div class="metadata-grid-container">
+        <div class="metadata-container" mat-elevation-z8>
+            <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedStudy}} MetaData </h3>
+            <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
+                [dataSource]="tableDataSource" matSort>
+                <ng-container matColumnDef="Sample">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="Sample" [(ngModel)]="filterEntity.Sample">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.Sample}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Organism">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="Organism" [(ngModel)]="filterEntity.Organism">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.Organism}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Tissue">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="Tissue" [(ngModel)]="filterEntity.Tissue">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.Tissue}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="CellType">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="CellType" [(ngModel)]="filterEntity.CellType">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.CellType}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="DiseaseState">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="DiseaseState" [(ngModel)]="filterEntity.DiseaseState">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.DiseaseState}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="Treatment">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="Treatment" [(ngModel)]="filterEntity.Treatment">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.Treatment}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="MergeConditions">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="MergeConditions" [(ngModel)]="filterEntity.MergeConditions">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.MergeConditions}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="AssayType">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="AssayType" [(ngModel)]="filterEntity.AssayType">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.AssayType}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
+                    [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}" (click)="onRowClicked(row, i)"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+                </mat-row>
+            </mat-table>
+            <mat-paginator #paginatorQuery [pageSizeOptions]="[5, 10, 20, 50, 100]"
+                showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+</div>

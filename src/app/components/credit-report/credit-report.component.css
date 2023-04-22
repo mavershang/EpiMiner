@@ -24,6 +24,10 @@
     width:100%;
 }
 
+.tissueSelector {
+    color: black;
+}
+
 .mat-tab-group {
     grid-area: main;
     color: black;

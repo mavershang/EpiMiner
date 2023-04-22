@@ -219,7 +219,6 @@ export class CreditReportComponent implements OnInit {
     )
 
     // scRNASEq
-    
   }
 
   verifyInput() {
@@ -256,7 +255,7 @@ export class CreditReportComponent implements OnInit {
     files.forEach(file => {
       this.imgService.getLzpImageByFname(file).subscribe(
         Response => {
-          this.createImageFromBlob(Response, file);
+          this.createLzpImg(Response, file);
         }, error => {
           console.log(error);
         }
@@ -264,7 +263,7 @@ export class CreditReportComponent implements OnInit {
     });
   }
 
-  createImageFromBlob(image: Blob, fname:string) {
+  createLzpImg(image: Blob, fname:string) {
     let reader = new FileReader();
     reader.addEventListener("load", () => {
       let i = this.lzpFiles.indexOf(fname);
