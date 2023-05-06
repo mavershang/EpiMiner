@@ -1,39 +1,42 @@
 import { Injectable } from '@angular/core';
 import { Subject, forkJoin, from, of } from 'rxjs';
 import { BulkRNASeqDEPerGene } from '../models/bulk-rnaseq-data';
-import { WGCNAData, WGCNAPathwayResult } from '../models/wgcna-data';
+import { WGCNAData, WGCNAGene, WGCNAPathwayResult } from '../models/wgcna-data';
 import { GetDataService } from './get-data.service';
 import { ImgService } from './img.service';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { SampleMeta } from '../models/sample-meta';
+import { CellClusterMarker, scRNASeqData } from '../models/scRNASeq-data';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DataSharingBulkRNASeqService {
+export class DataSharingCRService {
   SampleMetaData: Map<string, Map<string, SampleMeta>> = new Map<string, Map<string, SampleMeta>>();
   GeneExprData: Map<string, any> = new Map<string, any>();
   DEData: Map<string, Map<string, BulkRNASeqDEPerGene[]>> = new Map<string, Map<string, BulkRNASeqDEPerGene[]>>();
 
-
   selectedStudy: string = '';
-  isSelectedStudyChanged: boolean;
+  isSelectedStudyChanged: boolean = false;
   selectedStudyChange: Subject<boolean> = new Subject<boolean>();
 
-  selectedComparison: string;
-
   selectedGene: string = '';
-  isSelectedGeneChanged: boolean;
+  isSelectedGeneChanged: boolean = false;
   selectedGeneChange: Subject<boolean> = new Subject<boolean>();
 
-  isDEDataChanged: boolean;
-  DEDataChange: Subject<boolean> = new Subject<boolean>();
-  studyChanged: string[];
+  selectedComparison: string = '';
+  isSelectedComparisonChanged: boolean = false;
+  selectedComparisonChange: Subject<boolean> = new Subject<boolean>();
 
   exprWGCNAData: Map<string, WGCNAData> = new Map<string, WGCNAData>();
-  isExprWGCNADataChanged: boolean;
+  isExprWGCNADataChanged: boolean = false;
   exprWGCNADataChange: Subject<boolean> = new Subject<boolean>();
 
+  scRNASeqData: Map<string, scRNASeqData> = new Map<string, scRNASeqData>();
+  isScRNASeqDataChanged: boolean = false;
+  scRNASeqDataChange: Subject<boolean> = new Subject<boolean>();
+
+  
   constructor(private imgService: ImgService) {
   }
 
@@ -65,7 +68,7 @@ export class DataSharingBulkRNASeqService {
       this.pickDefaultStudy();
     }
     this.pickDefaultComparison(this.selectedStudy);
-    this.toggleExprDEDataChanged([...this.DEData.keys()]);
+    this.toggleSelectedComparisonChanged();
     this.toggleSelectedStudyChanged();
   }
 
@@ -73,18 +76,16 @@ export class DataSharingBulkRNASeqService {
     let allSuccessful = true;
     for (const item of data) {
       const study = item.Study;
-      const w = new WGCNAData(item.DendroFile, item.CorFile);
+      const w = new WGCNAData(item.DendroFile, item.CorFile, item.SampleTreeFile);
       w.populateModMap(item.WGCNAResult.ModInfoList);
       w.populateGeneMap(item.WGCNAResult.GeneInfoList);
       this.exprWGCNAData.set(study, w);
 
       try {
-        const wasSuccessful = await this.fetchImages(w, study).toPromise();
+        const wasSuccessful = await this.fetchWGCNAImages(w, study).toPromise();
         if (wasSuccessful) {
-          // Do something...
           console.log("successful");
         } else {
-          // Do something else...
           console.log("unsuccessful");
         }
       } catch (error) {
@@ -95,14 +96,16 @@ export class DataSharingBulkRNASeqService {
     return allSuccessful;
   }
 
-  fetchImages(w: WGCNAData, study: string) {
+  fetchWGCNAImages(w: WGCNAData, study: string) {
     return forkJoin([
-      this.imgService.getWGCNAImgByPath(w.CorImgFile, "png"),
-      this.imgService.getWGCNAImgByPath(w.DendroImgFile, "png")
+      this.imgService.getImgByPath(w.CorImgFile, "png"),
+      this.imgService.getImgByPath(w.DendroImgFile, "png"),
+      this.imgService.getImgByPath(w.SampleTreeFile, "png"),
     ]).pipe(
-      tap(([corImgBlob, dendroImgBlob]) => {
+      tap(([corImgBlob, dendroImgBlob, sampleTreeImgBlob]) => {
         this.exprWGCNAData.get(study).CorImgBlob = corImgBlob;
         this.exprWGCNAData.get(study).DendroImgBlob = dendroImgBlob;
+        this.exprWGCNAData.get(study).SampleTreeBlob = sampleTreeImgBlob;
       }),
       map(() => true),
       catchError((error) => {
@@ -119,9 +122,56 @@ export class DataSharingBulkRNASeqService {
         if (this.selectedStudy == undefined || this.selectedStudy == '') {
           this.pickDefaultStudy();
         }
-        this.toggleExprWGCNADataChanged([...this.exprWGCNAData.keys()]);
+        this.toggleExprWGCNADataChanged();
         this.toggleSelectedStudyChanged();
         console.log(successful)
+      });
+  }
+
+  
+  fetchScRNASeqImages(d: scRNASeqData, study:string) {
+    return forkJoin([
+      this.imgService.getImgByPath(d.ExprPlotFile, "png"),
+    ]).pipe(
+      tap(([exprImgBlob]) => {
+        this.scRNASeqData.get(study).ExprPlotBlob = exprImgBlob;
+      }),
+      map(() => true),
+      catchError((error) => {
+        console.log(error);
+        return of(false);
+      })
+    );
+  }
+
+  async loadScRNASeqData(data: any[]): Promise<boolean> {
+    let allSuccessful = true;
+    for (const item of data) {
+      const study = item.Study;
+      const d = new scRNASeqData(item.Study, item.Gene, item.plotImgFile, item.markerList);
+      this.scRNASeqData.set(study, d);
+
+      try {
+        const wasSuccessful = await this.fetchScRNASeqImages(d, study).toPromise();
+        if (wasSuccessful) {
+          console.log("successful");
+        } else {
+          console.log("unsuccessful");
+        }
+      } catch (error) {
+        console.error(error);
+        allSuccessful = false;
+      }
+    }
+    return allSuccessful;
+  }
+
+  importScRNASeqResult(data: any[]) {
+    const dataLoader = from(this.loadScRNASeqData(data));
+    dataLoader.subscribe(
+      (successful) => {
+        console.log(successful)
+        this.toggleScRNASeqDataChanged();
       });
   }
 
@@ -145,10 +195,17 @@ export class DataSharingBulkRNASeqService {
 
   getDETableData() {
     if (this.DEData == undefined || !this.DEData.has(this.selectedStudy)) {
+      console.log("DEData is not initiated or selectedStudy is not set");
       return [];
     }
-    return this.DEData.get(this.selectedStudy).get(this.selectedComparison);
 
+    if (!this.DEData.get(this.selectedStudy).has(this.selectedComparison))
+    {
+      console.log("Comparison doesn't exist");
+      return [];
+    }
+
+    return this.DEData.get(this.selectedStudy).get(this.selectedComparison);
   }
 
   getGeneExprData(genes: string[]) {
@@ -181,14 +238,29 @@ export class DataSharingBulkRNASeqService {
     return r;
   }
 
-  toggleExprDEDataChanged(studies: string[]) {
-    this.DEDataChange.next(!this.isDEDataChanged);
-    this.studyChanged = studies;
+  getWGCNAGeneTableData() {
+    let r: WGCNAGene[] = [];
+    r.push(this.exprWGCNAData.get(this.selectedStudy).GeneInfoMap.get(this.selectedGene));
+    return r;
   }
 
-  toggleExprWGCNADataChanged(studies: string[]) {
+  getCellClusterMarkerTableData() {
+    let r: CellClusterMarker[] = [];
+    for (let [key, value] of this.scRNASeqData) {
+      value.clusterMarkers.forEach(x=>{
+        x.Study = key;
+        r.push(x);
+      });
+    }
+    return r;
+  }
+
+  toggleSelectedComparisonChanged() {
+    this.selectedComparisonChange.next(!this.isSelectedComparisonChanged);
+  }
+
+  toggleExprWGCNADataChanged() {
     this.exprWGCNADataChange.next(!this.isExprWGCNADataChanged);
-    this.studyChanged = studies;
   }
 
   toggleSelectedStudyChanged() {
@@ -197,5 +269,9 @@ export class DataSharingBulkRNASeqService {
 
   toggleSelectedGeneChanged() {
     this.selectedGeneChange.next(!this.isSelectedGeneChanged);
+  }
+
+  toggleScRNASeqDataChanged() {
+    this.scRNASeqDataChange.next(!this.isScRNASeqDataChanged);
   }
 }

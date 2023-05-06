@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="Volcano-plots">
+    <div *ngFor="let item of this.dataShareService.DEData | keyvalue" style="display: inline-block;">
+      <app-plot-bulk-rnaseq-expr [study]=item.key [data]=item.value></app-plot-bulk-rnaseq-expr>
+    </div>
+  </div>
+
+  <div class="select-study-container">
+    <select class="selectStudy" [(ngModel)]="dataShareService.selectedStudy" (ngModelChange)="refreshStudyPlots()" name="studList" placeholder="Select Study">
+      <option *ngFor="let g of studies" [value]="g">{{g}}</option>
+    </select>
+  </div>
+
+  <div class="Metadata">
+    <app-study-metadata-table></app-study-metadata-table>
+  </div>
+
+  <div class="DE-result">
+    <div class="DE-table">
+      <app-study-de-table></app-study-de-table>
+    </div>
+    <div class="Single-Gene-Expr">
+      <app-study-gene-expr-plot></app-study-gene-expr-plot>
+    </div>
+  </div>
+
+  <div class="WGCNA">
+    <div class="WGCNA-Correlation">
+      <app-plot-wgcna-correlation-heatmap></app-plot-wgcna-correlation-heatmap>
+    </div>
+
+    <div class="WGCNA-Dendrogram">
+      <app-wgcna-dendrogram-plot></app-wgcna-dendrogram-plot>
+    </div>
+
+    <div class="WGCNA-SampleTree">
+      <app-wgcna-sample-tree-plot></app-wgcna-sample-tree-plot>
+    </div>
+
+    <div class="WGCNA-GeneTable">
+      <app-wgcna-gene-table></app-wgcna-gene-table>
+    </div>
+
+    <div class="WGCNA-PathwayEnrichment">
+      <app-wgcna-pathway-table></app-wgcna-pathway-table>
+    </div>
+    
+  </div>
+</div>

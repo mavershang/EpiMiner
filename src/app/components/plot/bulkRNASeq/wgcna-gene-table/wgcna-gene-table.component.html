@@ -1,0 +1,60 @@
+<div class="WGCNA-gene-table">
+    <div class="gene-table-container" mat-elevation-z8>
+        <h3 style="text-align: center; color:darkblue">WGCNA Gene Table</h3>
+        <mat-table class="gene-table" matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
+            [dataSource]="tableDataSource" matSort>
+
+            <ng-container matColumnDef="GeneSymbol">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="GeneSymbol" [(ngModel)]="filterEntity.GeneSymbol">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.GeneSymbol}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="GeneID">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="GeneID" [(ngModel)]="filterEntity.GeneID">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.GeneID}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Module">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Module" [(ngModel)]="filterEntity.Module">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Module}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="MMScore">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="MMScore" [(ngModel)]="filterEntity.MMScore">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.MMScore}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="MMPValue">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="MMPValue" [(ngModel)]="filterEntity.MMPValue">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.MMPValue}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
+                [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}" (click)="onRowClicked(row, i)"
+                (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+            </mat-row>
+        </mat-table>
+        <mat-paginator #paginatorQuery [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

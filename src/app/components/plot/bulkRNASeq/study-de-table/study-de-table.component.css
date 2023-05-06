@@ -1,0 +1,14 @@
+.DE-table {
+    width: 97%;
+    height: 100%;
+    overflow: auto;
+    border: 2px solid rgb(161, 174, 175);
+}
+
+.mat-row.hovered {
+    background: #eee;
+}
+
+.mat-row.highlighted {
+    background: #999;
+}

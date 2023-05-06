@@ -153,6 +153,14 @@ export class GetDataService extends BaseService{
     return this.http.get<any>(this.rootURL + "/WGCNA/id", {params});
   }
 
+  // credit report scRNASeq data service
+  getScRNASeqByGene(disease: string, gene:string): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('disease', disease);
+    params = params.append('gene', gene);
+    return this.http.get<any>(this.rootURL + "/CRscRNASeq/id", {params});
+  }
+
   askChatGPT(question:string, maxToken:number, randomness:number, model:string): Observable<string> {
     let params = new HttpParams();
     params = params.append('question', question);

@@ -39,17 +39,22 @@ import { AnalysisPlotComponent } from './components/analysis-plot/analysis-plot.
 import { CreditReportComponent } from './components/credit-report/credit-report.component';
 import { FunStuffComponent } from './components/fun-stuff/fun-stuff.component';
 import { BubblePlotBase } from './components/plot/bubble-plot-base/bubble-plot-base.component';
-import { PlotBulkRNASeqExprComponent } from './components/plot/study-volcano-plot/plot-bulk-rnaseq-expr.component';
-import { PlotHolderExprComponent } from './components/plot/plot-bulkRNASeq-holder/plot-holder-expr.component';
+import { PlotBulkRNASeqExprComponent } from './components/plot/bulkRNASeq/study-volcano-plot/plot-bulk-rnaseq-expr.component';
+import { PlotHolderExprComponent } from './components/plot/bulkRNASeq/bulkRNASeq-holder/plot-holder-expr.component';
 import { TestComponent } from './components/plot/test/test.component';
 import { TestNg2ChartsComponent } from './components/plot/test-ng2-charts/test-ng2-charts.component';
-import { WGCNACorrelationComponent } from './components/plot/wgcna-correlation-plot/wgcna-correlation-plot.component';
-import { PlotDEComponent } from './components/plot/exprHolder-study/plot-de.component';
-import { StudyDETableComponent } from './components/plot/study-de-table/study-de-table.component';
-import { StudyGeneExprPlotComponent } from './components/plot/study-gene-expr-plot/study-gene-expr-plot.component';
-import { StudyMetadataTableComponent } from './components/plot/study-metadata-table/study-metadata-table.component';
-import { WgcnaDendrogramPlotComponent } from './components/plot/wgcna-dendrogram-plot/wgcna-dendrogram-plot.component';
-import { WgcnaPathwayTableComponent } from './components/plot/wgcna-pathway-table/wgcna-pathway-table.component';
+import { WGCNACorrelationComponent } from './components/plot/bulkRNASeq/wgcna-correlation-plot/wgcna-correlation-plot.component';
+import { StudyDETableComponent } from './components/plot/bulkRNASeq/study-de-table/study-de-table.component';
+import { StudyGeneExprPlotComponent } from './components/plot/bulkRNASeq/study-gene-expr-plot/study-gene-expr-plot.component';
+import { StudyMetadataTableComponent } from './components/plot/bulkRNASeq/study-metadata-table/study-metadata-table.component';
+import { WgcnaDendrogramPlotComponent } from './components/plot/bulkRNASeq/wgcna-dendrogram-plot/wgcna-dendrogram-plot.component';
+import { WgcnaPathwayTableComponent } from './components/plot/bulkRNASeq/wgcna-pathway-table/wgcna-pathway-table.component';
+import { WgcnaSampleTreePlotComponent } from './components/plot/bulkRNASeq/wgcna-sample-tree-plot/wgcna-sample-tree-plot.component';
+import { WgcnaGeneTableComponent } from './components/plot/bulkRNASeq/wgcna-gene-table/wgcna-gene-table.component';
+import { EvidenceMatrixComponent } from './components/plot/evidence-matrix/evidence-matrix.component';
+import { ScRNASeqHolderComponent } from './components/plot/scRNASeq/sc-rnaseq-holder/sc-rnaseq-holder.component';
+import { StudyScRNASeqComponent } from './components/plot/scRNASeq/study-sc-rnaseq/study-sc-rnaseq.component';
+import { ClusterMarkerTableComponent } from './components/plot/scRNASeq/cluster-marker-table/cluster-marker-table.component';
 
 @NgModule({
   declarations: [
@@ -72,13 +77,18 @@ import { WgcnaPathwayTableComponent } from './components/plot/wgcna-pathway-tabl
     PlotHolderExprComponent,
     TestComponent,
     TestNg2ChartsComponent,
-    PlotDEComponent,
     StudyDETableComponent,
     StudyGeneExprPlotComponent,
     StudyMetadataTableComponent,
     WGCNACorrelationComponent,
     WgcnaDendrogramPlotComponent,
     WgcnaPathwayTableComponent,
+    WgcnaSampleTreePlotComponent,
+    WgcnaGeneTableComponent,
+    EvidenceMatrixComponent,
+    ScRNASeqHolderComponent,
+    StudyScRNASeqComponent,
+    ClusterMarkerTableComponent,
   ],
   imports: [
     BrowserModule,

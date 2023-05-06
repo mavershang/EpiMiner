@@ -1,0 +1,6 @@
+.scRNASeq-Expr-container {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    border: 2px solid rgb(161, 174, 175);
+}

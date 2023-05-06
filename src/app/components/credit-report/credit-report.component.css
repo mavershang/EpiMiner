@@ -1,40 +1,131 @@
-
 .grid-container {
     display: grid;
     grid-template-areas:
-      'input input'
-      'main main';
-    grid-gap: 5px;
-    background-color: #eaebec;
-    padding: 2px;
+        'input input'
+        'main main';
+    gap: 30px 30px;
+    background-color: #ffffff;
+    padding: 15px;
     position: relative;
     width: 100%;
-  }
-
-  .grid-container > div {
-    background-color:eaebec;
-    /* text-align: left; */
-    padding: 10px 0;
-    font-size: 16px;
-  }
-
-.Input {
-    grid-area:input;
-    align-items:flex-start;
-    width:100%;
 }
 
-.tissueSelector {
+.input-container {
+    grid-area: input;
+    display: grid;
+    grid-template-areas:
+        'geneInput disease tissue empty'
+        'distance submit other1 empty';
+    grid-template-columns: 0.5fr 0.5fr 0.5fr 0.5fr;
+    grid-template-rows: 1fr 1fr;
+    background-color: #b3cdd1;
+    background-image: linear-gradient(315deg, #d8e7ea 0%, #cccedb 74%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+    -webkit-box-shadow: 3px 3px 10px 3px #dddddd;
+    -moz-box-shadow: 3px 3px 10px 3px #dddddd;
+    box-shadow: 3px 3px 10px 3px #dddddd;
+    /* align-items:flex-start; */
+    width: 100%;
+    min-height: 80px;
+    max-height:130px;
+    gap:5px 5px;
     color: black;
+    padding: 10px;
+    z-index: 1;
 }
+
+
+.geneStrInput {
+    grid-area: geneInput;
+    height: 100%;
+}
+
+.disease-select-container {
+    grid-area: disease;
+    width:100%;
+    z-index: 2;
+}
+
+.tissue-selector {
+    grid-area: tissue;
+    color: black;
+    width: 95%;
+    z-index: 2;
+}
+
+.dist-container {
+    grid-area: distance;
+    max-height: 30px;
+}
+
+.button-submit {
+    grid-area: submit;
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    border: 0;
+    border-radius: 6px;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "JetBrains Mono",monospace;
+    height: 48px;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    padding-left: 16px;
+    padding-right: 16px;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 18px;
+    height:90%;
+    width:100%
+}
+.button-submit:focus {
+    box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  }
+  
+  .button-submit:hover {
+    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+    transform: translateY(-2px);
+  }
+  
+  .button-submit:active {
+    box-shadow: #3c4fe0 0 3px 7px inset;
+    transform: translateY(2px);
+  }
 
 .mat-tab-group {
     grid-area: main;
+    background-color: #b3cdd1;
+    background-image: linear-gradient(315deg, #d7e7e9 0%, #d2d4e1 74%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+    -webkit-box-shadow: 3px 3px 10px 3px #dddddd;
+    -moz-box-shadow: 3px 3px 10px 3px #dddddd;
+    box-shadow: 3px 3px 10px 3px #dddddd;
     color: black;
-    align-items:flex-start;
-    width: auto;
- }
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+}
 
+::ng-deep .mat-tab-label
 .genetics-grid-container {
     display: grid;
     grid-template-areas:
@@ -43,34 +134,60 @@
         'lzp3 lzp4'
         'lzp5 lzp6';
     grid-gap: 5px;
-    background-color: rgb(227, 230, 233);
+    /* background-color: rgb(227, 230, 233); */
     padding: 5px;
     position: relative;
     width: auto;
 }
 
 .table-container-hypercoloc {
-    grid-area:table; 
-    width:auto;
+    grid-area: table;
+    width: auto;
 }
 
 .img-container1 {
     grid-area: lzp1;
-    align-items:flex-start;
+    align-items: flex-start;
 }
+
 .img-container2 {
     grid-area: lzp2;
-    align-items:flex-start;
+    align-items: flex-start;
 }
+
 .img-container3 {
     grid-area: lzp3;
-    align-items:flex-start;
+    align-items: flex-start;
 }
+
 .img-container4 {
     grid-area: lzp4;
-    align-items:flex-start;
+    align-items: flex-start;
 }
+
 .img-container5 {
     grid-area: lzp5;
-    align-items:flex-start;
+    align-items: flex-start;
+}
+
+.epi-grid-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.tab-content.loading {
+    opacity: 0.2;
+    pointer-events: none;;
+}
+
+.ng-dropdown-panel {
+    z-index:9999 !important;
 }

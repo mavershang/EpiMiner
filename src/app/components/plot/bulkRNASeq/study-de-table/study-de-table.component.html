@@ -1,0 +1,44 @@
+<div class="DE-table">
+    <div class="DETable-grid-container">
+        <div class="DETable-container" mat-elevation-z8>
+            <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedStudy}} DE Result ({{this.dataShareService.selectedComparison}}) </h3>
+            <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
+                [dataSource]="DETableDataSource" matSort>
+                <ng-container matColumnDef="Gene">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="Search a gene" [(ngModel)]="filterEntity.Gene">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.Gene}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="LFC">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="Log2 Fold Change" [(ngModel)]="filterEntity.LFC">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.LFC}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="PValue">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <mat-form-field appearance="legacy">
+                            <input matInput placeholder="PValue" [(ngModel)]="filterEntity.PValue">
+                        </mat-form-field>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{row.PValue}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
+                    [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}" (click)="onRowClicked(row, i)"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+                </mat-row>
+            </mat-table>
+            <mat-paginator #paginatorQuery [pageSizeOptions]="[5, 10, 20, 50, 100]"
+                showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+</div>

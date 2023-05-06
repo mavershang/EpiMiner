@@ -1,7 +1,7 @@
 
 import { getMultipleValuesInSingleSelectionError } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
-import { DataSharingBulkRNASeqService } from 'src/app/services/data-sharing-bulk-rnaseq.service';
+import { DataSharingCRService } from 'src/app/services/data-sharing-bulk-rnaseq.service';
   
   @Component({
     selector: 'app-bubble-plot-base',
@@ -44,15 +44,15 @@ import { DataSharingBulkRNASeqService } from 'src/app/services/data-sharing-bulk
     }
   
     onSelect(data:any): void {
-      console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+      //console.log('Item clicked', JSON.parse(JSON.stringify(data)));
     }
 
     onActivate(data:any): void {
-      console.log('Activate', JSON.parse(JSON.stringify(data)));
+      //console.log('Activate', JSON.parse(JSON.stringify(data)));
     }
 
     onDeactivate(data:any): void {
-      console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+      //console.log('Deactivate', JSON.parse(JSON.stringify(data)));
     }
   
 

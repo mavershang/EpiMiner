@@ -14,8 +14,8 @@ import { MatTableFilter } from 'mat-table-filter';
 import { EpiData } from 'src/app/models/epi-data';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { DataTissueCell } from 'src/app/models/data-tissue-cell';
-import { DataSharingBulkRNASeqService } from 'src/app/services/data-sharing-bulk-rnaseq.service';
-
+import { DataSharingCRService } from 'src/app/services/data-sharing-bulk-rnaseq.service';
+import { DataUtil } from 'src/app/util/util.data';
 
 @Component({
   selector: 'app-credit-report',
@@ -25,22 +25,30 @@ import { DataSharingBulkRNASeqService } from 'src/app/services/data-sharing-bulk
 export class CreditReportComponent implements OnInit {
   // loading spiner
   loading$ = this.loader.loading$;
+  geneticsTabLoading = false;
+  epigenomicsTabLoading = false;
+  bulkRNASeqTabLoading = false;
+  scRNASeqTabLoading = false;
+
+  // conditional display
+  showRNASeqGrid: boolean = false;
+  showScRNASeqGrid: boolean = false;
 
   // input gene
   geneInput: string = "";
 
   // Ref Genome
   refGenomeArr = ["hg19", "hg38"];
-  selectedRefGenome:string;
-  currentRefGenome:string;
+  selectedRefGenome: string;
+  currentRefGenome: string;
 
   // disease 
   diseaseArr = ["Renal disease"];
-  selectedDisease:string;
-  currentDisease:string;
+  selectedDisease: string = '';
+  currentDisease: string = '';
 
   //  List of tissues in EPi data
-  tissueOptions: string[]=[];
+  tissueOptions: string[] = [];
   tissueCellOptions: DataTissueCell[] = [];
   dropdownSettings: IDropdownSettings;
 
@@ -48,44 +56,45 @@ export class CreditReportComponent implements OnInit {
   searchParam: SearchParam = new SearchParam();
 
   // tabs
-  tabOptions:string[] = ['Genetics', 'Epigenomics', 'RNASeq', 'scRNASeq']
-  activeTab:string=this.tabOptions[0];
+  tabOptions: string[] = ['Genetics', 'Epigenomics', 'RNASeq', 'scRNASeq']
+  activeTab: string = this.tabOptions[0];
 
   // genetics tab
   // --- hypercoloc result table
   hypercolocResults: HyperColocResult[] = [];
   displayedColumns: string[] = ['QueryGene', 'Iteration', 'Traits', 'PosteriorProb', 'RegionalProb', 'CandidateSNP', 'PosteriorExplainedBySNP', 'DroppedTrait'];
-  hasData:boolean=false;
-  tableDataSource = new MatTableDataSource<HyperColocResult>(); 
+  hasData: boolean = false;
+  tableDataSource = new MatTableDataSource<HyperColocResult>();
   @ViewChild('paginatorQuery') paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
   filterEntity: HyperColocResult;
   filterType: MatTableFilter;
   lastIdx: number;
   // --- locuszoom plot
   lzpFiles: string[] = [];
+  lzpPhenotypes: string[] = [];
   lzpImgs: any[] = [];
 
   // epigenetics tab
   displayedColumns2: string[] = ['Chr', 'SnpPosition', 'ChunkStartPos', 'ChunkEndPos', 'Gene', 'EpiLinkScore', 'QTLPValue', 'Tissue', 'CellType', 'CellLine', 'DataSource', 'Description', 'DataType'];
   epiResultData: EpiData[] = [];
-  hasData2:boolean=false;
-  tableDataSource2 = new MatTableDataSource<EpiData>(); 
+  hasData2: boolean = false;
+  tableDataSource2 = new MatTableDataSource<EpiData>();
   @ViewChild('paginatorQuery') paginator2: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort2: MatSort;
+  @ViewChild(MatSort, { static: false }) sort2: MatSort;
   filterEntity2: EpiData;
   filterType2: MatTableFilter;
   lastIdx2: number;
 
-  constructor( 
+  constructor(
     private dialog: MatDialog,
     public loader: LoadingService,
     private getDataService: GetDataService,
     private imgService: ImgService,
-    public dataShareBulkRnaSeqService: DataSharingBulkRNASeqService) {
-      this.initRefGenome();
-      this.getTissueCellList(this.currentRefGenome);
-    }
+    public dataShareBulkRnaSeqService: DataSharingCRService) {
+    this.initRefGenome();
+    this.getTissueCellList(this.currentRefGenome);
+  }
 
   ngOnInit(): void {
     this.filterEntity = new HyperColocResult();
@@ -97,6 +106,11 @@ export class CreditReportComponent implements OnInit {
     this.lastIdx2 = -1;
 
     this.reset();
+
+    //refresh scRNASeq tab when selected gene is changed
+    this.dataShareBulkRnaSeqService.selectedGeneChange.subscribe((value) => {
+      this.refreshScRNASeqTab(this.selectedDisease, this.dataShareBulkRnaSeqService.selectedGene);
+    })
   }
 
   ngAfterViewInit() {
@@ -122,7 +136,7 @@ export class CreditReportComponent implements OnInit {
     console.log(items);
   }
 
-  openDialog(description:string) {
+  openDialog(description: string) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
@@ -130,13 +144,13 @@ export class CreditReportComponent implements OnInit {
     this.dialog.open(DialogComponent, dialogConfig);
   }
 
-  getTissueCellList(refGenome:string) {
+  getTissueCellList(refGenome: string) {
     this.getDataService.getTissueCellList(refGenome).subscribe(
       data => {
         //this.tissueOptions = data;
         this.tissueCellOptions = data;
-        this.tissueOptions = this.tissueCellOptions.map(x=>x.InfoType+":"+x.InfoValue);
-        this.tissueOptions = this.tissueOptions.filter(function(ele, index, self){
+        this.tissueOptions = this.tissueCellOptions.map(x => x.InfoType + ":" + x.InfoValue);
+        this.tissueOptions = this.tissueOptions.filter(function (ele, index, self) {
           return index == self.indexOf(ele);
         })
         this.tissueOptions = this.tissueOptions.sort();
@@ -145,7 +159,7 @@ export class CreditReportComponent implements OnInit {
       });
   }
 
-  diseaseOnChange(){
+  diseaseOnChange() {
     if (this.selectedDisease == this.currentDisease) {
       // do nothing
       return;
@@ -162,18 +176,21 @@ export class CreditReportComponent implements OnInit {
 
   submitGene() {
     let verifyError = this.verifyInput();
-    if (verifyError.length > 0){
+    if (verifyError.length > 0) {
       this.openDialog(verifyError);
       return;
     }
-    
+
     // verify max distance
-    if (this.searchParam.maxDist == undefined ||  this.searchParam.maxDist.length == 0)
-    {
+    if (this.searchParam.maxDist == undefined || this.searchParam.maxDist.length == 0) {
       this.searchParam.maxDist = '500000';
     }
 
+    // show grid
+    this.showRNASeqGrid = true;
+
     // genetics: hypercoloc and locuszoom
+    this.geneticsTabLoading = true;
     this.getDataService.getCRGeneticsByGene(this.geneInput, this.selectedDisease, this.selectedRefGenome, this.searchParam).subscribe(
       data => {
         console.log(data);
@@ -182,51 +199,81 @@ export class CreditReportComponent implements OnInit {
         this.tableDataSource.paginator = this.paginator;
         this.tableDataSource.sort = this.sort;
         this.lzpFiles = data.LZPImgList;
-        this.getImages(this.lzpFiles);
-      },error => {
+        this.getLzpImages(this.lzpFiles);
+        this.parsePhenotypeFromName(this.lzpFiles);
+        this.geneticsTabLoading = false;
+      }, error => {
         this.openDialog("Failed to run Credit Report genetics: " + error.message);
-      }); 
-    
+      });
+
     // epigenomics
+    this.epigenomicsTabLoading = true;
     this.getDataService.queryByStr(this.geneInput, this.selectedRefGenome, this.searchParam).subscribe(
       data => {
         this.epiResultData = data.epiDataList;
         this.tableDataSource2.data = this.epiResultData;
         this.hasData2 = this.epiResultData.length > 0;
         this.tableDataSource2.paginator = this.paginator2;
-        this.tableDataSource.sort = this.sort;      
+        this.tableDataSource.sort = this.sort;
+        this.epigenomicsTabLoading = false;
       }, error => {
         this.openDialog("Failed to query gene for epigenomics: " + error.message);
       }
     );
 
-    // bulk RNASeq DE
+    // bulk RNASeq DE and WGCNA
+    this.bulkRNASeqTabLoading = true;
+    let deReady = false;
+    let wgcnaReady = false;
     this.getDataService.getCRBulkRNASeqByGene(this.selectedDisease).subscribe(
       data => {
         this.dataShareBulkRnaSeqService.importDEResult(data);
+        deReady = true;
+        if (deReady && wgcnaReady) {
+          this.bulkRNASeqTabLoading = false;
+          this.updateSelectedGene(this.geneInput);
+        }
       }, error => {
         this.openDialog("Failed to get bulk RNASeq DE result: " + error.message);
       }
     );
 
-    // WGCNA
     this.getDataService.getWGCNA(this.selectedDisease).subscribe(
       data => {
         this.dataShareBulkRnaSeqService.importWGCNAResult(data);
+        wgcnaReady = true;
+        if (deReady && wgcnaReady) {
+          this.bulkRNASeqTabLoading = false;
+          this.updateSelectedGene(this.geneInput);
+        }
       }, error => {
-        this.openDialog("Failed to get bulk RNASeq WGCNA result: "  + error.message);
+        this.openDialog("Failed to get bulk RNASeq WGCNA result: " + error.message);
       }
     )
 
     // scRNASEq
+    this.refreshScRNASeqTab(this.selectedDisease, this.geneInput);
+  }
+
+  refreshScRNASeqTab(disease: string, gene: string){
+    this.showScRNASeqGrid=true;
+    this.scRNASeqTabLoading=true
+    this.getDataService.getScRNASeqByGene(disease, gene).subscribe(
+      data => {
+        this.dataShareBulkRnaSeqService.importScRNASeqResult(data);
+        this.scRNASeqTabLoading=false;
+      }, error => {
+        this.openDialog("Failed to get scRNASeq result: " + error.message);
+      }
+    )
   }
 
   verifyInput() {
-    if (this.geneInput == "" ) {
+    if (this.geneInput == "") {
       return "Please fill gene search textbox before continue.";
     } else if (this.geneInput.split(',').length > 1) {
       return "Please submit one gene for each search.";
-    }  else if (this.searchParam.tissues == undefined || this.searchParam.tissues.length==0) {
+    } else if (this.searchParam.tissues == undefined || this.searchParam.tissues.length == 0) {
       return "Please select Tissue and Celltype before continue";
     }
     return "";
@@ -248,10 +295,9 @@ export class CreditReportComponent implements OnInit {
     }
     row.highlighted = !row.highlighted;
     this.lastIdx2 = i;
-
   }
 
-  getImages(files) {
+  getLzpImages(files) {
     files.forEach(file => {
       this.imgService.getLzpImageByFname(file).subscribe(
         Response => {
@@ -263,15 +309,38 @@ export class CreditReportComponent implements OnInit {
     });
   }
 
-  createLzpImg(image: Blob, fname:string) {
+  createLzpImg(image: Blob, fname: string) {
     let reader = new FileReader();
     reader.addEventListener("load", () => {
       let i = this.lzpFiles.indexOf(fname);
       this.lzpImgs[i] = reader.result;
     }, false);
- 
+
     if (image) {
-       reader.readAsDataURL(image);
+      reader.readAsDataURL(image);
     }
- }
+  }
+
+  parsePhenotypeFromName(files: string[]) {
+    console.log(files);
+    const regex = /chr\d+_\d+\-\d+\.([\w_\.]+)\.COLOC\.Subset/;
+    files.forEach(x => {
+      const fname = x.substring(x.lastIndexOf('\\') + 1);
+      const match = fname.match(regex);
+      if (match) {
+        const res = match[1];
+        this.lzpPhenotypes.push(res);
+      }
+      else {
+        this.lzpPhenotypes.push(x)
+      }
+    })
+  }
+
+  // set default selected gene to to update the gene expr plot 
+  updateSelectedGene(geneInputStr:string) {
+   this.dataShareBulkRnaSeqService.selectedGene = DataUtil.splitGeneInput(geneInputStr)[0];
+   this.dataShareBulkRnaSeqService.toggleSelectedGeneChanged();
+  }
+
 }

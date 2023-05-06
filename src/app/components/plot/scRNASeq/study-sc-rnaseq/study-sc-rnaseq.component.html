@@ -1,0 +1,78 @@
+<div class="scRNASeq-container">
+    <div class="header">
+        <h4> test {{study}} </h4>
+    </div>
+    
+    <div class="expr-container">
+        <img id="img-scRNASeq-expr" [src]='img' alt="scRNASeq expression plot is not available" />
+    </div>
+
+    <div class="marker-table-container" mat-elevation-z8>
+        <h3 style="text-align: center; color:darkblue">Cell Cluster Markers</h3>
+        <mat-table class="marker-table" matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
+            [dataSource]="tableDataSource" matSort>
+
+            <ng-container matColumnDef="Study">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Study" [(ngModel)]="filterEntity.Study">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Study}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Cluster">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Cluster" [(ngModel)]="filterEntity.Cluster">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Cluster}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Gene">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Gene" [(ngModel)]="filterEntity.Gene">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Gene}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="LFC">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="LFC" [(ngModel)]="filterEntity.LFC">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.LFC}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="AdjPValue">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="AdjPValue" [(ngModel)]="filterEntity.AdjPValue">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.AdjPValue}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Rank">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Rank" [(ngModel)]="filterEntity.Rank">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Rank}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
+                [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}" (click)="onRowClicked(row, i)"
+                (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+            </mat-row>
+        </mat-table>
+        <mat-paginator #paginatorQuery [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+
+</div>>

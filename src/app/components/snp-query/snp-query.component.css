@@ -1,55 +1,120 @@
 .grid-container {
-    display: grid;
-    grid-template-areas:
-      'genome main'
-      'snpInput main'
-      'track main'
-      'news main';
-    grid-gap: 5px;
-    background-color: #eaebec;
-    padding: 2px;
-    position: relative;
-    width: 100%;
-  }
+  display: grid;
+  grid-template-columns: 0.4fr 1.6fr;
+  grid-template-rows: 1fr;
+  gap: 5px 15px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "sidebar main";
+  background-image: url('../../../assets/img/cool-background.particle.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-color: #b3cdd1;
+  background-image: linear-gradient(315deg, #e6eced 0%, #e2e4f5 74%);
+  -webkit-backdrop-filter: blur(10px); */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 5px 5px 5px 5px / 5px 5px 5px 5px;
+  -webkit-box-shadow: 3px 3px 10px 3px #dddddd;
+  -moz-box-shadow: 3px 3px 10px 3px #dddddd;
+  box-shadow: 3px 3px 10px 3px #dddddd;
+  height: 100%;
+}
 
-  .grid-container > div {
-    background-color:eaebec;
-    /* text-align: left; */
-    padding: 10px 0;
-    font-size: 16px;
-  }
-
-/* .sidebar-container {
+.sidebar {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.1fr 0.3fr 0.2fr 1.4fr;
+  gap: 5px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "refGenome"
+    "snpInput-container"
+    "epiBrowser"
+    "news";
   grid-area: sidebar;
-  color: black;
-  align-items:flex-start;
-  font-size: 12px;
-  width: 250px;
-  max-width: 250px;
-} */
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.refGenome-select-container {
+  grid-area: refGenome;
+  height: 100%;
+  border: 1px solid rgba(134, 132, 132, 0.25);
+
+}
+
+.snpInput-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.33fr 0.33r 0.33fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "snpInputTitle"
+    "snpStrInput"
+    "snpFileInput";
+  grid-area: snpInput-container;
+  border: 1px solid rgba(134, 132, 132, 0.25);
+
+}
+
+.snpInputTitle {
+  grid-area: snpInputTitle;
+}
+
+.snpStrInput {
+  grid-area: snpStrInput;
+}
+
+.snpFileInput {
+  grid-area: snpFileInput;
+}
+
+.track-select-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.5fr 1.5fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "browser-title"
+    "browser-button";
+  grid-area: epiBrowser;
+  border: 1px solid rgba(134, 132, 132, 0.25);
+}
+
+.browser-title {
+  grid-area: browser-title;
+  height: 80%;
+}
+
+.browser-button {
+  grid-area: browser-button;
+  height: 100%;
+}
+
+.news {
+  grid-area: news;
+  border: 1px solid rgba(134, 132, 132, 0.25);
+}
+
+.main {
+  grid-area: main;
+}
+
 
 .mat-tab-group {
   grid-area: main;
   color: black;
-  align-items:flex-start;
-  width: auto;
+  align-items: flex-start;
+  width: 100%;
+  border: 1px solid rgba(134, 132, 132, 0.25);
+
 }
 
-.snpInput-container{
-  display: grid;
-  grid-template-areas:
-    'title'
-    'textbox'
-    'file';
-  grid-gap: 10px;
-  background-color: #ffffff;
-  padding: 5px;
-  position: relative;
-  width: auto;
-  max-height:170px;
-}
 
-.epiTab-grid-container{
+
+.epiTab-grid-container {
   display: 'grid';
   grid-template-areas:
     'tissue dist'
@@ -59,11 +124,11 @@
   background-color: #ffffff;
   padding: 5px;
   position: relative;
-  width: auto;
+  width: 100%;
   min-height: 600px;
 }
 
-.coloc-container{
+.coloc-container {
   display: 'grid';
   grid-template-areas:
     'data1 data1 data2 data2'
@@ -77,84 +142,45 @@
   min-height: 600px;
 }
 
-.select1-container{
+.select1-container {
   grid-area: data1;
-  width:500px;
-  align-items:flex-start;
-}
-.select2-container{
-  grid-area: data2;
-  width:500px;
-}
-
-
-.refGenome-select-container {
-  grid-area: genome;
-  height: 30px;
-  background-color:#ffffff;
-  padding: 10px;
-}
-
-.track-select-container {
-  grid-area: track;
-  height: 80px;
-  padding: 10px;
-  background-color:#ffffff ;
-}
-
-.input { 
-  grid-area: snpInput ;
-  height: 20px;    
-  padding:10px;
-}
-
-.snpInputTitle {
-  grid-area: title;
-  align-items:flex-start
-}
-.snpStrInput {
-  grid-area: textbox;
-  align-items:flex-start
-}
-
-.snpFileInput {
-  grid-area: file;
+  width: 500px;
   align-items: flex-start;
 }
 
-.placeholder {
-  grid-area:news;
-  background-color:#ffffff;
-  min-height: 300px;
+.select2-container {
+  grid-area: data2;
+  width: 500px;
 }
+
 
 .tissueSelector {
   grid-area: tissue;
-  align-items:flex-start;
+  align-items: flex-start;
   max-width: 98%;
 }
+
 .dist {
   grid-area: dist;
-  align-items:flex-end;
-  width:20%
+  align-items: flex-end;
+  width: 20%
 }
+
 .buttonSearchDB {
   grid-area: button;
-  align-items:flex-start;
-  width:10%
+  align-items: flex-start;
+  width: 10%
 }
 
-
-.button-export{
+.button-export {
   float: right;
-  right:-24px;
+  right: -24px;
 }
 
-
-.epiTable-container{
+.epiTable-container {
   grid-area: table;
-  align-items:flex-start;
-  width:1200px;
+  align-items: flex-start;
+  width: 1200px;
 }
 
 .mat-row.hovered {
@@ -164,4 +190,3 @@
 .mat-row.highlighted {
   background: #999;
 }
- 

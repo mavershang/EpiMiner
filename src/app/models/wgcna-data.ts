@@ -3,15 +3,19 @@ export class WGCNAData {
     // SoftPowerPlot: string;
     CorImgFile: string;
     DendroImgFile: string;
+    SampleTreeFile: string;
+
     CorImgBlob: any;
     DendroImgBlob: any;
+    SampleTreeBlob: any
 
     ModInfoMap: Map<string, WGCNAMod>;
     GeneInfoMap: Map<string, any>;
 
-    constructor(dendImg: any, corImg: any) {
+    constructor(dendImg: any, corImg: any, sampleTreeImg: any) {
         this.DendroImgFile = dendImg;
         this.CorImgFile = corImg;
+        this.SampleTreeFile = sampleTreeImg;
         this.ModInfoMap = new Map<string, WGCNAMod>();
         this.GeneInfoMap = new Map<string, any>();
     }
@@ -48,6 +52,7 @@ export class WGCNAMod {
 
         m.PathwayEnrichList.forEach(path => {
             const p = new WGCNAPathwayResult(path);
+            p.setHubGene(this.HubGeneSymbol);
             this.Pathways.push(p);
         });
 
@@ -70,8 +75,9 @@ export class WGCNAPathwayResult {
     Rank: number;
     PValue: number;
     AdjustPValue: number;
-    highlighted?: boolean;
-    hovered?: boolean;
+    HubGene:string;
+    highlighted?: boolean = false;
+    hovered?: boolean = false;
 
     constructor(p?: any) {
         if (p != undefined) {
@@ -87,6 +93,10 @@ export class WGCNAPathwayResult {
             this.AdjustPValue = p.BonferoniPvalue;
             this.Rank = p.Rank;
         }
+    }
+
+    setHubGene(gene:string){
+        this.HubGene = gene;
     }
 }
 
@@ -110,6 +120,8 @@ export class WGCNAGene {
     Module: string;
     MMPValue: number;
     MMScore: number;
+    highlighted?: boolean = false;
+    hovered?: boolean = false;
 
     constructor(g?: any) {
         if (g != undefined) {

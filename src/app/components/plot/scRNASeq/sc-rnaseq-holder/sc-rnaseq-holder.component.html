@@ -1,0 +1,11 @@
+<div class="container">
+    <div class="cell-cluster-expr-plots">
+      <div *ngFor="let item of this.dataShareService.scRNASeqData | keyvalue">
+        <app-study-sc-rnaseq [study]=item.key [data]=item.value></app-study-sc-rnaseq>
+      </div>
+    </div>
+
+    <!-- <div class="marker-table">
+        <app-cluster-marker-table [data]=this.dataShareService.getCellClusterMarkerTableData()></app-cluster-marker-table>
+    </div> -->
+  </div>

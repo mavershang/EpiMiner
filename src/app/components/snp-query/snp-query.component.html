@@ -27,19 +27,45 @@
 
 
 <div class="grid-container">
+    <div class="sidebar">
         <div class="refGenome-select-container" style="width:100%">
-            <label style="text-align: left; width:200px; padding-left:5px; padding-right: 10px; color:navy">Reference Genome</label>    
-            <select  class="selectGenome" style="width: 192px" [(ngModel)] = "selectedRefGenome" (change)="genomeOnChange()">
+            <label style="text-align: left; width:200px; height:100%; padding-left:5px; padding-right: 10px; color:navy">Reference
+                Genome</label>
+            <select class="selectGenome" style="width: 192px; height:100%" [(ngModel)]="selectedRefGenome"
+                (change)="genomeOnChange()">
                 <!-- <option value="" disabled selected>Select Reference Genome</option> -->
-                <option *ngFor = "let g of refGenomeArr" [ngValue]="g">{{g}}</option>
+                <option *ngFor="let g of refGenomeArr" [ngValue]="g">{{g}}</option>
             </select>
         </div>
 
-    <div class="track-select-container">
-        <!-- <div *ngFor='let tt of trackTypes'>
+        <div class="snpInput-container">
+            <div class="snpInputTitle">
+                <a style="font-size:medium; text-align:left; color: navy; font-size:20px; height:100%">SNP/Gene
+                    Input</a>
+            </div>
+
+            <div class="snpStrInput">
+                <label
+                    style="width:180px; height:100%; padding-left: 5px; padding-right: 5px; color: black; text-align: left;">Option
+                    #1</label>
+                <input type="text" style="width:70%"
+                    placeholder="Search with SNP rsID, SNP coordinate or Gene name, separated by comma" name="snp"
+                    class="form-control" [(ngModel)]="inputStr" required maxlength="100" />
+            </div>
+            <div class="snpFileInput">
+                <label
+                    style="width:180px; height:100%; padding-left: 5px; padding-right: 5px; color: black; text-align: left;">Option
+                    #2</label>
+                <input type="file" class="file-input" style="color:black;width:70%" (change)="onFileSelected($event)"
+                    #fileUpload>
+            </div>
+        </div>
+
+        <div class="track-select-container">
+            <!-- <div *ngFor='let tt of trackTypes'>
             <input type="checkbox" style="color:black">{{tt}}
         </div> -->
-        <!-- <div class="sidebar-container">
+            <!-- <div class="sidebar-container">
         <h3 style="text-align: center;">Genome Browser Parameters</h3>    
         <div class="egTrackTypeSelector">
             <ng-multiselect-dropdown
@@ -79,338 +105,341 @@
         </div>
 
         <button class="buttonViewer" (click)="openEpiBrowser()">Launch Epigenome Browser</button> -->
-
-        <h4 style="text-align: left; padding-left: 5px; color:navy">Epigenome Browser</h4>    
-        <button mat-raised-button class="buttonTrackSelection" color="primary" style="align-items: center; color: black" (click)="openTrackTreeDialog()">Launch Track Selector</button>
-    </div>
-
-    <div class="Input">
-        <div class="snpInput-container"> 
-            <!-- <div class="snpInputTitle"> -->
-                <h4 style="font-size:medium; text-align:left; color: navy;">SNP/Gene Input</h4>    
-            <!-- </div> -->
-
-            <!-- <div class="snpInput"> -->
-                    <div class="snpStrInput">
-                        <label style="width:180px; padding-left: 5px; padding-right: 5px; color: black; text-align: left;">Option #1</label>>
-                        <input type="text" style="width:238px" placeholder="Search with SNP rsID, SNP coordinate or Gene name, separated by comma" name="snp"  class="form-control" [(ngModel)]="inputStr" required maxlength="100"/>
-                    </div>
-                    <div class="snpFileInput">
-                        <label style="width:180px; padding-left: 5px; padding-right: 5px; color: black; text-align: left;">Option #2</label>
-                        <input type="file" class="file-input" style="color:black;width:250px"
-                            (change)="onFileSelected($event)" #fileUpload>
-                    </div>
-            <!-- </div> -->
-        </div> 
-    </div>
-
-    <div class="placeholder">
-        <h4 style="text-align:left; color:navy">News</h4>
-        <a style="color:black;">[3/24/2022] Announcement:</a>
-        <br>
-        <a style="color:black;">hg38 data is under preparation.</a>
-    </div>
-
-    <mat-tab-group (selectedTabChange)="tabChanged($event)">
-        <mat-tab label="Epi Data Search"> 
-            <div class="epiTab-grid-container">
-                <!-- <div class = "searchParam"> -->
-                    <!-- <div class="searchParam-container"> -->
-                <div class="tissueSelector">
-                            <ng-multiselect-dropdown
-                                [settings]="dropdownSettings"
-                                [placeholder]="'Select Tissue(s)'"
-                                [data]="tissueOptions"
-                                [(ngModel)]="searchParam.tissues"
-                                (onSelect)="onItemSelect($event)"
-                                (onSelectAll)="onSelectAll($event)"
-                            ></ng-multiselect-dropdown>
-                </div>
-
-                <div class="dist">
-                    <input type="text" placeholder="maximal distance (default +/-100k nt)" name="maxDist"  class="form-control" [(ngModel)]="searchParam.maxDist" required maxlength="20"/>
-                </div>
-                        
-                        <!-- </div> -->
-                <button class="buttonSearchDB" mat-raised-button color="primary" style="color:blue" (click)="searchDB()">Search EpiDB</button>
-
-                <button class="button-export" mat-raised-button color="primary" style="color:black" (click)="exportAsXLSX()">Export to Excel</button>
-
-                <button class="button-heatmap" mat-raised-button color="primary" style="color:rgb(255, 0, 0)" (click)="analsisHeatmap()">Analysis Summary Plot</button>
-
-                <div class="epiTable-container" mat-elevation-z8>
-                    <h3 style="text-align: center; color:darkblue">Epi Result Table</h3>
-                    <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType" [dataSource]="tableDataSource" matSort>
-                                    
-                        <ng-container matColumnDef="DataSource">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="DataSource" [(ngModel)]="filterEntity.DataSource">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.DataSource}} </mat-cell>
-                        </ng-container>
-                                    
-                        <ng-container matColumnDef="DataType">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="DataType" [(ngModel)]="filterEntity.DataType">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.DataType}} </mat-cell>
-                        </ng-container>
-            
-                        <ng-container matColumnDef="Tissue">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Tissue" [(ngModel)]="filterEntity.Tissue">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.Tissue}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="CellType">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="CellType" [(ngModel)]="filterEntity.CellType">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.CellType}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="CellLine">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="CellLine" [(ngModel)]="filterEntity.CellLine">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.CellLine}} </mat-cell>
-                        </ng-container>
-            
-                        <ng-container matColumnDef="Description">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Description" [(ngModel)]="filterEntity.Description">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.Description}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="Chr">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Chromosome" [(ngModel)]="filterEntity.Chr">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.Chr}} </mat-cell>
-                        </ng-container>
-            
-                        <ng-container matColumnDef="SnpPosition">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="SNP Position" [(ngModel)]="filterEntity.SnpPosition">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.SnpPosition}} </mat-cell>
-                        </ng-container>
-                
-                        <ng-container matColumnDef="ChunkStartPos">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Chunk Start Position" [(ngModel)]="filterEntity.ChunkStartPos">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.ChunkStartPos}} </mat-cell>
-                        </ng-container>
-                
-                        <ng-container matColumnDef="ChunkEndPos">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Chunk End Position" [(ngModel)]="filterEntity.ChunkEndPos">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.ChunkEndPos}} </mat-cell>
-                        </ng-container>
-                
-                        <ng-container matColumnDef="Gene">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Linked Gene" [(ngModel)]="filterEntity.Gene">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.Gene}} </mat-cell>
-                        </ng-container>
-            
-                        <ng-container matColumnDef="EpiLinkScore">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="EpiLinkScore" [(ngModel)]="filterEntity.EpiLinkScore">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.EpiLinkScore}} </mat-cell>
-                        </ng-container>
-            
-                        <ng-container matColumnDef="QTLPValue">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="P-Value" [(ngModel)]="filterEntity.QTLPValue">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.QTLPValue}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="scEpiLockPeakOverlap">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="scEpiLockPeakOverlap" [(ngModel)]="filterEntity.scEpiLockPeakOverlap">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.scEpiLockPeakOverlap}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="scEpiLockPred">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="scEpiLock_Pred" [(ngModel)]="filterEntity.scEpiLockPred">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.scEpiLockPred}} </mat-cell>
-                        </ng-container>
-                
-                        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;" 
-                            [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}" (click)="onRowClicked(row, i)"
-                            (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
-                        </mat-row>
-                    </mat-table>
-                    <mat-paginator #paginatorQuery [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
-                </div> 
+            <div class="browser-title">
+                <a style="width:100%;font-size:20px; text-align: left; padding-left: 5px; color:navy">Epigenome
+                    Browser</a>
             </div>
-        </mat-tab>
+            <button mat-raised-button class="browser-button" color="primary"
+                style="align-items: center; width: 50%; color: black" (click)="openTrackTreeDialog()">Launch Track Selector</button>
+</div>
 
-        <mat-tab label="Colocalization"> 
-            <div class="coloc-container">
+
+            <div class="news">
+                <h4 style="text-align:left; color:navy">News</h4>
+                <a style="color:black;">[3/24/2022] Announcement:</a>
+                <br>
+                <a style="color:black;">hg38 data is under preparation.</a>
+            </div>
+        </div>
+
+        <mat-tab-group class="tab-container" (selectedTabChange)="tabChanged($event)">
+            <mat-tab label="Epi Data Search">
+                <div class="epiTab-grid-container">
+                    <!-- <div class = "searchParam"> -->
+                    <!-- <div class="searchParam-container"> -->
+                    <div class="tissueSelector">
+                        <ng-multiselect-dropdown [settings]="dropdownSettings" [placeholder]="'Select Tissue(s)'"
+                            [data]="tissueOptions" [(ngModel)]="searchParam.tissues" (onSelect)="onItemSelect($event)"
+                            (onSelectAll)="onSelectAll($event)"></ng-multiselect-dropdown>
+                    </div>
+
+                    <div class="dist">
+                        <input type="text" placeholder="maximal distance (default +/-100k nt)" name="maxDist"
+                            class="form-control" [(ngModel)]="searchParam.maxDist" required maxlength="20" />
+                    </div>
+
+                    <!-- </div> -->
+                    <button class="buttonSearchDB" mat-raised-button color="primary" style="color:blue"
+                        (click)="searchDB()">Search EpiDB</button>
+
+                    <button class="button-export" mat-raised-button color="primary" style="color:black"
+                        (click)="exportAsXLSX()">Export to Excel</button>
+
+                    <button class="button-heatmap" mat-raised-button color="primary" style="color:rgb(255, 0, 0)"
+                        (click)="analsisHeatmap()">Analysis Summary Plot</button>
+
+                    <div class="epiTable-container" mat-elevation-z8>
+                        <h3 style="text-align: center; color:darkblue">Epi Result Table</h3>
+                        <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
+                            [dataSource]="tableDataSource" matSort>
+
+                            <ng-container matColumnDef="DataSource">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="DataSource" [(ngModel)]="filterEntity.DataSource">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.DataSource}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="DataType">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="DataType" [(ngModel)]="filterEntity.DataType">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.DataType}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Tissue">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Tissue" [(ngModel)]="filterEntity.Tissue">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.Tissue}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="CellType">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="CellType" [(ngModel)]="filterEntity.CellType">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.CellType}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="CellLine">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="CellLine" [(ngModel)]="filterEntity.CellLine">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.CellLine}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Description">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Description"
+                                            [(ngModel)]="filterEntity.Description">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.Description}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Chr">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Chromosome" [(ngModel)]="filterEntity.Chr">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.Chr}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="SnpPosition">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="SNP Position"
+                                            [(ngModel)]="filterEntity.SnpPosition">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.SnpPosition}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ChunkStartPos">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Chunk Start Position"
+                                            [(ngModel)]="filterEntity.ChunkStartPos">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.ChunkStartPos}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="ChunkEndPos">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Chunk End Position"
+                                            [(ngModel)]="filterEntity.ChunkEndPos">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.ChunkEndPos}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Gene">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Linked Gene" [(ngModel)]="filterEntity.Gene">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.Gene}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="EpiLinkScore">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="EpiLinkScore"
+                                            [(ngModel)]="filterEntity.EpiLinkScore">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.EpiLinkScore}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="QTLPValue">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="P-Value" [(ngModel)]="filterEntity.QTLPValue">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.QTLPValue}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="scEpiLockPeakOverlap">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="scEpiLockPeakOverlap"
+                                            [(ngModel)]="filterEntity.scEpiLockPeakOverlap">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.scEpiLockPeakOverlap}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="scEpiLockPred">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="scEpiLock_Pred"
+                                            [(ngModel)]="filterEntity.scEpiLockPred">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.scEpiLockPred}} </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
+                                [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}"
+                                (click)="onRowClicked(row, i)" (mouseover)="row.hovered = true"
+                                (mouseout)="row.hovered = false">
+                            </mat-row>
+                        </mat-table>
+                        <mat-paginator #paginatorQuery [pageSizeOptions]="[10, 20, 50, 100]"
+                            showFirstLastButtons></mat-paginator>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Colocalization">
+                <div class="coloc-container">
                     <div class="select1-container">
-                        <select  class="selectGWAS" [(ngModel)] = "qtlParam.dataset1" name="gwasDataList" placeholder="Select GWAS Data">
+                        <select class="selectGWAS" [(ngModel)]="qtlParam.dataset1" name="gwasDataList"
+                            placeholder="Select GWAS Data">
                             <!-- <option [ngValue]="undefined" hidden>Select GWAS Dataset</option> -->
                             <option value="" disabled selected>Select the 1st GWAS/QTL Dataset</option>
-                            <option *ngFor = "let g of allColocDataList" [value]="g">{{g}}</option>
+                            <option *ngFor="let g of allColocDataList" [value]="g">{{g}}</option>
                         </select>
                     </div>
                     <div class="select2-container">
-                        <select class="selectQTL" [(ngModel)] = "qtlParam.dataset2" name="qtlDataList" placeholder="Select QTL Data">
+                        <select class="selectQTL" [(ngModel)]="qtlParam.dataset2" name="qtlDataList"
+                            placeholder="Select QTL Data">
                             <!-- <option [ngValue]="undefined" hidden>Select QTL Dataset</option> -->
                             <option value="" disabled selected>Select the 2nd GWAS/QTL Dataset</option>
-                            <option *ngFor = "let q of allColocDataList" [value]="q">{{q}}</option>
+                            <option *ngFor="let q of allColocDataList" [value]="q">{{q}}</option>
                         </select>
                     </div>
 
-                <div class="pval-cutoff">
-                    <div class="pval-container">
-                        <input class="p1val" type="text" placeholder="p1 cutoff (default 1e-4)" name="p1" [(ngModel)]="qtlParam.p1" required maxlength="10"/>
-                        <input class="p2val" type="text" placeholder="p2 cutoff (default 1e-4)" name="p2" [(ngModel)]="qtlParam.p2" required maxlength="10"/>
-                        <input class="p12val" type="text" placeholder="p12 cutoff (default 1e-6)" name="p12" [(ngModel)]="qtlParam.p12" required maxlength="10"/>
+                    <div class="pval-cutoff">
+                        <div class="pval-container">
+                            <input class="p1val" type="text" placeholder="p1 cutoff (default 1e-4)" name="p1"
+                                [(ngModel)]="qtlParam.p1" required maxlength="10" />
+                            <input class="p2val" type="text" placeholder="p2 cutoff (default 1e-4)" name="p2"
+                                [(ngModel)]="qtlParam.p2" required maxlength="10" />
+                            <input class="p12val" type="text" placeholder="p12 cutoff (default 1e-6)" name="p12"
+                                [(ngModel)]="qtlParam.p12" required maxlength="10" />
+                        </div>
+                    </div>
+
+                    <div class="dist">
+                        <input type="text" placeholder="maximal distance (default +/-500k nt)" name="maxDistColoc"
+                            class="form-control" [(ngModel)]="qtlParam.maxDist" required maxlength="20" />
+                    </div>
+
+                    <button class="buttonRunQTL" (click)="runQTL()">Run Colocolization</button>
+
+                    <div class="table-container-coloc" mat-elevation-z8>
+                        <h2 style="text-align: center; color:darkblue">Coloc Result Table</h2>
+                        <mat-table matTableFilter [exampleEntity]="filterEntity2" [filterType]="filterType2"
+                            [dataSource]="tableDataSource2" matSort>
+                            <ng-container matColumnDef="IndexSnp">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Indexing SNP" [(ngModel)]="filterEntity2.IndexSnp">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row">
+                                    <button class="button-exp" mat-flat-button
+                                        (click)="openTopSnpDialog(row)">{{row.IndexSnp}} </button>
+                                </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Gene">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Gene (QTL only)" [(ngModel)]="filterEntity2.Gene">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.Gene}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="NumOfSnp">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="Number of SNPs"
+                                            [(ngModel)]="filterEntity2.NumOfSnp">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.NumOfSnp}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="H0_abf">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="H0_abf" [(ngModel)]="filterEntity2.H0_abf">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.H0_abf | number:'1.1-5'}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="H1_abf">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="H1_abf" [(ngModel)]="filterEntity2.H1_abf">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.H1_abf| number:'1.1-5'}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="H2_abf">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="H2_abf" [(ngModel)]="filterEntity2.H2_abf">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.H2_abf | number:'1.1-5'}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="H3_abf">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="H3_abf" [(ngModel)]="filterEntity2.H3_abf">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.H3_abf | number:'1.1-5'}} </mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="H4_abf">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                    <mat-form-field appearance="legacy">
+                                        <input matInput placeholder="H4_abf" [(ngModel)]="filterEntity2.H4_abf">
+                                    </mat-form-field>
+                                </mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.H4_abf | number:'1.1-5'}} </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns2; let i = index;"
+                                [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}"
+                                (click)="onRowClicked2(row, i)" (mouseover)="row.hovered = true"
+                                (mouseout)="row.hovered = false">
+                            </mat-row>
+                        </mat-table>
+                        <mat-paginator #paginatorColoc [pageSizeOptions]="[10, 20, 50, 100]"
+                            showFirstLastButtons></mat-paginator>
                     </div>
                 </div>
+            </mat-tab>
+        </mat-tab-group>
 
-                <div class="dist">
-                    <input type="text" placeholder="maximal distance (default +/-500k nt)" name="maxDistColoc"  class="form-control" [(ngModel)]="qtlParam.maxDist" required maxlength="20"/>
-                </div>
-                
-                <button class="buttonRunQTL" (click)="runQTL()">Run Colocolization</button>
+        <mat-progress-spinner style="margin:0 auto;" [mode]="'indeterminate'"
+            *ngIf="loading$ | async"></mat-progress-spinner>
 
-                <div class="table-container-coloc" mat-elevation-z8>
-                    <h2 style="text-align: center; color:darkblue">Coloc Result Table</h2>
-                    <mat-table matTableFilter [exampleEntity]="filterEntity2" [filterType]="filterType2" [dataSource]="tableDataSource2" matSort>
-                        <ng-container matColumnDef="IndexSnp">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Indexing SNP" [(ngModel)]="filterEntity2.IndexSnp">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> 
-                                <button class="button-exp" mat-flat-button (click)="openTopSnpDialog(row)">{{row.IndexSnp}} </button>
-                            </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="Gene">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Gene (QTL only)" [(ngModel)]="filterEntity2.Gene">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.Gene}} </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="NumOfSnp">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="Number of SNPs" [(ngModel)]="filterEntity2.NumOfSnp">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.NumOfSnp}} </mat-cell>
-                        </ng-container>
-                
-                        <ng-container matColumnDef="H0_abf">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="H0_abf" [(ngModel)]="filterEntity2.H0_abf">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.H0_abf | number:'1.1-5'}} </mat-cell>
-                        </ng-container>
-                
-                        <ng-container matColumnDef="H1_abf">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="H1_abf" [(ngModel)]="filterEntity2.H1_abf">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.H1_abf| number:'1.1-5'}} </mat-cell>
-                        </ng-container>
-                
-                        <ng-container matColumnDef="H2_abf">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="H2_abf" [(ngModel)]="filterEntity2.H2_abf">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.H2_abf | number:'1.1-5'}}  </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="H3_abf">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="H3_abf" [(ngModel)]="filterEntity2.H3_abf">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.H3_abf | number:'1.1-5'}}  </mat-cell>
-                        </ng-container>
-
-                        <ng-container matColumnDef="H4_abf">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                <mat-form-field appearance="legacy">
-                                    <input matInput placeholder="H4_abf" [(ngModel)]="filterEntity2.H4_abf">
-                                </mat-form-field>
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.H4_abf | number:'1.1-5'}}  </mat-cell>
-                        </ng-container>
-
-                        <mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumns2; let i = index;" 
-                            [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}" (click)="onRowClicked2(row, i)"
-                            (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
-                        </mat-row>
-                    </mat-table>
-                    <mat-paginator #paginatorColoc [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
-                </div> 
-            </div>
-        </mat-tab>
-      </mat-tab-group>
-
-    <mat-progress-spinner style="margin:0 auto;"  
-                          [mode]="'indeterminate'" 
-                          *ngIf="loading$ | async"></mat-progress-spinner>
-
-</div>
-
+    </div>

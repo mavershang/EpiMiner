@@ -1,0 +1,69 @@
+<div class="WGCNA-pathway-table">
+    <div class="path-table-container" mat-elevation-z8>
+        <h3 style="text-align: center; color:darkblue">WGCNA Module Pathway Enrichment Table</h3>
+        <mat-table class="path-table" matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
+            [dataSource]="tableDataSource" matSort>
+
+            <ng-container matColumnDef="Module">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Module" [(ngModel)]="filterEntity.Module">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Module}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="TermID">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="TermID" [(ngModel)]="filterEntity.TermID">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.TermID}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="TermName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="TermName" [(ngModel)]="filterEntity.TermName">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.TermName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Rank">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Rank" [(ngModel)]="filterEntity.Rank">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Rank}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="AdjustPValue">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="AdjustPValue" [(ngModel)]="filterEntity.AdjustPValue">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.AdjustPValue}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="HubGene">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="HubGene" [(ngModel)]="filterEntity.HubGene">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.HubGene}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
+                [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}" (click)="onRowClicked(row, i)"
+                (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+            </mat-row>
+        </mat-table>
+        <mat-paginator #paginatorQuery [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

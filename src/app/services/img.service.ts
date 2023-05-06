@@ -32,7 +32,7 @@ export class ImgService  extends BaseService{
     return this.http.get(this.rootURL+'/analysisPlot',  { params: params, responseType: 'blob' });  
   }
 
-  getWGCNAImgByPath(imgFile: string, imgType: string): Observable<Blob> {
+  getImgByPath(imgFile: string, imgType: string): Observable<Blob> {
     let params = new HttpParams();
     params = params.append('file', imgFile);
     params = params.append('type', imgType);

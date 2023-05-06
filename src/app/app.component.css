@@ -63,7 +63,9 @@ p {
 
 /* Sets background color, height and padding*/
 .navbar {
-  background-color: rgb(59, 104, 172);
+  background-image: url('../assets/img/cool-background.trianglify.png');
+  background-repeat: no-repeat;
+  background-size: cover;
   height: 75px;
   padding: 0 30px;
 }
@@ -74,6 +76,7 @@ p {
   font-weight: 300;
   margin: 10px 0;
   line-height: 1.2;
+  color: black;
 }
 
 .navbar .flex {

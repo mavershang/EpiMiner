@@ -79,4 +79,9 @@ export class DataUtil {
         
         return data1;
     }
+
+    static splitGeneInput(str: string): string[] {
+        const r = str.split(/[,;| ]+/).map(x=>x.trim().toUpperCase());
+        return r;
+    }
 }
