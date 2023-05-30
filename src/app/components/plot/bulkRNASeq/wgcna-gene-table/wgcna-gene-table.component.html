@@ -1,6 +1,12 @@
-<div class="WGCNA-gene-table">
+<div class="WGCNA-gene">
     <div class="gene-table-container" mat-elevation-z8>
-        <h3 style="text-align: center; color:darkblue">WGCNA Gene Table</h3>
+        <div class="WGCNA-gene-table-header">
+            <h3 style="text-align: center; color:navy">WGCNA Gene Table</h3>
+            <div class="WGCNA-gene-tip">
+                <p> this is cluster table tip</p>
+            </div>
+        </div>
+
         <mat-table class="gene-table" matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
             [dataSource]="tableDataSource" matSort>
 

@@ -1,19 +1,17 @@
 <div class="gene-expr-container">
-  <ngx-charts-box-chart
-    [view]="view"
-    [legend]="legend"
-    [schema]="colorScheme"
-    [showXAxisLabel]="showXAxisLabel"
-    [showYAxisLabel]="showYAxisLabel"
-    [xAxis]="xAxis"
-    [yAxis]="yAxis"
-    [xAxisLabel]="xAxisLabel"
-    [yAxisLabel]="yAxisLabel"
-    [results]="data"
-    (select)="onSelect($event)"
-    (activate)="onActivate($event)"
-    (deactivate)="onDeactivate($event)"
-    >
+
+  <div class="gene-expr-barplot-header">
+    <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedGene}} Expression in
+      {{this.dataShareService.selectedStudy}} </h3>
+    <div class="gene-expr-barplot-tip">
+      <p> The barplot shows the normalized expression of the selected gene in the study under focus </p>
+    </div>
+  </div>
+
+  <ngx-charts-box-chart [view]="view" [legend]="legend" [schema]="colorScheme" [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel" [xAxis]="xAxis" [yAxis]="yAxis" [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel" [results]="data" (select)="onSelect($event)" (activate)="onActivate($event)"
+    (deactivate)="onDeactivate($event)">
   </ngx-charts-box-chart>
 </div>
 

@@ -3,8 +3,17 @@
             <input class = "geneStrInput" type="text" placeholder="Query with Gene" name="gene" class="form-control"
                 [(ngModel)]="geneInput" required maxlength="100" />
 
+                <div class="help-tip1">
+                    <p> <strong>Tips of input section</strong><br>
+                        <strong>"Query with Genes"</strong><br> query with gene name (only one gene is alllowed at current stage). <br><br>
+                        <strong>"Disease area"</strong><br> specify target disease which will map to a collection of predefined datasets. <br><br>
+                        <strong>"Tissue for epigenomic query"</strong><br> specify tissue or celltypes to query enhancer-gene association. <br><br>
+                        <strong>"Max distance"</strong><br> the flanking area of query gene used for hypercoloc analysis (genetics tab). The default is 500k. <br>
+                    </p>
+                </div>
+
+
         <div class="disease-select-container">
-            <!-- <label style="height:100%; width:100px">Disease Area  </label> -->
             <select class="selectDisease" style="height:100%; width:100%" [(ngModel)]="selectedDisease"
                 (change)="diseaseOnChange()">
                 <option value="" disabled selected> Select a disease area</option>
@@ -45,7 +54,13 @@
             <div [ngClass]="{'tab-content': true, 'loading':geneticsTabLoading}">
             <div class="genetics-grid-container">
                 <div class="table-container-hypercoloc" mat-elevation-z8>
-                    <h2 style="text-align: center; color:darkblue">HyperColoc Result Table</h2>
+                    <div class="genetics-table-header">
+                        <h2 style="text-align: center; color:navy">HyperColoc Result Table</h2>
+                        <div class="help-tip1">
+                            <p>This table shows the hypercoloc analysis results using the SNPs in flanking regions of the target gene</p>
+                        </div>
+                    </div>
+
                     <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
                         [dataSource]="tableDataSource" matSort>
                         <ng-container matColumnDef="QueryGene">
@@ -334,7 +349,7 @@
                 <span style="color:navy; font-size: 20px; font-weight: bold;">Summary</span>
             </ng-template>
             <div class="scrnaseq-grid-container">
-                <h4 style="color:rgb(0, 0, 0);">The evidence matrix tab is under constrcution</h4>
+                <app-evidence-matrix></app-evidence-matrix>
             </div>
         </mat-tab>
     </mat-tab-group>

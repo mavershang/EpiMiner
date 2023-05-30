@@ -6,9 +6,11 @@
   </div>
 
   <div class="select-study-container">
-    <select class="selectStudy" [(ngModel)]="dataShareService.selectedStudy" (ngModelChange)="refreshStudyPlots()" name="studList" placeholder="Select Study">
+    <select class="selectStudy" [(ngModel)]="dataShareService.selectedStudy" (ngModelChange)="refreshStudyPlots()"
+      name="studList" placeholder="Select Study">
       <option *ngFor="let g of studies" [value]="g">{{g}}</option>
     </select>
+    <button class="button-muiti-gene-expr" role="button" (click)="launchMultiGeneExpr()">Multi-Gene Expression Plot</button>
   </div>
 
   <div class="Metadata">
@@ -25,6 +27,26 @@
   </div>
 
   <div class="WGCNA">
+
+    <div class="WGCNA-header">
+      <div class="WGCNA-tip">
+        <p>Weighted correlation network analysis (WGCNA) can be used for finding clusters (modules) of highly correlated
+          genes, for summarizing such clusters using the module eigengene or an intramodular hub gene, for relating
+          modules to one another and to external sample traits (using eigengene network methodology), and for
+          calculating module membership measures.
+
+          Correlation networks facilitate network based gene screening methods that can be used to identify candidate
+          biomarkers or therapeutic targets. These methods have been successfully
+          applied in various biological contexts, e.g. cancer, mouse genetics, yeast genetics, and analysis of brain
+          imaging data. While parts of the correlation network methodology have been described in separate publications,
+          there is a need to provide a user-friendly, comprehensive, and consistent software implementation and an
+          accompanying tutorial.</p>
+      </div>
+      <div class="WGCNA-adv-analysis">
+        <button class="button-analysis" role="button" (click)="launchAnalysis()">Advanced Gene Signature Analysis</button>
+      </div>
+    </div>
+
     <div class="WGCNA-Correlation">
       <app-plot-wgcna-correlation-heatmap></app-plot-wgcna-correlation-heatmap>
     </div>
@@ -37,13 +59,15 @@
       <app-wgcna-sample-tree-plot></app-wgcna-sample-tree-plot>
     </div>
 
-    <div class="WGCNA-GeneTable">
-      <app-wgcna-gene-table></app-wgcna-gene-table>
+    <div class="WGCNA-Info-Tables">
+      <div class="WGCNA-GeneTable">
+        <app-wgcna-gene-table></app-wgcna-gene-table>
+      </div>
+
+      <div class="WGCNA-PathwayEnrichment">
+        <app-wgcna-pathway-table></app-wgcna-pathway-table>
+      </div>
     </div>
 
-    <div class="WGCNA-PathwayEnrichment">
-      <app-wgcna-pathway-table></app-wgcna-pathway-table>
-    </div>
-    
   </div>
 </div>

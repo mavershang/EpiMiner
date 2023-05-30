@@ -1,5 +1,5 @@
 <div class="select-comparison-container">
-    <label style="height:100%"> {{study}}</label>
+    <label style="height:100%"><a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={{study}}">{{study}}</a></label>
     <select  class="selectComparison" [(ngModel)] = "selectedComparison" (ngModelChange)="refreshPlot()" name="comparisonList" placeholder="Select Comparison">
         <option *ngFor = "let g of comparisons" [value]="g">{{g}}</option>
     </select>

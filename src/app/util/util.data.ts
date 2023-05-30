@@ -84,4 +84,24 @@ export class DataUtil {
         const r = str.split(/[,;| ]+/).map(x=>x.trim().toUpperCase());
         return r;
     }
+
+    static createBlobFromFile(file: File): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (reader.result instanceof ArrayBuffer) {
+                    const blob = new Blob([reader.result], { type: file.type});
+                    resolve(blob);
+                } else {
+                    reject(new Error('Failed to create Blob from file.'));
+                }
+            };
+
+            reader.onerror = () => {
+                reject(new Error('Failed to read file.'));
+            };
+
+            reader.readAsArrayBuffer(file);
+        });
+    }
 }

@@ -8,7 +8,6 @@ import { BubblePlotBase } from '../../bubble-plot-base/bubble-plot-base.componen
 import { ChartConfiguration, ChartDataset, ChartOptions } from 'chart.js'
 import { DataSharingCRService } from 'src/app/services/data-sharing-bulk-rnaseq.service';
 
-
 @Component({
   selector: 'app-plot-bulk-rnaseq-expr',
   templateUrl: './plot-bulk-rnaseq-expr.component.html',
@@ -217,4 +216,5 @@ export class PlotBulkRNASeqExprComponent extends BubblePlotBase {
       this.dataShareService.toggleSelectedComparisonChanged();
     }
   }
+
 }

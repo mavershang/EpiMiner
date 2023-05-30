@@ -22,4 +22,24 @@ export class SampleMeta {
             this.MergeConditions = s.MergeConditions;
         }
     }
+
+    public getTag() {
+        const delim="||";
+        return this.Organism+delim+this.Tissue+delim+this.CellType+delim+
+        this.AssayType + delim + this.DiseaseState+delim+this.Treatment+delim+this.MergeConditions;
+    }
+
+    public addSample(s:string){
+        this.Sample += ", "+s;
+    }
+
+    public isSameGroup(b:SampleMeta) {
+        return  this.Organism == b.Organism &&
+                this.Tissue == b.Tissue &&
+                this.CellType == b.CellType &&
+                this.AssayType == b.AssayType &&
+                this.DiseaseState == b.DiseaseState &&
+                this.Treatment == b.Treatment &&
+                this.MergeConditions == b.MergeConditions;
+    }
 }

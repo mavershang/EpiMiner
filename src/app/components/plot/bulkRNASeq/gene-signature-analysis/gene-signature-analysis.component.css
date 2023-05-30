@@ -1,0 +1,112 @@
+.close-button{
+    float: right;
+    top:-24px;
+    right:-24px;
+  }
+  
+  .close-icon {
+    transition: 1s ease-in-out;
+  }
+  
+  .close-icon:hover {
+    transform: rotate(180deg);
+  }
+  
+.cluster-table-header{
+    /* border: 1px solid black; */
+    margin: 1rem;
+    padding: 2rem 2rem;
+    height: 30px;
+    text-align: center;
+  }
+  
+  
+  .cluster-table-title{
+    padding: 5px 5px;
+    left:20px;
+    display: inline-block;
+  }
+  
+  .cluster-table-tip {
+      grid-area: tip;
+      position: relative;
+      top: 0px;
+      left:5px;
+      right: 5px;
+      text-align: center;
+      background-color: #53b2e2;
+      border-radius: 80%;
+      width: 24px;
+      height: 24px;
+      font-size: 14px;
+      line-height: 26px;
+      cursor: default;
+      display: inline-block;
+    }
+    
+    .cluster-table-tip:before {
+      content:'About WGCNA';
+      font-weight: bold;
+      color:#fff;
+    }
+    
+    .cluster-table-tip:hover p {
+      display:block;
+      transform-origin: 100% 0%;
+      -webkit-animation: fadeIn 0.3s ease-in-out;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .cluster-table-tip p{    /* The tooltip */
+      display: none;
+      text-align: left;
+      background-color: #1E2021;
+      padding: 20px;
+      width: 300px;
+      position: absolute;
+      border-radius: 3px;
+      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+      right: -4px;
+      color: #FFF;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    
+    .cluster-table-tip p:before { /* The pointer of the tooltip */
+      position: absolute;
+      content: '';
+      width:0;
+      height: 0;
+      border:6px solid transparent;
+      border-bottom-color:#1E2021;
+      right:10px;
+      top:-12px;
+    }
+    
+    .cluster-table-tip p:after { /* Prevents the tooltip from being hidden */
+      width:100%;
+      height:40px;
+      content:'';
+      position: absolute;
+      top:-40px;
+      left:0;
+    }
+    
+    /* CSS animation */
+    
+    @-webkit-keyframes fadeIn {
+      0% { 
+          opacity:0; 
+          transform: scale(0.6);
+      }
+    
+      100% {
+          opacity:100%;
+          transform: scale(1);
+      }
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity:0; }
+      100% { opacity:100%; }
+    }

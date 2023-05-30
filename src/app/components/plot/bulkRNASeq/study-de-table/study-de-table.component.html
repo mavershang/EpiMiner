@@ -1,7 +1,14 @@
 <div class="DE-table">
     <div class="DETable-grid-container">
         <div class="DETable-container" mat-elevation-z8>
-            <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedStudy}} DE Result ({{this.dataShareService.selectedComparison}}) </h3>
+            
+            <div class="DE-table-header">
+                <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedStudy}} DE Result ({{this.dataShareService.selectedComparison}}) </h3>
+                <div class="DE-table-tip">
+                    <p> DE table lists the gene, log2 foldchange, and P-value for the selected comparison of the study that is under current focus  </p>
+                </div>
+            </div>
+            
             <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
                 [dataSource]="DETableDataSource" matSort>
                 <ng-container matColumnDef="Gene">

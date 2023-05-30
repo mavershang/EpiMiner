@@ -1,6 +1,6 @@
 .container {  display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 600px 20px 400px 400px 1100px;
+  grid-template-rows: min-content 20px 500px min-content 1100px;
   grid-auto-columns: 1fr 1fr;
   grid-auto-rows: 1fr;
   gap: 5px 5px;
@@ -33,14 +33,14 @@
   align-self: stretch; 
   grid-area: Metadata; 
   width: 100%; 
-  height: 100%; 
+  height: auto;  
 }
 
 .DE-result  {
   display: grid; 
   grid-template-columns: 1fr 1fr; 
   grid-template-rows: 1fr; 
-  gap: 0px 0px; 
+  gap: 5px 5px; 
   grid-template-areas: 
     "DE-table Single-Gene-Expr"; 
   justify-content: stretch; 
@@ -50,71 +50,205 @@
   justify-self: stretch; 
   align-self: stretch; 
   grid-area: DE-result; 
-  /* width: 100%; 
-  height: 100%;  */
-  max-height: 400px;
+  width: 100%; 
+  height: 100%; 
+  /* max-height: 500px; */
 }
 .DE-table {
   justify-self: stretch; 
   align-self: stretch; 
   grid-area: DE-table; 
+  padding: 3px;
   /* width: 100%; 
   height: 100%;  */
-  max-height: 400px;
+  max-height: 500px;
+  border: 2px solid rgb(161, 174, 175);
 }
 .Single-Gene-Expr {
   justify-self: stretch; 
   align-self: stretch; 
   grid-area: Single-Gene-Expr; 
+  padding: 3px;
   /* width: 100%; 
   height: 100%;  */
-  max-height: 400px;
-
+  max-height: 500px;
+  border: 2px solid rgb(161, 174, 175);
 }
 
 .WGCNA {
   display: grid; 
-  grid-template-columns: 0.8fr 1.2fr ; 
-  grid-template-rows: 0.875fr 0.75fr 0.5fr; 
-  gap: 5px 5px; 
+  grid-template-columns: 0.8fr 1.2fr; 
+  grid-template-rows: 0.1fr 1fr 0.6fr; 
+  gap: 5px 10px; 
   grid-template-areas: 
-    "WGCNA-Correlation WGCNA-GeneInfo"
-    "WGCNA-Dendrogram WGCNA-PathwayEnrichment"
-    "TBD TBD"; 
+    "WGCNA-Header WGCNA-Header"
+    "WGCNA-Correlation WGCNA-tables"
+    "WGCNA-Dendrogram TBD"; 
   grid-area: WGCNA; 
+  width: auto;
 }
+
 .WGCNA-Correlation {
   justify-self: stretch; 
   align-self: stretch; 
   grid-area: WGCNA-Correlation; 
   /* width: 100%; 
   height: 100%;  */
-  max-height: 500px;
+  max-height: 600px;
+  border: 2px solid rgb(161, 174, 175);
+  padding: 5px;
 }
+
+.WGCNA-Info-Tables {
+  grid-area: WGCNA-tables;
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-template-rows: 0.3fr 1.7fr; 
+  gap: 5px; 
+  padding: 5px;
+  border: 2px solid rgb(161, 174, 175);
+  grid-template-areas: 
+    "WGCNA-GeneInfo"
+    "WGCNA-PathwayInfo";
+}
+
+.WGCNA-GeneTable {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: WGCNA-GeneInfo; 
+  /* border: 2px solid rgb(161, 174, 175); */
+}
+
+.WGCNA-PathwayEnrichment {
+  justify-self: stretch; 
+  align-self: stretch; 
+  grid-area: WGCNA-PathwayInfo; 
+  /* border: 2px solid rgb(161, 174, 175); */
+
+  /* width: 100%; 
+  height: 100%;  
+  max-height: 500px;*/
+}
+
 .WGCNA-Dendrogram {
   justify-self: stretch; 
   align-self: stretch; 
   grid-area: WGCNA-Dendrogram; 
   /* width: 100%; 
   height: 100%;  */
-  max-height: 500px;
+  max-height: 600px;
+  border: 2px solid rgb(161, 174, 175);
 }
-.WGCNA-PathwayEnrichment {
-  justify-self: stretch; 
-  align-self: stretch; 
-  grid-area: WGCNA-PathwayEnrichment; 
-  /* width: 100%; 
-  height: 100%;  */
-  max-height: 500px;
-}
+
 .WGCNA-SampleTree {
   justify-self: stretch; 
   align-self: stretch; 
   grid-area: TBD; 
   /* width: 100%; 
   height: 100%;  */
-  max-height: 500px;
+  max-height: 600px;
+  border: 2px solid rgb(161, 174, 175);
 }
+
+.WGCNA-header{
+  grid-area: WGCNA-Header;
+  /* margin: 1rem; */
+  max-height: 30px;
+  border: 2px solid rgb(161, 174, 175);
+  /* padding: 2rem 2rem; */
+}
+
+.WGCNA-adv-analysis{
+  padding: 5px 5px;
+  left:20px;
+  display: inline-block;
+}
+
+.WGCNA-tip {
+    grid-area: tip;
+    position: relative;
+    top: 0px;
+    left:5px;
+    right: 5px;
+    text-align: center;
+    background-color: #53b2e2;
+    border-radius: 80%;
+    width: 240px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 26px;
+    cursor: default;
+    display: inline-block;
+    z-index: 9999;
+  }
+  
+  .WGCNA-tip:before {
+    content:'About WGCNA';
+    font-weight: bold;
+    color:#fff;
+  }
+  
+  .WGCNA-tip:hover p {
+    display:block;
+    transform-origin: 100% 0%;
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .WGCNA-tip p{    /* The tooltip */
+    display: none;
+    text-align: left;
+    background-color: #1E2021;
+    padding: 20px;
+    width: 300px;
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    left:10px;
+    /* right: -4px; */
+    color: #FFF;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  
+  .WGCNA-tip p:before { /* The pointer of the tooltip */
+    position: absolute;
+    content: '';
+    width:0;
+    height: 0;
+    border:6px solid transparent;
+    border-bottom-color:#1E2021;
+    right:10px;
+    top:-12px;
+  }
+  
+  .WGCNA-tip p:after { /* Prevents the tooltip from being hidden */
+    width:100%;
+    height:40px;
+    content:'';
+    position: absolute;
+    top:-40px;
+    left:0;
+  }
+  
+  /* CSS animation */
+  
+  @-webkit-keyframes fadeIn {
+    0% { 
+        opacity:0; 
+        transform: scale(0.6);
+    }
+  
+    100% {
+        opacity:100%;
+        transform: scale(1);
+    }
+  }
+  
+  @keyframes fadeIn {
+    0% { opacity:0; }
+    100% { opacity:100%; }
+  }
 
 
 

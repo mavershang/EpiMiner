@@ -1,6 +1,14 @@
-<div class="WGCNA-pathway-table">
+<div class="WGCNA-pathway">
     <div class="path-table-container" mat-elevation-z8>
-        <h3 style="text-align: center; color:darkblue">WGCNA Module Pathway Enrichment Table</h3>
+
+        <div class="WGCNA-pathway-table-header">
+            <h3 style="text-align: center; color:navy">WGCNA Module Pathway Enrichment Table</h3>
+            <div class="WGCNA-pathway-tip">
+                <p> WGCNA module pathway enrichment table listed the top 10 most enriched 
+                    pathways of each gene module </p>
+            </div>
+        </div>
+
         <mat-table class="path-table" matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
             [dataSource]="tableDataSource" matSort>
 

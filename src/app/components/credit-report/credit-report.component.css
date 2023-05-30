@@ -14,7 +14,7 @@
     grid-area: input;
     display: grid;
     grid-template-areas:
-        'geneInput disease tissue empty'
+        'geneInput disease tissue tip'
         'distance submit other1 empty';
     grid-template-columns: 0.5fr 0.5fr 0.5fr 0.5fr;
     grid-template-rows: 1fr 1fr;
@@ -110,8 +110,8 @@
 
 .mat-tab-group {
     grid-area: main;
-    background-color: #b3cdd1;
-    background-image: linear-gradient(315deg, #d7e7e9 0%, #d2d4e1 74%);
+    /* background-color: #ffffff; */
+    background-image: linear-gradient(315deg, #ffffff 0%, #eceef8 74%);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.25);
@@ -191,3 +191,100 @@
 .ng-dropdown-panel {
     z-index:9999 !important;
 }
+
+
+
+.genetics-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:5px;
+}
+.help-tip1,
+.help-tip2 {
+    grid-area: tip;
+    position: relative;
+    top: 0px;
+    right: 0px;
+    text-align: center;
+    background-color: #6c7275;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 14px;
+    line-height: 26px;
+    cursor: default;
+  }
+  
+  .help-tip1:before,
+  .help-tip2:before {
+    content:'?';
+    font-weight: bold;
+    color:#fff;
+  }
+  
+  .help-tip1:hover p,
+  .help-tip2:hover p {
+    display:block;
+    transform-origin: 100% 0%;
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .help-tip1 p,
+  .help-tip2 p{    /* The tooltip */
+    display: none;
+    text-align: left;
+    background-color: #1E2021;
+    padding: 10px;
+    width: 600px;
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    right: -4px;
+    color: #FFF;
+    font-size: 16px;
+    line-height: 1.4;
+    z-index: 9999;
+  }
+  
+  .help-tip1 p:before,
+  .help-tip2 p:before { /* The pointer of the tooltip */
+    position: absolute;
+    content: '';
+    width:0;
+    height: 0;
+    border:6px solid transparent;
+    border-bottom-color:#1E2021;
+    right:10px;
+    top:-12px;
+  }
+  
+  .help-tip1 p:after,
+  .help-tip2 p:after { /* Prevents the tooltip from being hidden */
+    width:100%;
+    height:80px;
+    content:'';
+    position: absolute;
+    top:-40px;
+    left:0;
+  }
+  
+  /* CSS animation */
+  
+  @-webkit-keyframes fadeIn {
+    0% { 
+        opacity:0; 
+        transform: scale(0.6);
+    }
+  
+    100% {
+        opacity:100%;
+        transform: scale(1);
+    }
+  }
+  
+  @keyframes fadeIn {
+    0% { opacity:0; }
+    100% { opacity:100%; }
+  }

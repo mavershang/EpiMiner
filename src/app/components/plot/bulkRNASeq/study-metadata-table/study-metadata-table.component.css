@@ -8,7 +8,100 @@
 
 .metadata-table {
   width: 100%;
-  height: 100%;
+  height: auto;
   max-height: 500px;
   overflow: auto;
+}
+
+.metadata-table-header {
+  display: flex;
+  gap:2px;
+  align-items: center;
+  justify-content: Center;
+}
+
+
+.metadata-table-tip {
+  grid-area: tip;
+  position: relative;
+  top: 0px;
+  left:5px;
+  right: 5px;
+  text-align: center;
+  background-color: #b7b0b0;
+  border-radius: 90%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  line-height: 26px;
+  cursor: default;
+  display: inline-block;
+  z-index: 9999;
+}
+
+.metadata-table-tip:before {
+  content:'?';
+  font-weight: bold;
+  color:#fff;
+}
+
+.metadata-table-tip:hover p {
+  display:block;
+  transform-origin: 100% 0%;
+  -webkit-animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.metadata-table-tip p{    /* The tooltip */
+  display: none;
+  text-align: left;
+  background-color: #1E2021;
+  padding: 10px;
+  width: 600px;
+  position: absolute;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  left:10px;
+  /* right: -4px; */
+  color: #FFF;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.metadata-table-tip p:before { /* The pointer of the tooltip */
+  position: absolute;
+  content: '';
+  width:0;
+  height: 0;
+  border:6px solid transparent;
+  border-bottom-color:#1E2021;
+  right:10px;
+  top:-12px;
+}
+
+.metadata-table-tip p:after { /* Prevents the tooltip from being hidden */
+  width:100%;
+  height:100%;
+  content:'';
+  position: absolute;
+  top:-40px;
+  left:0;
+}
+
+/* CSS animation */
+@-webkit-keyframes fadeIn {
+  0% { 
+      opacity:0; 
+      transform: scale(0.6);
+  }
+
+  100% {
+      opacity:100%;
+      transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  0% { opacity:0; }
+  100% { opacity:100%; }
 }

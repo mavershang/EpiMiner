@@ -47,7 +47,7 @@ export class WGCNAMod {
     constructor(m?: any) {
         this.Module = m.Module;
         this.HubGeneID = m.HubGeneEnsemblID;
-        this.HubGeneSymbol = m.HubGeneSymbol;
+        this.HubGeneSymbol = m.HubGeneSymbol.toUpperCase();
         this.HubGeneName = m.HubGeneName;
 
         m.PathwayEnrichList.forEach(path => {
@@ -126,7 +126,7 @@ export class WGCNAGene {
     constructor(g?: any) {
         if (g != undefined) {
             this.GeneID = g.GeneEnsemblID;
-            this.GeneSymbol = g.GeneSymbol;
+            this.GeneSymbol = g.GeneSymbol.toUpperCase();
             this.Module = g.Module;
             this.MMScore = g.MMScore;
             this.MMPValue = g.MMPvalue;

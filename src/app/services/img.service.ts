@@ -38,4 +38,6 @@ export class ImgService  extends BaseService{
     params = params.append('type', imgType);
     return this.http.get(this.rootURL + "/Image", { params: params, responseType: 'blob' });
   }
+
+  
 }

@@ -1,8 +1,18 @@
-
 <div class="metadata-table">
+    <button (click)="toggle()">{{this.showTable?'Hide':'Show'}} Sample Metadata Table </button>
+    <button class="button-meta-mode" role="button" (click)="switchMode()">{{useCollapseMode?'Classic':'Collapsed'}}
+        Metadata Mode</button>
+    <div class="metadata-table-header">
+        <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedStudy}} Sample MetaData </h3>
+        <div class="metadata-table-tip">
+            <p> Sample metadata table lists the major experiment metadata including sample name, tissue, celltype, treatment, 
+                disease, assay type, and other information. It has two display mode: CLASSIC which list each sample in a row,
+                and COLLAPSED which squeeze samples with the same metadata into the same row </p>
+        </div>
+    </div>
+
     <div class="metadata-grid-container">
-        <div class="metadata-container" mat-elevation-z8>
-            <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedStudy}} MetaData </h3>
+        <div class="metadata-container" *ngIf="showTable" mat-elevation-z8>
             <mat-table matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
                 [dataSource]="tableDataSource" matSort>
                 <ng-container matColumnDef="Sample">

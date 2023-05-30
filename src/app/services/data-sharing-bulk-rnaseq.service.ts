@@ -7,6 +7,7 @@ import { ImgService } from './img.service';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { SampleMeta } from '../models/sample-meta';
 import { CellClusterMarker, scRNASeqData } from '../models/scRNASeq-data';
+import { DataUtil } from '../util/util.data';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class DataSharingCRService {
   isSelectedStudyChanged: boolean = false;
   selectedStudyChange: Subject<boolean> = new Subject<boolean>();
 
+  lastSelectedGene: string = '';
   selectedGene: string = '';
   isSelectedGeneChanged: boolean = false;
   selectedGeneChange: Subject<boolean> = new Subject<boolean>();
@@ -36,10 +38,24 @@ export class DataSharingCRService {
   isScRNASeqDataChanged: boolean = false;
   scRNASeqDataChange: Subject<boolean> = new Subject<boolean>();
 
-  
   constructor(private imgService: ImgService) {
   }
 
+  resetDEData() {
+    this.DEData = new Map<string, Map<string, BulkRNASeqDEPerGene[]>>();
+    this.GeneExprData = new Map<string, any>();
+  }
+
+  resetWGCNAData() {
+    this.exprWGCNAData = new Map<string, WGCNAData>();
+  }
+
+  resetTxData() {
+    this.selectedStudy = '';
+    this.selectedComparison = '';
+    this.resetDEData();
+    this.resetWGCNAData();
+  }
 
   importDEResult(data: any[]) {
     for (let i = 0; i < data.length; i++) {
@@ -67,6 +83,7 @@ export class DataSharingCRService {
     if (this.selectedStudy == undefined || this.selectedStudy == '') {
       this.pickDefaultStudy();
     }
+
     this.pickDefaultComparison(this.selectedStudy);
     this.toggleSelectedComparisonChanged();
     this.toggleSelectedStudyChanged();
@@ -115,6 +132,19 @@ export class DataSharingCRService {
     );
   }
 
+  checkImgBlob(blob: any) {
+    if (blob == undefined) {
+      return this.createNAImgBlob();
+    } else {
+      return blob;
+    }
+  }
+
+  createNAImgBlob() {
+      const file= new File(['../assets/image_not_available.png'], 'image_not_available', {type: "image/png"} );
+      return DataUtil.createBlobFromFile(file);
+  }
+
   importWGCNAResult(data: any[]) {
     const imageLoader = from(this.loadWGCNAData(data));
     imageLoader.subscribe(
@@ -128,8 +158,8 @@ export class DataSharingCRService {
       });
   }
 
-  
-  fetchScRNASeqImages(d: scRNASeqData, study:string) {
+
+  fetchScRNASeqImages(d: scRNASeqData, study: string) {
     return forkJoin([
       this.imgService.getImgByPath(d.ExprPlotFile, "png"),
     ]).pipe(
@@ -185,12 +215,42 @@ export class DataSharingCRService {
     this.selectedComparison = keys[0];
   }
 
-  getSampleMetaData() {
+  getSampleMetaData(collapse: boolean) {
+    if (collapse) {
+      return this.getCollapseSampleMetaData();
+    }
+    else {
+      return this.getFlatSampleMetaData();
+    }
+  }
+
+  getFlatSampleMetaData() {
     if (this.SampleMetaData == undefined || !this.SampleMetaData.has(this.selectedStudy)) {
       return [];
     }
-    let r =Array.from(this.SampleMetaData.get(this.selectedStudy).values()).sort();
+
+    let r = Array.from(this.SampleMetaData.get(this.selectedStudy).values()).sort();
     return r;
+  }
+
+  getCollapseSampleMetaData() {
+    if (this.selectedStudy == undefined || !this.SampleMetaData.has(this.selectedStudy)) {
+      return [];
+    }
+
+    let r: Map<string, SampleMeta> = new Map<string, SampleMeta>();
+    for (let a of this.SampleMetaData.get(this.selectedStudy).values()) {
+      const tag = a.getTag();
+      if (r.has(tag)){
+        r.get(tag).addSample(a.Sample);
+      }
+      else {
+        let copy = new SampleMeta();
+        Object.assign(copy, a);
+        r.set(tag, copy);
+      } 
+    }
+    return Array.from(r.values()).sort();
   }
 
   getDETableData() {
@@ -199,8 +259,7 @@ export class DataSharingCRService {
       return [];
     }
 
-    if (!this.DEData.get(this.selectedStudy).has(this.selectedComparison))
-    {
+    if (!this.DEData.get(this.selectedStudy).has(this.selectedComparison)) {
       console.log("Comparison doesn't exist");
       return [];
     }
@@ -208,46 +267,128 @@ export class DataSharingCRService {
     return this.DEData.get(this.selectedStudy).get(this.selectedComparison);
   }
 
-  getGeneExprData(genes: string[]) {
-    let r: any[] = [];
-    let geneIdx = genes.map(x => {
-      return this.GeneExprData.get(this.selectedStudy).Genes.indexOf(x);
+  getGeneExprData(genes: string[], plotType:any) {
+    if (this.selectedStudy == undefined || !this.GeneExprData.has(this.selectedStudy)){ 
+      return [];
+    }
+
+    let geneIdx = genes.map(gene => {
+      return this.GeneExprData.get(this.selectedStudy).Genes.findIndex(
+        e => e.toLowerCase() === gene.toLowerCase());
     });
-    for (let i = 0; i < this.GeneExprData.get(this.selectedStudy).Samples.length; i++) {
-      let group = this.SampleMetaData.get(this.selectedStudy).get(this.GeneExprData.get(this.selectedStudy).Samples[i]).MergeConditions;
-      let iGroup = r.map(x=>x.name).indexOf(group);
+
+    // geneIdx = geneIdx.filter(x => x >= 0);
+    // if (geneIdx.length == 0) {
+    //   return [];
+    // }
+
+    switch (plotType.toLowerCase()) {
+      case "barplot":
+        return this.getGeneExprDataForBarPlot(this.selectedStudy, geneIdx[0]);
+      case "heatmap":
+        return this.getGeneExprDataForHeatmap(this.selectedStudy, geneIdx, genes);
+      default:
+        return [];
+    }
+
+    // let r: any[] = [];
+    // for (let i = 0; i < this.GeneExprData.get(this.selectedStudy).Samples.length; i++) {
+    //   let group = this.SampleMetaData.get(this.selectedStudy).get(this.GeneExprData.get(this.selectedStudy).Samples[i]).MergeConditions;
+    //   let iGroup = r.map(x => x.name).indexOf(group);
+    //   if (iGroup < 0) {
+    //     r.push({ "name": group, "series": [] });
+    //     iGroup = r.length - 1;
+    //   }
+    //   for (let i2 = 0; i2 < genes.length; i2++) {
+    //     r[iGroup].series.push({
+    //       "name": this.GeneExprData.get(this.selectedStudy).Samples[i],
+    //       "value": this.GeneExprData.get(this.selectedStudy).Counts[geneIdx[i2]][i]
+    //     });
+    //   }
+    // }
+    // return r;
+  }
+
+  getGeneExprDataForBarPlot(study:string, geneIdx: number) {
+    let r: any[] = [];
+    for (let i = 0; i < this.GeneExprData.get(study).Samples.length; i++) {
+      let group = this.SampleMetaData.get(study).get(this.GeneExprData.get(study).Samples[i]).MergeConditions;
+      let iGroup = r.map(x => x.name).indexOf(group);
       if (iGroup < 0) {
         r.push({ "name": group, "series": [] });
         iGroup = r.length - 1;
       }
-      for (let i2 = 0; i2 < genes.length; i2++) {
+
         r[iGroup].series.push({
-          "name": this.GeneExprData.get(this.selectedStudy).Samples[i],
-          "value": this.GeneExprData.get(this.selectedStudy).Counts[geneIdx[i2]][i]
+          "name": this.GeneExprData.get(study).Samples[i],
+          "value": this.GeneExprData.get(study).Counts[geneIdx][i]
+        });
+    }
+    return r;
+  }
+
+  getGeneExprDataForHeatmap(study:string, geneIdxArr: number[], geneArr: string[]) {
+    let r: any[] = [];
+    for (let i = 0; i < this.GeneExprData.get(study).Samples.length; i++) {
+      const group = this.SampleMetaData.get(study).get(this.GeneExprData.get(study).Samples[i]).MergeConditions;
+      const sample = this.GeneExprData.get(study).Samples[i];
+      const name = sample + "_" + group;
+
+      let iGroup = r.map(x => x.name).indexOf(group);
+      if (iGroup < 0) {
+        r.push({ "name": name, "series": [] });
+        iGroup = r.length - 1;
+      }
+
+      for (let i2 = 0; i2 < geneIdxArr.length; i2++) {
+        if (geneIdxArr[i2] < 0) {
+          continue;
+        }
+        r[iGroup].series.push({
+          "name": geneArr[i2],
+          "value": this.GeneExprData.get(study).Counts[geneIdxArr[i2]][i]
         });
       }
     }
     return r;
   }
 
-  getWGCNAPathwayTableData() {
-    let r: WGCNAPathwayResult[] = [];
-    for (let [key, value] of this.exprWGCNAData.get(this.selectedStudy).ModInfoMap) {
-      r = r.concat(value.Pathways);
+
+  getWGCNAImgBlob(study:string, type: string) {
+    if (this.exprWGCNAData.has(study)) {
+      switch (type.toLowerCase()) {
+        case "cor":
+          return this.exprWGCNAData.get(study).CorImgBlob;
+        case "dendro":
+          return this.exprWGCNAData.get(study).DendroImgBlob;
+        case "sampletree":
+          return this.exprWGCNAData.get(study).SampleTreeBlob;
+        }
+    } else {
+      return null;
     }
+  }
+
+  getWGCNAPathwayTableData() {
+    if (!this.exprWGCNAData.has(this.selectedStudy)){ return [];}
+    let r: WGCNAPathwayResult[] = [];
+      for (let [key, value] of this.exprWGCNAData.get(this.selectedStudy).ModInfoMap) {
+        r = r.concat(value.Pathways);
+      }
     return r;
   }
 
   getWGCNAGeneTableData() {
+    if (!this.exprWGCNAData.has(this.selectedStudy)) { return [];}
     let r: WGCNAGene[] = [];
-    r.push(this.exprWGCNAData.get(this.selectedStudy).GeneInfoMap.get(this.selectedGene));
+    r.push(this.exprWGCNAData.get(this.selectedStudy).GeneInfoMap.get(this.selectedGene.toUpperCase()));
     return r;
   }
 
   getCellClusterMarkerTableData() {
     let r: CellClusterMarker[] = [];
     for (let [key, value] of this.scRNASeqData) {
-      value.clusterMarkers.forEach(x=>{
+      value.clusterMarkers.forEach(x => {
         x.Study = key;
         r.push(x);
       });
@@ -268,7 +409,10 @@ export class DataSharingCRService {
   }
 
   toggleSelectedGeneChanged() {
-    this.selectedGeneChange.next(!this.isSelectedGeneChanged);
+    if (this.lastSelectedGene != this.selectedGene) {
+      this.selectedGeneChange.next(!this.isSelectedGeneChanged);
+      this.lastSelectedGene = this.selectedGene
+    }
   }
 
   toggleScRNASeqDataChanged() {

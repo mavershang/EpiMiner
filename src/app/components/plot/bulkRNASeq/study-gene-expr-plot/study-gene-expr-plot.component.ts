@@ -31,9 +31,12 @@ export class StudyGeneExprPlotComponent implements OnInit {
 
   constructor(public dataShareService: DataSharingCRService) {
     //Object.assign(this, { multi });
+    console.log("constructor")
   }
 
   ngOnInit(): void {
+
+    console.log("ngOnInit")
 
     this.dataShareService.selectedGeneChange.subscribe((value) => {
       this.refresh();
@@ -56,6 +59,6 @@ export class StudyGeneExprPlotComponent implements OnInit {
   }
 
   refresh() {
-    this.data = this.dataShareService.getGeneExprData([this.dataShareService.selectedGene]);
+    this.data = this.dataShareService.getGeneExprData([this.dataShareService.selectedGene], "barplot");
   }
 }

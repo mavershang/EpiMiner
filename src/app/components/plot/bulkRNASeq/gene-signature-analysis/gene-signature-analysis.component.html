@@ -1,0 +1,100 @@
+<div class="adv-analysis-container">
+    <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+        <mat-icon class="close-icon" color="warn">X</mat-icon>
+    </button>
+
+    <div class="cluster-param-input">
+        <input class = "k" type="text" placeholder="k-means " name="gene" 
+        [(ngModel)]="k" required maxlength="100" />
+    </div>
+
+    <div class="k-plot-container">
+        <img id="k-plot" [src]='imgK' alt="WSS k plot is not available" />
+    </div>
+
+    <div class="cluster-info-container">
+        <div class="cluster-table-header">
+            <div class="cluster-table-title">
+                <h4>Gene Cluster table</h4>
+            </div>
+            <div class="cluster-table-tip">
+                <p> this is cluster table tip</p>
+            </div>
+        </div>
+        <mat-table class="cluster-table" matTableFilter [exampleEntity]="filterEntity" [filterType]="filterType"
+            [dataSource]="tableDataSource" matSort>
+
+            <ng-container matColumnDef="GeneSymbol">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="GeneSymbol" [(ngModel)]="filterEntity.GeneSymbol">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.GeneSymbol}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Module">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Module" [(ngModel)]="filterEntity.Module">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Module}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="GroupScore">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="GroupScore" [(ngModel)]="filterEntity.GroupScore">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.GroupScore}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="GSPValue">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="GSPValue" [(ngModel)]="filterEntity.GSPValue">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.GSPValue}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Cluster">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-form-field appearance="legacy">
+                        <input matInput placeholder="Cluster" [(ngModel)]="filterEntity.Cluster">
+                    </mat-form-field>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Cluster}} </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
+                [ngClass]="{hovered: row.hovered, highlighted: row.highlighted}" (click)="onRowClicked(row, i)"
+                (mouseover)="row.hovered = true" (mouseout)="row.hovered = false">
+            </mat-row>
+        </mat-table>
+        <mat-paginator #paginatorQuery [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+
+
+    <div class="algos">
+        <ng-multiselect-dropdown 
+            class="dropdown-list"
+            [placeholder]="'Select ML classification algorithms'" 
+            [data]="algoOptions"
+            [settings]="dropdownSettings"
+            [(ngModel)]="selectedAlgo" 
+            (onSelect)="onItemSelect($event)"
+            (onSelectAll)="onSelectAll($event)"
+            ></ng-multiselect-dropdown>
+    </div>
+
+
+
+</div>
+
+
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Close</button>
+</div>

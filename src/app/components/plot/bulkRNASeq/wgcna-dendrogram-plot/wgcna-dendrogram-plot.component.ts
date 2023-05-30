@@ -23,9 +23,18 @@ export class WgcnaDendrogramPlotComponent implements OnInit {
     if (study == undefined || study == '') {
       this.dataShareService.pickDefaultStudy();
     }
-    let blob = this.dataShareService.exprWGCNAData.get(this.dataShareService.selectedStudy).DendroImgBlob;
-    this.createImageFromBlob(blob);
-  }
+    let blob = this.dataShareService.getWGCNAImgBlob(this.dataShareService.selectedStudy, 'dendro');
+    if (blob != null) {
+      this.createImageFromBlob(blob);
+    } else {
+      this.dataShareService.createNAImgBlob().then(b => {
+        blob=b;
+        this.createImageFromBlob(blob);
+      })
+      .catch(error => {
+        console.error(error);
+      }) 
+    }  }
 
   createImageFromBlob(image: Blob) {
     let reader = new FileReader();

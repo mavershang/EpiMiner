@@ -6,9 +6,11 @@ export class BulkRNASeqDEPerGene {
     hovered?:boolean;  
 
     constructor(gene?:string, lfc?:number, pval?:number){
-        this.Gene = gene;
-        this.LFC = lfc;
-        this.PValue = pval;
+        if (gene != undefined) {
+            this.Gene = gene.toUpperCase();
+            this.LFC = lfc;
+            this.PValue = pval;
+        }
     }
 
     whichGroup(lfc:number=1, pval:number=0.05) {

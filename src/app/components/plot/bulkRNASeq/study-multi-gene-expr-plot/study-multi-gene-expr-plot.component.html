@@ -1,0 +1,30 @@
+<div class="adv-analysis-container">
+    <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+        <mat-icon class="close-icon" color="warn">X</mat-icon>
+    </button>
+
+    <h1 mat-dialog-title style="color: rgb(1, 0, 75);">Multi-Gene Expression of {{study}}</h1>
+
+    <div class="genes-input-container">
+        <input class = "gene-input" type="text" placeholder="Type in gene names " name="gene" 
+        [(ngModel)]="geneInput" required maxlength="2000" />
+    </div>
+
+    <button class="button-muiti-gene-expr" role="button" (click)="multiGeneExprPlotRefresh()">Submit</button>
+
+    <div class="expr-heatmap-container">
+        <ngx-charts-heat-map
+            [view]="view"
+            [legend]="legend"
+            [schema]="colorScheme"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxis]="xAxis"
+            [yAxis]="yAxis"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            [results]="multi"
+        >
+      </ngx-charts-heat-map>    
+    </div>
+</div>

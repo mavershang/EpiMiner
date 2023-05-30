@@ -1,19 +1,115 @@
+.WGCNA-gene {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gene-table-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+}
+
 .mat-row.hovered {
-    background: #eee;
-  }
-  
-  .mat-row.highlighted {
-    background: #999;
+  background: #eee;
+}
+
+.mat-row.highlighted {
+  background: #999;
+}
+
+.WGCNA-gene-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.WGCNA-gene-tip {
+  grid-area: tip;
+  position: relative;
+  top: 0px;
+  left:5px;
+  right: 5px;
+  text-align: center;
+  background-color: #b7b0b0;
+  border-radius: 90%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  line-height: 26px;
+  cursor: default;
+  display: inline-block;
+  z-index: 9999;
+}
+
+.WGCNA-gene-tip:before {
+  content:'?';
+  font-weight: bold;
+  color:#fff;
+}
+
+.WGCNA-gene-tip:hover p {
+  display:block;
+  transform-origin: 100% 0%;
+  -webkit-animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.WGCNA-gene-tip p{    /* The tooltip */
+  display: none;
+  text-align: left;
+  background-color: #1E2021;
+  padding: 20px;
+  width: 300px;
+  position: absolute;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  left:10px;
+  /* right: -4px; */
+  color: #FFF;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.WGCNA-gene-tip p:before { /* The pointer of the tooltip */
+  position: absolute;
+  content: '';
+  width:0;
+  height: 0;
+  border:6px solid transparent;
+  border-bottom-color:#1E2021;
+  right:10px;
+  top:-12px;
+}
+
+.WGCNA-gene-tip p:after { /* Prevents the tooltip from being hidden */
+  width:100%;
+  height:40px;
+  content:'';
+  position: absolute;
+  top:-40px;
+  left:0;
+}
+
+/* CSS animation */
+@-webkit-keyframes fadeIn {
+  0% { 
+      opacity:0; 
+      transform: scale(0.6);
   }
 
-  
-  .WGCNA-gene-table{
-    width:100%;
-    height:100%;
-    /* border: 2px solid rgb(161, 174, 175); */
-    overflow:auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  100% {
+      opacity:100%;
+      transform: scale(1);
   }
+}
 
+@keyframes fadeIn {
+  0% { opacity:0; }
+  100% { opacity:100%; }
+}

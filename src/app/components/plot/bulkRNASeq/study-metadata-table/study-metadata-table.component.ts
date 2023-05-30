@@ -12,8 +12,6 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./study-metadata-table.component.css']
 })
 export class StudyMetadataTableComponent implements OnInit {
-
-
   displayedColumns: string[] = ['Sample', 'Organism', 'Tissue', 'CellType', 'DiseaseState', 'Treatment', 'AssayType', 'MergeConditions']; 
   tableDataSource = new MatTableDataSource<SampleMeta>(); 
   @ViewChild('paginatorQuery') paginator: MatPaginator;
@@ -21,6 +19,10 @@ export class StudyMetadataTableComponent implements OnInit {
   filterEntity: SampleMeta;
   filterType: MatTableFilter;
   lastIdx: number;
+
+  showTable: boolean=true
+
+  useCollapseMode: boolean=true
   
   constructor(public dataShareService: DataSharingCRService) {}
 
@@ -44,8 +46,17 @@ export class StudyMetadataTableComponent implements OnInit {
   }
 
   refresh() {
-    this.tableDataSource.data = this.dataShareService.getSampleMetaData();
+    this.tableDataSource.data = this.dataShareService.getSampleMetaData(this.useCollapseMode);
     this.tableDataSource.paginator = this.paginator;
     this.tableDataSource.sort = this.sort; 
+  }
+
+  switchMode(){
+    this.useCollapseMode = !this.useCollapseMode;
+    this.refresh();
+  }
+
+  toggle() {
+    this.showTable=!this.showTable;
   }
 }

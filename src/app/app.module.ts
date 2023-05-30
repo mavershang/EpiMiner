@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
@@ -55,6 +56,8 @@ import { EvidenceMatrixComponent } from './components/plot/evidence-matrix/evide
 import { ScRNASeqHolderComponent } from './components/plot/scRNASeq/sc-rnaseq-holder/sc-rnaseq-holder.component';
 import { StudyScRNASeqComponent } from './components/plot/scRNASeq/study-sc-rnaseq/study-sc-rnaseq.component';
 import { ClusterMarkerTableComponent } from './components/plot/scRNASeq/cluster-marker-table/cluster-marker-table.component';
+import { GeneSignatureAnalysisComponent } from './components/plot/bulkRNASeq/gene-signature-analysis/gene-signature-analysis.component';
+import { StudyMultiGeneExprPlotComponent } from './components/plot/bulkRNASeq/study-multi-gene-expr-plot/study-multi-gene-expr-plot.component';
 
 @NgModule({
   declarations: [
@@ -89,9 +92,12 @@ import { ClusterMarkerTableComponent } from './components/plot/scRNASeq/cluster-
     ScRNASeqHolderComponent,
     StudyScRNASeqComponent,
     ClusterMarkerTableComponent,
+    GeneSignatureAnalysisComponent,
+    StudyMultiGeneExprPlotComponent,
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,

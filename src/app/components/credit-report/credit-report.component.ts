@@ -31,8 +31,8 @@ export class CreditReportComponent implements OnInit {
   scRNASeqTabLoading = false;
 
   // conditional display
-  showRNASeqGrid: boolean = false;
-  showScRNASeqGrid: boolean = false;
+  showRNASeqGrid: boolean = true;
+  showScRNASeqGrid: boolean = true;
 
   // input gene
   geneInput: string = "";
@@ -43,7 +43,7 @@ export class CreditReportComponent implements OnInit {
   currentRefGenome: string;
 
   // disease 
-  diseaseArr = ["Renal disease"];
+  diseaseArr = ["Renal disease", "BMP9", "LILRB1_2"];
   selectedDisease: string = '';
   currentDisease: string = '';
 
@@ -203,6 +203,7 @@ export class CreditReportComponent implements OnInit {
         this.parsePhenotypeFromName(this.lzpFiles);
         this.geneticsTabLoading = false;
       }, error => {
+        this.geneticsTabLoading = false;
         this.openDialog("Failed to run Credit Report genetics: " + error.message);
       });
 
@@ -217,12 +218,14 @@ export class CreditReportComponent implements OnInit {
         this.tableDataSource.sort = this.sort;
         this.epigenomicsTabLoading = false;
       }, error => {
+        this.epigenomicsTabLoading = false;
         this.openDialog("Failed to query gene for epigenomics: " + error.message);
       }
     );
 
     // bulk RNASeq DE and WGCNA
     this.bulkRNASeqTabLoading = true;
+    this.dataShareBulkRnaSeqService.resetTxData();
     let deReady = false;
     let wgcnaReady = false;
     this.getDataService.getCRBulkRNASeqByGene(this.selectedDisease).subscribe(
@@ -234,6 +237,8 @@ export class CreditReportComponent implements OnInit {
           this.updateSelectedGene(this.geneInput);
         }
       }, error => {
+        deReady = true;
+        this.bulkRNASeqTabLoading = !(deReady && wgcnaReady);
         this.openDialog("Failed to get bulk RNASeq DE result: " + error.message);
       }
     );
@@ -247,6 +252,8 @@ export class CreditReportComponent implements OnInit {
           this.updateSelectedGene(this.geneInput);
         }
       }, error => {
+        wgcnaReady = true;
+        this.bulkRNASeqTabLoading = !(deReady && wgcnaReady);
         this.openDialog("Failed to get bulk RNASeq WGCNA result: " + error.message);
       }
     )
