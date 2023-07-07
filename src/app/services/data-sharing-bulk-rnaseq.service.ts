@@ -14,6 +14,7 @@ import { DataUtil } from '../util/util.data';
 })
 export class DataSharingCRService {
   SampleMetaData: Map<string, Map<string, SampleMeta>> = new Map<string, Map<string, SampleMeta>>();
+  SamplePCAData: Map<string, string> = new Map<string, string>();
   GeneExprData: Map<string, any> = new Map<string, any>();
   DEData: Map<string, Map<string, BulkRNASeqDEPerGene[]>> = new Map<string, Map<string, BulkRNASeqDEPerGene[]>>();
 
@@ -66,6 +67,8 @@ export class DataSharingCRService {
       data[i].SampleMetaData.forEach(s => {
         this.SampleMetaData.get(study).set(s.Sample, new SampleMeta(s));
       });
+
+      this.SamplePCAData.set(study, data[i].SamplePCAPlot);
 
       let cmprMap = new Map<string, BulkRNASeqDEPerGene[]>();
       data[i].DEData.forEach(v => {
@@ -141,7 +144,7 @@ export class DataSharingCRService {
   }
 
   createNAImgBlob() {
-      const file= new File(['../assets/image_not_available.png'], 'image_not_available', {type: "image/png"} );
+      const file= new File(['../assets/img/image_not_available.png'], 'image_not_available', {type: "image/png"} );
       return DataUtil.createBlobFromFile(file);
   }
 
@@ -158,6 +161,15 @@ export class DataSharingCRService {
       });
   }
 
+  fetchSamplePCAPlots(file:string, study: string) {
+    return forkJoin([
+      this.imgService.getImgByPath(file, "png"),
+    ]).pipe(
+      tap(([pcaImgBlob]) =>{
+        this.SamplePCAData.get(study)
+      })
+    )
+  }
 
   fetchScRNASeqImages(d: scRNASeqData, study: string) {
     return forkJoin([
@@ -310,6 +322,9 @@ export class DataSharingCRService {
   }
 
   getGeneExprDataForBarPlot(study:string, geneIdx: number) {
+    if (geneIdx < 0){
+      return [];
+    }
     let r: any[] = [];
     for (let i = 0; i < this.GeneExprData.get(study).Samples.length; i++) {
       let group = this.SampleMetaData.get(study).get(this.GeneExprData.get(study).Samples[i]).MergeConditions;
@@ -353,6 +368,9 @@ export class DataSharingCRService {
     return r;
   }
 
+  getSamplePCAImgBlob(file: string, type: string) {
+    return this.imgService.getImgByPath(file, type);
+  }
 
   getWGCNAImgBlob(study:string, type: string) {
     if (this.exprWGCNAData.has(study)) {

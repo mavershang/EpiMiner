@@ -43,9 +43,12 @@ export class CreditReportComponent implements OnInit {
   currentRefGenome: string;
 
   // disease 
-  diseaseArr = ["Renal disease", "BMP9", "LILRB1_2"];
+  diseaseArr = ["Renal disease", "BMP9", "LILRB1_2", "SIRT6", 'SMASh'];
   selectedDisease: string = '';
   currentDisease: string = '';
+
+  //
+  runGeneticAnalysis=true
 
   //  List of tissues in EPi data
   tissueOptions: string[] = [];
@@ -53,7 +56,7 @@ export class CreditReportComponent implements OnInit {
   dropdownSettings: IDropdownSettings;
 
   // search parameters
-  searchParam: SearchParam = new SearchParam();
+  epiSearchParam: SearchParam = new SearchParam();
 
   // tabs
   tabOptions: string[] = ['Genetics', 'Epigenomics', 'RNASeq', 'scRNASeq']
@@ -125,7 +128,7 @@ export class CreditReportComponent implements OnInit {
 
   reset() {
     this.initRefGenome();
-    this.searchParam = new SearchParam();
+    this.epiSearchParam = new SearchParam();
   }
 
   onItemSelect(item: any) {
@@ -182,16 +185,17 @@ export class CreditReportComponent implements OnInit {
     }
 
     // verify max distance
-    if (this.searchParam.maxDist == undefined || this.searchParam.maxDist.length == 0) {
-      this.searchParam.maxDist = '500000';
+    if (this.epiSearchParam.maxDist == undefined || this.epiSearchParam.maxDist.length == 0) {
+      this.epiSearchParam.maxDist = '500000';
     }
 
     // show grid
     this.showRNASeqGrid = true;
 
     // genetics: hypercoloc and locuszoom
+    if (this.runGeneticAnalysis) {
     this.geneticsTabLoading = true;
-    this.getDataService.getCRGeneticsByGene(this.geneInput, this.selectedDisease, this.selectedRefGenome, this.searchParam).subscribe(
+    this.getDataService.getCRGeneticsByGene(this.geneInput, this.selectedDisease, this.selectedRefGenome, this.epiSearchParam).subscribe(
       data => {
         console.log(data);
         this.hypercolocResults = data.HCRList;
@@ -206,10 +210,12 @@ export class CreditReportComponent implements OnInit {
         this.geneticsTabLoading = false;
         this.openDialog("Failed to run Credit Report genetics: " + error.message);
       });
+    }
 
     // epigenomics
+    if (this.epiSearchParam.hasValue()) {
     this.epigenomicsTabLoading = true;
-    this.getDataService.queryByStr(this.geneInput, this.selectedRefGenome, this.searchParam).subscribe(
+    this.getDataService.queryByStr(this.geneInput, this.selectedRefGenome, this.epiSearchParam).subscribe(
       data => {
         this.epiResultData = data.epiDataList;
         this.tableDataSource2.data = this.epiResultData;
@@ -222,6 +228,7 @@ export class CreditReportComponent implements OnInit {
         this.openDialog("Failed to query gene for epigenomics: " + error.message);
       }
     );
+    }
 
     // bulk RNASeq DE and WGCNA
     this.bulkRNASeqTabLoading = true;
@@ -280,9 +287,10 @@ export class CreditReportComponent implements OnInit {
       return "Please fill gene search textbox before continue.";
     } else if (this.geneInput.split(',').length > 1) {
       return "Please submit one gene for each search.";
-    } else if (this.searchParam.tissues == undefined || this.searchParam.tissues.length == 0) {
-      return "Please select Tissue and Celltype before continue";
-    }
+    } 
+    // else if (this.epiSearchParam.tissues == undefined || this.epiSearchParam.tissues.length == 0) {
+    //   return "Please select Tissue and Celltype before continue";
+    // }
     return "";
   }
 

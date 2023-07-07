@@ -9,7 +9,7 @@ import { DataSharingCRService } from 'src/app/services/data-sharing-bulk-rnaseq.
   styleUrls: ['./study-gene-expr-plot.component.css']
 })
 export class StudyGeneExprPlotComponent implements OnInit {
-  data:any[] = [];
+  data: any[] = [];
   //multi: any[];
   view: [number, number] = [700, 400];
 
@@ -59,6 +59,8 @@ export class StudyGeneExprPlotComponent implements OnInit {
   }
 
   refresh() {
-    this.data = this.dataShareService.getGeneExprData([this.dataShareService.selectedGene], "barplot");
+    if (this.dataShareService.selectedGene != undefined && this.dataShareService.selectedGene.length > 0) {
+      this.data = this.dataShareService.getGeneExprData([this.dataShareService.selectedGene], "barplot");
+    }
   }
 }

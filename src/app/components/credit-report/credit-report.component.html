@@ -12,7 +12,6 @@
                     </p>
                 </div>
 
-
         <div class="disease-select-container">
             <select class="selectDisease" style="height:100%; width:100%" [(ngModel)]="selectedDisease"
                 (change)="diseaseOnChange()">
@@ -21,13 +20,20 @@
             </select>
         </div>
 
+        <div class="geneticAnalysis-selection">
+            <mat-checkbox class="geneticAnalysis-checkbox"
+                          [(ngModel)]="runGeneticAnalysis">
+                Run Genetic HyperColoc Analysis
+            </mat-checkbox>
+        </div>
+
         <div class="tissue-selector">
             <ng-multiselect-dropdown 
                 class="dropdown-list"
                 [placeholder]="'Select Tissue(s) For Epigenomic query'" 
                 [data]="tissueOptions"
                 [settings]="dropdownSettings"
-                [(ngModel)]="searchParam.tissues" 
+                [(ngModel)]="epiSearchParam.tissues" 
                 (onSelect)="onItemSelect($event)"
                 (onSelectAll)="onSelectAll($event)"
                 ></ng-multiselect-dropdown>
@@ -36,7 +42,7 @@
         <div class="dist-container">
             <label style="height:100%; width:40px">Max distance </label>
             <input type="text" style="height:90%; width:73.5%" placeholder="Epigenomic chunk to gene (default +/-500k nt)" name="maxDistColoc"
-                class="form-control" [(ngModel)]="searchParam.maxDist" required maxlength="20" />
+                class="form-control" [(ngModel)]="epiSearchParam.maxDist" required maxlength="20" />
         </div>
 
         <button class="button-submit" role="button" (click)="submitGene()">Submit</button>

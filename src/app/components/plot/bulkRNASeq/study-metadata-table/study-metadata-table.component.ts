@@ -5,6 +5,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableFilter } from 'mat-table-filter';
 import { MatPaginator } from '@angular/material/paginator';
+import { SamplePCAPlotComponent } from '../sample-pca-plot/sample-pca-plot.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-study-metadata-table',
@@ -24,7 +26,9 @@ export class StudyMetadataTableComponent implements OnInit {
 
   useCollapseMode: boolean=true
   
-  constructor(public dataShareService: DataSharingCRService) {}
+  constructor(
+    private dialog: MatDialog,
+    public dataShareService: DataSharingCRService) {}
 
   ngOnInit(): void {
     this.filterEntity = new SampleMeta();
@@ -49,6 +53,19 @@ export class StudyMetadataTableComponent implements OnInit {
     this.tableDataSource.data = this.dataShareService.getSampleMetaData(this.useCollapseMode);
     this.tableDataSource.paginator = this.paginator;
     this.tableDataSource.sort = this.sort; 
+  }
+
+  launchPCA() {
+    const dialogRef = this.dialog.open(SamplePCAPlotComponent, {
+      width: '1800px',
+      data:{
+          study:  this.dataShareService.SamplePCAData.get(this.dataShareService.selectedStudy),
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
   }
 
   switchMode(){

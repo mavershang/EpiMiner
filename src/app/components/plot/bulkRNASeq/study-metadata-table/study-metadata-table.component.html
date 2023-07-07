@@ -2,6 +2,8 @@
     <button (click)="toggle()">{{this.showTable?'Hide':'Show'}} Sample Metadata Table </button>
     <button class="button-meta-mode" role="button" (click)="switchMode()">{{useCollapseMode?'Classic':'Collapsed'}}
         Metadata Mode</button>
+    <button (click)="launchPCA()">Sample Variance Plot (PCA)</button>
+
     <div class="metadata-table-header">
         <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedStudy}} Sample MetaData </h3>
         <div class="metadata-table-tip">

@@ -58,6 +58,7 @@ import { StudyScRNASeqComponent } from './components/plot/scRNASeq/study-sc-rnas
 import { ClusterMarkerTableComponent } from './components/plot/scRNASeq/cluster-marker-table/cluster-marker-table.component';
 import { GeneSignatureAnalysisComponent } from './components/plot/bulkRNASeq/gene-signature-analysis/gene-signature-analysis.component';
 import { StudyMultiGeneExprPlotComponent } from './components/plot/bulkRNASeq/study-multi-gene-expr-plot/study-multi-gene-expr-plot.component';
+import { SamplePCAPlotComponent } from './components/plot/bulkRNASeq/sample-pca-plot/sample-pca-plot.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { StudyMultiGeneExprPlotComponent } from './components/plot/bulkRNASeq/st
     ClusterMarkerTableComponent,
     GeneSignatureAnalysisComponent,
     StudyMultiGeneExprPlotComponent,
+    SamplePCAPlotComponent,
   ],
   imports: [
     BrowserModule,

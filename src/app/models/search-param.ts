@@ -6,5 +6,9 @@ export class SearchParam {
         this.maxDist='';
         this.tissues = [];
     }
+
+    hasValue() {
+        return !(this.tissues == undefined || this.tissues.length == 0);
+    }
 }
 
