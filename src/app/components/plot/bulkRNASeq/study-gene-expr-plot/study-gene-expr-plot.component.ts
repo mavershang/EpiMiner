@@ -13,6 +13,10 @@ export class StudyGeneExprPlotComponent implements OnInit {
   //multi: any[];
   view: [number, number] = [700, 400];
 
+
+  selectedExprMetric: string;
+  exprMetrics: string[]
+
   // options
   legend: boolean = true;
   showLabels: boolean = true;
@@ -37,17 +41,20 @@ export class StudyGeneExprPlotComponent implements OnInit {
   ngOnInit(): void {
 
     console.log("ngOnInit")
+    this.populateExprMetrics();
 
     this.dataShareService.selectedGeneChange.subscribe((value) => {
       this.refresh();
     });
     this.dataShareService.selectedStudyChange.subscribe((value) => {
+      this.populateExprMetrics();
       this.refresh();
     })
   }
 
   onSelect(data): void {
-    //console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+    this.dataShareService.selectedGene=data;
   }
 
   onActivate(data): void {
@@ -58,9 +65,21 @@ export class StudyGeneExprPlotComponent implements OnInit {
     console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
+  exprMetricOnChange() {
+    this.refresh();
+  }
+
+  populateExprMetrics() {
+    // update gene expression metric types (normCount or TPM)
+    this.exprMetrics = this.dataShareService.getExprMetricTypes(this.dataShareService.selectedStudy);
+    if (this.exprMetrics.length > 0) {
+      this.selectedExprMetric = this.exprMetrics[0];
+    }
+  }
+
   refresh() {
     if (this.dataShareService.selectedGene != undefined && this.dataShareService.selectedGene.length > 0) {
-      this.data = this.dataShareService.getGeneExprData([this.dataShareService.selectedGene], "barplot");
+      this.data = this.dataShareService.getGeneExprData([this.dataShareService.selectedGene], "barplot", this.selectedExprMetric);
     }
   }
 }

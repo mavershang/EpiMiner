@@ -30,6 +30,9 @@ export class PlotBulkRNASeqExprComponent extends BubblePlotBase {
 
   bubbleChartOptions: ChartConfiguration<'bubble'>['options'] = {
     responsive: true,
+    onClick: function(event) {
+      console.log(event);
+    },
     maintainAspectRatio: false,
     scales: {
       y: {

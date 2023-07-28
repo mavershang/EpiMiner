@@ -62,7 +62,7 @@ export class StudyMultiGeneExprPlotComponent implements OnInit {
 
   multiGeneExprPlotRefresh() {
     const genes = DataUtil.splitGeneInput(this.geneInput);
-    const exprData = this.dataShareService.getGeneExprData(genes, "heatmap");
+    const exprData = this.dataShareService.getGeneExprData(genes, "heatmap", "normCount");
     this.view = [Math.min(this.width, exprData.length*60+200), genes.length*50+200];
     this.multi = exprData;
   }

@@ -44,7 +44,7 @@ import { DataSharingCRService } from 'src/app/services/data-sharing-bulk-rnaseq.
     }
   
     onSelect(data:any): void {
-      //console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+      console.log('Item clicked', JSON.parse(JSON.stringify(data)));
     }
 
     onActivate(data:any): void {

@@ -3,8 +3,15 @@
   <div class="gene-expr-barplot-header">
     <h3 style="text-align: center; color:darkblue"> {{this.dataShareService.selectedGene}} Expression in
       {{this.dataShareService.selectedStudy}} </h3>
+    <div class="gene-expr-metric-selector">
+      <select class="select-expr-metric" style="height:100%; width:100%" [(ngModel)]="selectedExprMetric"
+                (change)="exprMetricOnChange()">
+                <!-- <option value="" disabled selected> Select </option> -->
+                <option *ngFor="let g of exprMetrics" [ngValue]="g">{{g}}</option>
+            </select>
+    </div>
     <div class="gene-expr-barplot-tip">
-      <p> The barplot shows the normalized expression of the selected gene in the study under focus </p>
+      <p> The barplot shows the normalized expression of the selected gene in the study under focus (normalized read count or TPM) </p>
     </div>
   </div>
 

@@ -16,6 +16,7 @@ export class DataSharingCRService {
   SampleMetaData: Map<string, Map<string, SampleMeta>> = new Map<string, Map<string, SampleMeta>>();
   SamplePCAData: Map<string, string> = new Map<string, string>();
   GeneExprData: Map<string, any> = new Map<string, any>();
+  TpmData: Map<string, any> = new Map<string, any>();
   DEData: Map<string, Map<string, BulkRNASeqDEPerGene[]>> = new Map<string, Map<string, BulkRNASeqDEPerGene[]>>();
 
   selectedStudy: string = '';
@@ -45,6 +46,7 @@ export class DataSharingCRService {
   resetDEData() {
     this.DEData = new Map<string, Map<string, BulkRNASeqDEPerGene[]>>();
     this.GeneExprData = new Map<string, any>();
+    this.TpmData = new Map<string, any>();
   }
 
   resetWGCNAData() {
@@ -62,6 +64,7 @@ export class DataSharingCRService {
     for (let i = 0; i < data.length; i++) {
       let study = data[i].Study;
       this.GeneExprData.set(study, data[i].GeneExprData);
+      this.TpmData.set(study, data[i].TpmData);
 
       this.SampleMetaData.set(study, new Map<string, SampleMeta>());
       data[i].SampleMetaData.forEach(s => {
@@ -144,8 +147,8 @@ export class DataSharingCRService {
   }
 
   createNAImgBlob() {
-      const file= new File(['../assets/img/image_not_available.png'], 'image_not_available', {type: "image/png"} );
-      return DataUtil.createBlobFromFile(file);
+    const file = new File(['../assets/img/image_not_available.png'], 'image_not_available', { type: "image/png" });
+    return DataUtil.createBlobFromFile(file);
   }
 
   importWGCNAResult(data: any[]) {
@@ -161,11 +164,11 @@ export class DataSharingCRService {
       });
   }
 
-  fetchSamplePCAPlots(file:string, study: string) {
+  fetchSamplePCAPlots(file: string, study: string) {
     return forkJoin([
       this.imgService.getImgByPath(file, "png"),
     ]).pipe(
-      tap(([pcaImgBlob]) =>{
+      tap(([pcaImgBlob]) => {
         this.SamplePCAData.get(study)
       })
     )
@@ -253,14 +256,14 @@ export class DataSharingCRService {
     let r: Map<string, SampleMeta> = new Map<string, SampleMeta>();
     for (let a of this.SampleMetaData.get(this.selectedStudy).values()) {
       const tag = a.getTag();
-      if (r.has(tag)){
+      if (r.has(tag)) {
         r.get(tag).addSample(a.Sample);
       }
       else {
         let copy = new SampleMeta();
         Object.assign(copy, a);
         r.set(tag, copy);
-      } 
+      }
     }
     return Array.from(r.values()).sort();
   }
@@ -279,13 +282,25 @@ export class DataSharingCRService {
     return this.DEData.get(this.selectedStudy).get(this.selectedComparison);
   }
 
-  getGeneExprData(genes: string[], plotType:any) {
-    if (this.selectedStudy == undefined || !this.GeneExprData.has(this.selectedStudy)){ 
+  getExprMetricTypes(study: string) {
+    let r: string[] = []
+    if (this.GeneExprData.get(study) != null && this.GeneExprData.get(study).Samples.length > 0) {
+      r.push('NormCount');
+    }
+    if (this.TpmData.get(study) != null && this.TpmData.get(study).Samples.length > 0) {
+      r.push('TPM');
+    }
+    return r;
+  }
+
+  getGeneExprData(genes: string[], plotType: any, exprMetric: string) {
+    if (this.selectedStudy == undefined || !this.GeneExprData.has(this.selectedStudy)) {
       return [];
     }
 
+    let data = this.getExprDataPointer(exprMetric);
     let geneIdx = genes.map(gene => {
-      return this.GeneExprData.get(this.selectedStudy).Genes.findIndex(
+      return data.get(this.selectedStudy).Genes.findIndex(
         e => e.toLowerCase() === gene.toLowerCase());
     });
 
@@ -296,9 +311,9 @@ export class DataSharingCRService {
 
     switch (plotType.toLowerCase()) {
       case "barplot":
-        return this.getGeneExprDataForBarPlot(this.selectedStudy, geneIdx[0]);
+        return this.getGeneExprDataForBarPlot(this.selectedStudy, geneIdx[0], exprMetric);
       case "heatmap":
-        return this.getGeneExprDataForHeatmap(this.selectedStudy, geneIdx, genes);
+        return this.getGeneExprDataForHeatmap(this.selectedStudy, geneIdx, genes, exprMetric);
       default:
         return [];
     }
@@ -321,32 +336,58 @@ export class DataSharingCRService {
     // return r;
   }
 
-  getGeneExprDataForBarPlot(study:string, geneIdx: number) {
-    if (geneIdx < 0){
+  getExprDataPointer(exprMetric: string) {
+    let data: any;
+    switch (exprMetric.toLowerCase()) {
+      case "tpm":
+        data = this.TpmData;
+        break;
+      case "normcount":
+        data = this.GeneExprData;
+        break;
+    }
+    return data;
+  }
+
+  getGeneExprDataForBarPlot(study: string, geneIdx: number, exprMetric: string) {
+    if (geneIdx < 0) {
       return [];
     }
     let r: any[] = [];
-    for (let i = 0; i < this.GeneExprData.get(study).Samples.length; i++) {
-      let group = this.SampleMetaData.get(study).get(this.GeneExprData.get(study).Samples[i]).MergeConditions;
+
+    let data = this.getExprDataPointer(exprMetric);
+    for (let i = 0; i < data.get(study).Samples.length; i++) {
+      let group = this.SampleMetaData.get(study).get(data.get(study).Samples[i]).MergeConditions;
       let iGroup = r.map(x => x.name).indexOf(group);
       if (iGroup < 0) {
         r.push({ "name": group, "series": [] });
         iGroup = r.length - 1;
       }
 
-        r[iGroup].series.push({
-          "name": this.GeneExprData.get(study).Samples[i],
-          "value": this.GeneExprData.get(study).Counts[geneIdx][i]
-        });
+      r[iGroup].series.push({
+        "name": data.get(study).Samples[i],
+        "value": data.get(study).Counts[geneIdx][i]
+      });
     }
     return r;
   }
 
-  getGeneExprDataForHeatmap(study:string, geneIdxArr: number[], geneArr: string[]) {
+  getGeneExprDataForHeatmap(study: string, geneIdxArr: number[], geneArr: string[], exprMetric: string) {
     let r: any[] = [];
-    for (let i = 0; i < this.GeneExprData.get(study).Samples.length; i++) {
+
+    let data: any;
+    switch (exprMetric.toLowerCase()) {
+      case "tpm":
+        data = this.GeneExprData;
+        break;
+      case "normcount":
+        data = this.TpmData;
+        break;
+    }
+
+    for (let i = 0; i < data.get(study).Samples.length; i++) {
       const group = this.SampleMetaData.get(study).get(this.GeneExprData.get(study).Samples[i]).MergeConditions;
-      const sample = this.GeneExprData.get(study).Samples[i];
+      const sample = data.get(study).Samples[i];
       const name = sample + "_" + group;
 
       let iGroup = r.map(x => x.name).indexOf(group);
@@ -361,7 +402,7 @@ export class DataSharingCRService {
         }
         r[iGroup].series.push({
           "name": geneArr[i2],
-          "value": this.GeneExprData.get(study).Counts[geneIdxArr[i2]][i]
+          "value": data.get(study).Counts[geneIdxArr[i2]][i]
         });
       }
     }
@@ -372,7 +413,7 @@ export class DataSharingCRService {
     return this.imgService.getImgByPath(file, type);
   }
 
-  getWGCNAImgBlob(study:string, type: string) {
+  getWGCNAImgBlob(study: string, type: string) {
     if (this.exprWGCNAData.has(study)) {
       switch (type.toLowerCase()) {
         case "cor":
@@ -381,23 +422,23 @@ export class DataSharingCRService {
           return this.exprWGCNAData.get(study).DendroImgBlob;
         case "sampletree":
           return this.exprWGCNAData.get(study).SampleTreeBlob;
-        }
+      }
     } else {
       return null;
     }
   }
 
   getWGCNAPathwayTableData() {
-    if (!this.exprWGCNAData.has(this.selectedStudy)){ return [];}
+    if (!this.exprWGCNAData.has(this.selectedStudy)) { return []; }
     let r: WGCNAPathwayResult[] = [];
-      for (let [key, value] of this.exprWGCNAData.get(this.selectedStudy).ModInfoMap) {
-        r = r.concat(value.Pathways);
-      }
+    for (let [key, value] of this.exprWGCNAData.get(this.selectedStudy).ModInfoMap) {
+      r = r.concat(value.Pathways);
+    }
     return r;
   }
 
   getWGCNAGeneTableData() {
-    if (!this.exprWGCNAData.has(this.selectedStudy)) { return [];}
+    if (!this.exprWGCNAData.has(this.selectedStudy)) { return []; }
     let r: WGCNAGene[] = [];
     r.push(this.exprWGCNAData.get(this.selectedStudy).GeneInfoMap.get(this.selectedGene.toUpperCase()));
     return r;
