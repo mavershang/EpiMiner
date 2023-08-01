@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <div class="help-tip">
     <p>This is the inline help tip! It can contain all kinds of HTML. Style it as you please.</p>
   </div>
@@ -9,7 +9,16 @@
     </div>
   </div>
 
-  <!-- <div class="marker-table">
+  <div class="marker-table">
         <app-cluster-marker-table [data]=this.dataShareService.getCellClusterMarkerTableData()></app-cluster-marker-table>
-    </div> -->
+    </div>
+</div> -->
+
+<div class="select-container">
+  <select class="selectData" style="height:100%; width:100%" [(ngModel)]="selectedDataIdx"
+      (change)="selectedDataOnChange()">
+      <option *ngFor="let d of this.dataArr; let indexOfelement=index;" [ngValue]="indexOfelement">{{d.studyName}}</option>
+  </select>
 </div>
+
+<iframe [src]="iframeSrc" width="2200" height="1600" id="inlineFrameExample" frameborder="1" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>

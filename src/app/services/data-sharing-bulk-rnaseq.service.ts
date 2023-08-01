@@ -19,6 +19,10 @@ export class DataSharingCRService {
   TpmData: Map<string, any> = new Map<string, any>();
   DEData: Map<string, Map<string, BulkRNASeqDEPerGene[]>> = new Map<string, Map<string, BulkRNASeqDEPerGene[]>>();
 
+  selectedDisease: string = '';
+  isSelectedDiseaseChanged: boolean = false;
+  selectedDiseaseChange: Subject<boolean> = new Subject<boolean>();
+
   selectedStudy: string = '';
   isSelectedStudyChanged: boolean = false;
   selectedStudyChange: Subject<boolean> = new Subject<boolean>();
@@ -461,6 +465,10 @@ export class DataSharingCRService {
 
   toggleExprWGCNADataChanged() {
     this.exprWGCNADataChange.next(!this.isExprWGCNADataChanged);
+  }
+
+  toggleSelectedDiseaseChanged() {
+    this.selectedDiseaseChange.next(!this.isSelectedDiseaseChanged);
   }
 
   toggleSelectedStudyChanged() {

@@ -4,6 +4,8 @@ import { DataSharingCRService } from 'src/app/services/data-sharing-bulk-rnaseq.
 import { GetDataService } from 'src/app/services/get-data.service';
 import { GeneSignatureAnalysisComponent } from '../gene-signature-analysis/gene-signature-analysis.component';
 import { StudyMultiGeneExprPlotComponent } from '../study-multi-gene-expr-plot/study-multi-gene-expr-plot.component';
+import { utils } from 'xlsx';
+
 
 @Component({
   selector: 'app-plot-holder-expr',
@@ -11,6 +13,7 @@ import { StudyMultiGeneExprPlotComponent } from '../study-multi-gene-expr-plot/s
   styleUrls: ['./plot-holder-expr.component.css']
 })
 export class PlotHolderExprComponent implements OnInit {
+  
   studies: string[];
 
   constructor(

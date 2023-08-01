@@ -31,6 +31,7 @@ export class CreditReportComponent implements OnInit {
   scRNASeqTabLoading = false;
 
   // conditional display
+  showInput: boolean = true;
   showRNASeqGrid: boolean = true;
   showScRNASeqGrid: boolean = true;
 
@@ -170,6 +171,8 @@ export class CreditReportComponent implements OnInit {
 
     // reset selected disease and fetch dataset
     this.currentDisease = this.selectedDisease
+    this.dataShareBulkRnaSeqService.selectedDisease = this.selectedDisease;
+    this.dataShareBulkRnaSeqService.toggleSelectedDiseaseChanged();
   }
 
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {

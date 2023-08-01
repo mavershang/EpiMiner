@@ -104,4 +104,35 @@ export class DataUtil {
             reader.readAsArrayBuffer(file);
         });
     }
+
+
+   /*  static readTSV(filePath, sep='\t') {
+        const fs=require('fs')
+        return new Promise((resolve, reject) => {
+            fs.readFile(filePath, 'utf8', (err, data) => {
+                if(err) {
+                    reject(err);
+                    return;
+                }
+            
+                const lines = data.split('\n');
+                const headers = lines[0].trim().split(sep);
+                const table = [];
+
+                for (let i=1; i < lines.length; i++) {
+                    const values = lines[i].trim().split('\t');
+                    if (values.length !== headers.length) {
+                        reject(new Error('Line ${i+1} has an incorrect number of columns.'));
+                        return;
+                    }
+                    const row = {};
+                    for (let j = 0; j<headers.length; j++) {
+                        row[headers[j]] = values[j];
+                    }
+                    table.push(row);
+                }
+                resolve(table);
+            });
+        });
+    } */
 }

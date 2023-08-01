@@ -1,5 +1,5 @@
 <div class="grid-container">
-    <div class="input-container">
+    <div class="input-container" *ngIf="showInput">
             <input class = "geneStrInput" type="text" placeholder="Query with Gene" name="gene" class="form-control"
                 [(ngModel)]="geneInput" required maxlength="100" />
 

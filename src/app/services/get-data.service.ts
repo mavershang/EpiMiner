@@ -173,4 +173,29 @@ export class GetDataService extends BaseService{
   // testCORS() {
   //   return this.http.get('http://10.132.10.11:81/testTrack/FINAL_ATAC-seq_BSS00007.sub_VS_Uniform_BKG_CONTROL_36_50000000.pval.signal.bedgraph.gz.bigWig');
   // }
+
+  async loadTSV(filePath: string): Promise<any[]> {
+    try {
+      const data = await this.http.get(filePath, {responseType: 'text' }).toPromise();
+      const lines = data.split('\n').filter((e) => e.trim() !== '');
+      const headers = lines[0].trim().split('\t');
+      const table = [];
+
+      for (let i=1; i< lines.length; i++) {
+        const values = lines[i].trim().split('\t');
+        if (values.length !== headers.length) {
+          throw new Error('Line ${i+1} has incorrect number of columns.')
+        }
+
+        const row = {};
+        for (let j=0; j < headers.length; j++) {
+          row[headers[j]] = values[j];
+        }
+        table.push(row);
+      }
+      return table;
+    } catch (error) {
+      throw new Error('Error loading the file: ${error.message}');
+    }
+  }
 }
